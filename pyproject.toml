@@ -19,6 +19,13 @@ docs = [
     "python-markdown-math==0.9"
 ]
 
+[dependency-groups]
+dev = [
+    "prek", # Pre-commit: run `prek install` to add to git config
+    "ruff", # Linter and formatter
+    "ty",   # Type checker and language server
+]
+
 [project.scripts]
 game-of-life = "game_of_life:main"
 
@@ -26,8 +33,4 @@ game-of-life = "game_of_life:main"
 requires = ["uv_build>=0.10.8,<0.11.0"]
 build-backend = "uv_build"
 
-[dependency-groups]
-dev = [
-    "prek>=0.3.5",
-]
 
