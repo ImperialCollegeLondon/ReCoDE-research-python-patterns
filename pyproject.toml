@@ -25,6 +25,7 @@ docs = [
 [dependency-groups]
 dev = [
     "prek", # Pre-commit: run `prek install` to add to git config
+    "pytest",
     "ruff", # Linter and formatter
     "ty",   # Type checker and language server
 ]
