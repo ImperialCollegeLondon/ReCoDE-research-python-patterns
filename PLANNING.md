@@ -5,7 +5,7 @@ exemplar. In this regard, the document need not be completed in
 a single pass. Some sections will be relatively straightforward
 to complete, others may evolve over time.
 
-Once complete, content here can be moved to the README.md which 
+Once complete, content here can be moved to the README.md which
 will serve as the landing page for your exemplar, providing learners
 with an outline of what they can expect should they engage with
 the work.
@@ -43,7 +43,7 @@ Researcher Institute.
 
 ## Learning Outcomes 🎓
 
-> Aim for 3 - 4 points that illustrate what knowledge and 
+> Aim for 3 - 4 points that illustrate what knowledge and
 > skills will be gained by studying your ReCoDE exemplar.
 
 After completing this exemplar, students will:
@@ -93,7 +93,7 @@ e.g. Step-by-step guide:
 
 
 ## Disciplinary Background 🔬
-     
+
 > Tell learners about why this exemplar is useful.
 
 Briefly describe how this project fits in your discipline, why you chose
@@ -141,14 +141,14 @@ Code is organised into logical components:
 > is what you should develop first, ideally by week 6. Defining
 > a core helps ensure that, despite a tight timeline, we will end
 > up with a complete project.
-> 
+>
 > Identify project extensions. These are additional features that
 > you will implement after the core of the project is finished; you
 > could also propose extensions as open-ended exercises for the ReCoDE
 > audience.
-> 
+>
 > Outline the process of creating the exemplar as a project roadmap
-> with individual steps. This will help you with defining the scope of 
+> with individual steps. This will help you with defining the scope of
 > the project. When you think about this, imagine that you are explaining
 > it to a new PhD student. Assume that this student is from a related (but
 > not necessarily same) discipline. They can code but have never undertaken
@@ -157,7 +157,7 @@ Code is organised into logical components:
 > its own learning annotation and links to other learning materials if
 > appropriate. The learning annotation is going to form a significant portion
 > of your efforts.
-> 
+>
 > Learning annotations will evolve as we go along but planning now will be useful
 > in defining your exemplar steps. Remember that active learning is generally more
 > valuable than just reading information, so small exercises that build on previous
