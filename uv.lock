@@ -353,9 +353,9 @@ requires-dist = [
     { name = "mkdocs-include-markdown-plugin", marker = "extra == 'docs'", specifier = "==7.1.5" },
     { name = "mkdocs-jupyter", marker = "extra == 'docs'", specifier = "==0.25.1" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "==9.6.12" },
-    { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "pydantic" },
     { name = "python-markdown-math", marker = "extra == 'docs'", specifier = "==0.9" },
-    { name = "typer", specifier = ">=0.24.1" },
+    { name = "typer" },
 ]
 provides-extras = ["docs"]
 
