@@ -3,6 +3,7 @@ repos:
     rev: v6.0.0  # This is ignored for fast path detection
     hooks:
       - id: trailing-whitespace
+      - id: end-of-file-fixer
       - id: check-added-large-files
       - id: check-case-conflict
       - id: check-toml
