@@ -30,7 +30,7 @@ collaboration with (RSE MENTOR) from Research Software Engineering and
 Researcher Institute.
 
 
-<!-- Learning Outcomes. 
+<!-- Learning Outcomes.
 Aim for 3 - 4 points that illustrate what knowledge and
 skills will be gained by studying your ReCoDE exemplar. -->
 ## Learning Outcomes 🎓
@@ -83,7 +83,7 @@ e.g. Step-by-step guide:
 
 <!-- Background. Tell learners about why this exemplar is useful. -->
 ## Disciplinary Background 🔬
-     
+
 Briefly describe how this project fits in your discipline, why you chose
 to work on it, and what other disciplines may find it useful.
 
@@ -133,7 +133,7 @@ could also propose extensions as open-ended exercises for the ReCoDE
 audience.
 
 Outline the process of creating the exemplar as a project roadmap
-with individual steps. This will help you with defining the scope of 
+with individual steps. This will help you with defining the scope of
 the project. When you think about this, imagine that you are explaining
 it to a new PhD student. Assume that this student is from a related (but
 not necessarily same) discipline. They can code but have never undertaken

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+  workflow_dispatch:
+
+# GH102: Auto-cancel on repeated PRs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.12", "3.13", "3.14" ]
+    if: ${{ !github.event.pull_request.draft }}
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install the project
+        run: uv sync --locked --all-groups
+      - name: Install ruff and lint code
+        uses: astral-sh/ruff-action@v3
+      - name: Run ty to type check source code
+        run: uv run ty check . --output-format github
+      - name: Test with pytest
+        run: uv run pytest

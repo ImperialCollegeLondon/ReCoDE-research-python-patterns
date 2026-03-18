@@ -9,23 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get repository
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/checkout@v6
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.12
-      - name: Install dependencies
-        run: pip install -e .[dev]
-      - name: Embed Markdown images in notebooks
-        run: python utils/embed_images.py notebooks
-      - name: Copy notebooks into docs
-        run: cp notebooks/* docs/ || echo "No notebooks found"
+      - name: Install the project
+        run: uv sync --locked --all-groups --extra docs
       - name: Rewrite links in README.md for docs
         env:
           GH_URL: https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}
         run: |
           perl -i -pe '
-            s#\]\(docs/([^):]+)\)#](docs/$1)#g; 
+            s#\]\(docs/([^):]+)\)#](docs/$1)#g;
             s#\]\((?!https?:|mailto:|docs/)([^)]+)\)#]($ENV{GH_URL}/$1)#g
           ' README.md
       - name: Deploy Mkdocs
