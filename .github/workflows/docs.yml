@@ -25,4 +25,4 @@ jobs:
             s#\]\((?!https?:|mailto:|docs/)([^)]+)\)#]($ENV{GH_URL}/$1)#g
           ' README.md
       - name: Deploy Mkdocs
-        run: mkdocs gh-deploy --force
+        run: uv run mkdocs gh-deploy --force
