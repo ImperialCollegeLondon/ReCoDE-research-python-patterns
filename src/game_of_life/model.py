@@ -3,7 +3,7 @@ from typing import ClassVar
 import numpy as np
 import numpy.typing as npt
 
-NDArrayInt = npt.NDArray[np.int_]
+NDArrayInt = npt.NDArray[np.uint8]
 
 
 class Grid:
