@@ -1,6 +1,6 @@
 import pytest
 
-from game_of_life.model import Grid, Pattern
+from game_of_life.model import Grid, Pattern, random_initialiser
 
 
 class TestGrid:
@@ -20,17 +20,21 @@ class TestGrid:
         assert grid.n_cols == custom_size
         assert grid.population() == 0
 
-    def test_randomise_grid(self) -> None:
-        grid = Grid()
-        assert grid.population() == 0
-        grid.randomise()
+    def test_randomise_grid_sparse(self) -> None:
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.1})
+        assert grid.population() != 0
+        num_cells: int = self.default_n_rows * self.default_n_cols
+        assert (0.05 * num_cells) < grid.population() < (0.15 * num_cells)
+
+    def test_randomise_grid_no_density(self) -> None:
+        grid = Grid(grid_init_callback=random_initialiser)
+        assert grid.population() != 0
         num_cells: int = self.default_n_rows * self.default_n_cols
         assert (0.1 * num_cells) < grid.population() < (0.25 * num_cells)
 
     def test_randomise_grid_filled(self) -> None:
-        grid = Grid()
-        assert grid.population() == 0
-        grid.randomise(density=1)
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 1})
+        assert grid.population() != 0
         num_cells: int = self.default_n_rows * self.default_n_cols
         assert num_cells == grid.population()
 
@@ -41,15 +45,13 @@ class TestGrid:
         assert grid.population() == 0
 
     def test_step_non_empty_grid_increase(self) -> None:
-        grid = Grid()
-        grid.randomise(density=0.3)
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.3})
         original_count: int = grid.population()
         grid.step()
         assert grid.population() > original_count
 
     def test_step_non_empty_grid_decrease(self) -> None:
-        grid = Grid()
-        grid.randomise(density=0.7)
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.7})
         original_count: int = grid.population()
         grid.step()
         assert grid.population() < original_count

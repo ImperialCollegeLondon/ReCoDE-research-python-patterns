@@ -1,5 +1,5 @@
 import re
-from typing import ClassVar, Self
+from typing import Any, ClassVar, Protocol, Self
 
 import numpy as np
 import numpy.typing as npt
@@ -8,17 +8,39 @@ from pydantic import BaseModel, PositiveInt, field_validator, model_validator
 NDArrayInt = npt.NDArray[np.uint8]
 
 
+class GridInitialiser(Protocol):
+    def __call__(self, n_rows: int, n_cols: int, **kwargs: dict[str, Any]) -> NDArrayInt: ...
+
+
+def zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt:  # noqa: ANN401, ARG001
+    return np.zeros((n_rows, n_cols), dtype=np.uint8)
+
+
+def random_initialiser(n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt:  # noqa: ANN401
+    density: float = kwargs.get("density", 0.2)
+    return np.random.default_rng().choice([0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density]))
+
+
 class Grid:
     N_BIRTH: ClassVar[int] = 3
     N_SURVIVAL: ClassVar[int] = 2  # assumes that N_BIRTH is also a survival
 
-    def __init__(self, n_rows: int = 50, n_cols: int = 50, wrap: bool = True, store_history: bool = False) -> None:
+    def __init__(
+        self,
+        n_rows: int = 50,
+        n_cols: int = 50,
+        wrap: bool = True,
+        grid_init_callback: GridInitialiser = zeros_initialiser,
+        callback_kwargs: dict[str, Any] | None = None,
+    ) -> None:
         self.n_rows: int = n_rows
         self.n_cols: int = n_cols
         self.wrap: bool = wrap
         self._generation: int = 0
-        self._grid: NDArrayInt = np.zeros((n_rows, n_cols), dtype=np.uint8)
-        self._history: list[NDArrayInt] | None = [self._grid] if store_history else None
+        self._grid: NDArrayInt = grid_init_callback(
+            n_rows, n_cols, **(callback_kwargs if callback_kwargs is not None else {})
+        )
+        self._history: list[NDArrayInt] = [self._grid]
 
     def population(self) -> int:
         return int(self._grid.sum())
@@ -31,18 +53,14 @@ class Grid:
     def generation(self) -> int:
         return self._generation
 
+    @property
+    def history(self) -> NDArrayInt:
+        return np.dstack(self._history)
+
     def all_grid_history(self) -> NDArrayInt | None:
         if self._history is not None:
             return np.dstack(self._history)
         return self._history
-
-    def randomise(self, density: float = 0.2) -> None:
-        assert self.generation == 0, "Grid can only be randomised at the start"
-        self._grid = np.random.default_rng().choice(
-            [0, 1], size=(self.n_rows, self.n_cols), p=np.asarray([1 - density, density])
-        )
-        if self._history is not None:
-            self._history[0] = self._grid
 
     def compute_next_generation(self) -> NDArrayInt:
         neighbours = (
