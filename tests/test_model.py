@@ -1,11 +1,13 @@
+import numpy as np
 import pytest
 
-from game_of_life.model import Grid, Pattern, random_initialiser
+from game_of_life.model import Grid, Pattern, pattern_initialiser, random_initialiser
 
 
 class TestGrid:
     default_n_rows: int = 50
     default_n_cols: int = 50
+    four_cells: Pattern = Pattern(width=4, height=1, encoded_pattern="4o!")
 
     def test_default_grid_dimensions(self) -> None:
         grid = Grid()
@@ -55,6 +57,46 @@ class TestGrid:
         original_count: int = grid.population()
         grid.step()
         assert grid.population() < original_count
+
+    def test_initialise_with_pattern_zero_offset(self) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            callback_kwargs={"pattern": self.four_cells, "col_offset": 0, "row_offset": 0},
+        )
+        num_in_pattern: int = 4
+        assert grid.population() == num_in_pattern
+        np.testing.assert_array_equal(grid.grid[0, 0:4], np.ones((4), dtype=np.uint8))
+
+    @pytest.mark.parametrize(("col_offset", "row_offset"), [(1, 1), (5, 7), (45, 45)])
+    def test_initialise_with_pattern_with_offset(self, col_offset: int, row_offset: int) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            callback_kwargs={"pattern": self.four_cells, "col_offset": col_offset, "row_offset": row_offset},
+        )
+        num_in_pattern: int = 4
+        assert grid.population() == num_in_pattern
+        np.testing.assert_array_equal(
+            grid.grid[0 + row_offset, 0 + col_offset : 4 + col_offset], np.ones((4), dtype=np.uint8)
+        )
+
+    def test_step_four_cell_pattern(self) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            callback_kwargs={"pattern": self.four_cells, "col_offset": 1, "row_offset": 1},
+        )
+        np.testing.assert_array_equal(grid.grid[1, 1:5], np.ones((4), dtype=np.uint8))
+        grid.step()
+        np.testing.assert_array_equal(grid.grid[0:3, 2:4], np.ones((3, 2), dtype=np.uint8))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 2, 3, 2, 3]))
+        grid.step()
+        assert len(np.nonzero(grid.grid)[0]) == 6  # noqa: PLR2004
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 1, 4, 2, 3]))
+        grid.step()
+        # After the first step, the pattern does not change
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 1, 4, 2, 3]))
 
 
 class TestPatternValidation:

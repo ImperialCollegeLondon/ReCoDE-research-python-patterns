@@ -1,5 +1,5 @@
 import re
-from typing import Any, ClassVar, Protocol, Self
+from typing import Any, ClassVar, Final, Protocol, Self, TypedDict, Unpack, runtime_checkable
 
 import numpy as np
 import numpy.typing as npt
@@ -46,18 +46,76 @@ class Pattern(BaseModel):
                 raise ValueError("Number of new lines does not match specified pattern height")
         return self
 
+    def populate_grid(self, row_offset: int, col_offset: int, grid: NDArrayInt) -> NDArrayInt:
+        row_index: int = row_offset
+        for row_pattern in self.encoded_pattern.split("$"):
+            col_index: int = col_offset
+            for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern):
+                if match_in_row.group(1).isdecimal():
+                    is_alive: bool = match_in_row.group(2) == "o"
+                    num_to_set: int = int(match_in_row.group(1))
+                    if is_alive:
+                        if num_to_set > 1:
+                            grid[row_index, col_index : col_index + num_to_set] = 1
+                        else:
+                            grid[row_index, col_index] = 1
+                    col_index += num_to_set
+            row_index += 1
+        return grid
 
+
+@runtime_checkable
 class GridInitialiser(Protocol):
-    def __call__(self, n_rows: int, n_cols: int, **kwargs: dict[str, Any]) -> NDArrayInt: ...
+    def __call__(self, n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt: ...  # noqa: ANN401
 
 
-def zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt:  # noqa: ANN401, ARG001
+class NoKwargs(TypedDict): ...
+
+
+def _zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[NoKwargs]) -> NDArrayInt:  # noqa: ARG001
     return np.zeros((n_rows, n_cols), dtype=np.uint8)
 
 
-def random_initialiser(n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt:  # noqa: ANN401
+zeros_initialiser: Final[GridInitialiser] = _zeros_initialiser
+
+
+class RandomInitKwargs(TypedDict, total=False):
+    density: float
+
+
+def _random_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[RandomInitKwargs]) -> NDArrayInt:
     density: float = kwargs.get("density", 0.2)
     return np.random.default_rng().choice([0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density]))
+
+
+random_initialiser: Final[GridInitialiser] = _random_initialiser
+
+
+class PatternKwargs(TypedDict):
+    pattern: Pattern
+    row_offset: int
+    col_offset: int
+
+
+def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternKwargs]) -> NDArrayInt:
+    pattern: Pattern = kwargs["pattern"]
+    if pattern.width > n_cols or pattern.height > n_rows:
+        raise ValueError("Pattern is larger than grid")
+
+    row_offset: int = kwargs["row_offset"]
+    col_offset: int = kwargs["col_offset"]
+
+    if row_offset + pattern.height > n_rows:
+        raise ValueError("Pattern with row offset exceeds grid bounds by {row_offset + pattern.height - n_rows}")
+    if col_offset + pattern.width > n_cols:
+        raise ValueError("Pattern with col offset exceeds grid bounds by {col_offset + pattern.width - n_cols}")
+
+    grid: NDArrayInt = np.zeros((n_rows, n_cols), dtype=np.uint8)
+
+    return pattern.populate_grid(row_offset, col_offset, grid)
+
+
+pattern_initialiser: Final[GridInitialiser] = _initialise_with_pattern
 
 
 class Grid:
