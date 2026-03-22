@@ -1,4 +1,4 @@
-from game_of_life.model import Grid
+from game_of_life.model import Grid, Pattern
 
 
 class TestGrid:
@@ -51,3 +51,15 @@ class TestGrid:
         original_count: int = grid.population()
         grid.step()
         assert grid.population() < original_count
+
+
+class TestPatternValidation:
+    def test_valid_light_weight_spaceship(self) -> None:
+        Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o!")
+
+    def test_valid_gosper_glider_gun(self) -> None:
+        Pattern(
+            width=36,
+            height=16,
+            encoded_pattern="27bo$26bobo$9b2o15b2obo4b2o$9bobo14b2ob2o3b2o$2o2b2o6bo13b2obo$2obo2bo2bo2bo13bobo$4b2o6bo8bo5bo$9bobo7bobo$9b2o9b2o5$28bo$29bo$27b3o!",
+        )
