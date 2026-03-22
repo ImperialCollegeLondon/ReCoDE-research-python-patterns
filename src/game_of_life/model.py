@@ -10,11 +10,12 @@ class Grid:
     N_BIRTH: ClassVar[int] = 3
     N_SURVIVAL: ClassVar[int] = 2  # assumes that N_BIRTH is also a survival
 
-    def __init__(self, grid_size: int = 50, wrap: bool = True, store_history: bool = False) -> None:
-        self.grid_size: int = grid_size
+    def __init__(self, n_rows: int = 50, n_cols: int = 50, wrap: bool = True, store_history: bool = False) -> None:
+        self.n_rows: int = n_rows
+        self.n_cols: int = n_cols
         self.wrap: bool = wrap
         self._generation: int = 0
-        self._grid: NDArrayInt = np.zeros((grid_size, grid_size), dtype=np.uint8)
+        self._grid: NDArrayInt = np.zeros((n_rows, n_cols), dtype=np.uint8)
         self._history: list[NDArrayInt] | None = [self._grid] if store_history else None
 
     def population(self) -> int:
@@ -36,7 +37,7 @@ class Grid:
     def randomise(self, density: float = 0.2) -> None:
         assert self.generation == 0, "Grid can only be randomised at the start"
         self._grid = np.random.default_rng().choice(
-            [0, 1], size=(self.grid_size, self.grid_size), p=np.asarray([1 - density, density])
+            [0, 1], size=(self.n_rows, self.n_cols), p=np.asarray([1 - density, density])
         )
         if self._history is not None:
             self._history[0] = self._grid
