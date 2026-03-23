@@ -8,6 +8,7 @@ class TestGrid:
     default_n_rows: int = 50
     default_n_cols: int = 50
     four_cells: Pattern = Pattern(width=4, height=1, encoded_pattern="4o!")
+    t_tetromino: Pattern = Pattern(width=3, height=2, encoded_pattern="bo$3o!")
 
     def test_default_grid_dimensions(self) -> None:
         grid = Grid()
@@ -84,6 +85,7 @@ class TestGrid:
             grid_init_callback=pattern_initialiser,
             callback_kwargs={"pattern": self.four_cells, "col_offset": 1, "row_offset": 1},
         )
+        assert grid.generation == 0
         np.testing.assert_array_equal(grid.grid[1, 1:5], np.ones((4), dtype=np.uint8))
         grid.step()
         np.testing.assert_array_equal(grid.grid[0:3, 2:4], np.ones((3, 2), dtype=np.uint8))
@@ -97,6 +99,56 @@ class TestGrid:
         # After the first step, the pattern does not change
         np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
         np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 1, 4, 2, 3]))
+
+    def test_step_four_cell_pattern_wraps(self) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            callback_kwargs={"pattern": self.four_cells, "col_offset": 0, "row_offset": 0},
+        )
+        assert grid.generation == 0
+        np.testing.assert_array_equal(grid.grid[0, 0:4], np.ones((4), dtype=np.uint8))
+        grid.step()
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 49, 49]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([1, 2, 1, 2, 1, 2]))
+
+    def test_step_four_cell_pattern_no_wrap(self) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            wrap=False,
+            callback_kwargs={"pattern": self.four_cells, "col_offset": 0, "row_offset": 0},
+        )
+        assert grid.generation == 0
+        np.testing.assert_array_equal(grid.grid[0, 0:4], np.ones((4), dtype=np.uint8))
+        grid.step()
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([1, 1]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([1, 2]))
+
+    def test_t_tetromino_init(self) -> None:
+        grid = Grid(
+            grid_init_callback=pattern_initialiser,
+            callback_kwargs={"pattern": self.t_tetromino, "col_offset": 25, "row_offset": 25},
+        )
+        starting_population: int = 4
+        assert grid.population() == starting_population
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([25, 26, 26, 26]))
+        np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([26, 25, 26, 27]))
+
+    def test_t_tetromino_grid_too_small(self) -> None:
+        with pytest.raises(ValueError, match="Pattern is larger than grid"):
+            Grid(
+                n_rows=1,
+                n_cols=2,
+                grid_init_callback=pattern_initialiser,
+                callback_kwargs={"pattern": self.t_tetromino, "col_offset": 25, "row_offset": 25},
+            )
+
+    @pytest.mark.parametrize(("col_offset", "row_offset"), [(1, 60), (60, 7), (60, 60)])
+    def test_pattern_outside_grid(self, col_offset: int, row_offset: int) -> None:
+        with pytest.raises(ValueError, match=r".*offset exceeds grid bounds by.*"):
+            Grid(
+                grid_init_callback=pattern_initialiser,
+                callback_kwargs={"pattern": self.four_cells, "col_offset": col_offset, "row_offset": row_offset},
+            )
 
 
 class TestPatternValidation:

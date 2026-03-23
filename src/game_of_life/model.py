@@ -156,11 +156,6 @@ class Grid:
     def history(self) -> NDArrayInt:
         return np.dstack(self._history)
 
-    def all_grid_history(self) -> NDArrayInt | None:
-        if self._history is not None:
-            return np.dstack(self._history)
-        return self._history
-
     def compute_next_generation(self) -> NDArrayInt:
         neighbours = (
             np.roll(np.roll(self._grid, 1, axis=0), 1, axis=1)
