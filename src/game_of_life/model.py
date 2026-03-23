@@ -52,14 +52,16 @@ class Pattern(BaseModel):
             col_index: int = col_offset
             for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern):
                 if match_in_row.group(1).isdecimal():
-                    is_alive: bool = match_in_row.group(2) == "o"
                     num_to_set: int = int(match_in_row.group(1))
-                    if is_alive:
-                        if num_to_set > 1:
-                            grid[row_index, col_index : col_index + num_to_set] = 1
-                        else:
-                            grid[row_index, col_index] = 1
-                    col_index += num_to_set
+                else:
+                    num_to_set: int = 1
+                is_alive: bool = match_in_row.group(2) == "o"
+                if is_alive:
+                    if num_to_set > 1:
+                        grid[row_index, col_index : col_index + num_to_set] = 1
+                    else:
+                        grid[row_index, col_index] = 1
+                col_index += num_to_set
             row_index += 1
         return grid
 
