@@ -51,10 +51,7 @@ class Pattern(BaseModel):
         for row_pattern in self.encoded_pattern.split("$"):
             col_index: int = col_offset
             for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern):
-                if match_in_row.group(1).isdecimal():
-                    num_to_set: int = int(match_in_row.group(1))
-                else:
-                    num_to_set: int = 1
+                num_to_set: int = int(match) if (match := match_in_row.group(1)) else 1
                 is_alive: bool = match_in_row.group(2) == "o"
                 if is_alive:
                     if num_to_set > 1:
