@@ -16,6 +16,9 @@ class Pattern(BaseModel):
     @field_validator("encoded_pattern", mode="after")
     @classmethod
     def validate_pattern_string(cls, pattern_str: str) -> str:
+        if len(pattern_str) < 1:
+            raise ValueError("Pattern string cannot be empty")
+
         if not pattern_str.endswith("!"):
             raise ValueError("Pattern string must end with an '!'")
 

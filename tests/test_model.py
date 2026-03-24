@@ -165,7 +165,7 @@ class TestPatternValidation:
         )
 
     def test_empty_string(self) -> None:
-        with pytest.raises(ValueError, match="Pattern string must end with an '!'"):
+        with pytest.raises(ValueError, match="Pattern string cannot be empty"):
             Pattern(width=5, height=4, encoded_pattern="")
 
     def test_no_end_of_pattern(self) -> None:
