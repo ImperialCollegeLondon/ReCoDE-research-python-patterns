@@ -5,7 +5,7 @@ import numpy as np
 import numpy.typing as npt
 from pydantic import BaseModel, PositiveInt, field_validator, model_validator
 
-NDArrayInt = npt.NDArray[np.uint8]
+NDArrayU8 = npt.NDArray[np.uint8]
 
 
 class Pattern(BaseModel):
@@ -46,7 +46,7 @@ class Pattern(BaseModel):
                 raise ValueError("Number of new lines does not match specified pattern height")
         return self
 
-    def populate_grid(self, row_offset: int, col_offset: int, grid: NDArrayInt) -> NDArrayInt:
+    def populate_grid(self, row_offset: int, col_offset: int, grid: NDArrayU8) -> NDArrayU8:
         row_index: int = row_offset
         for row_pattern in self.encoded_pattern.split("$"):
             col_index: int = col_offset
@@ -68,13 +68,13 @@ class Pattern(BaseModel):
 
 @runtime_checkable
 class GridInitialiser(Protocol):
-    def __call__(self, n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayInt: ...  # noqa: ANN401
+    def __call__(self, n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayU8: ...  # noqa: ANN401
 
 
 class NoKwargs(TypedDict): ...
 
 
-def _zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[NoKwargs]) -> NDArrayInt:  # noqa: ARG001
+def _zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[NoKwargs]) -> NDArrayU8:  # noqa: ARG001
     return np.zeros((n_rows, n_cols), dtype=np.uint8)
 
 
@@ -85,7 +85,7 @@ class RandomInitKwargs(TypedDict, total=False):
     density: float
 
 
-def _random_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[RandomInitKwargs]) -> NDArrayInt:
+def _random_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[RandomInitKwargs]) -> NDArrayU8:
     density: float = kwargs.get("density", 0.2)
     return np.random.default_rng().choice([0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density]))
 
@@ -99,7 +99,7 @@ class PatternKwargs(TypedDict):
     col_offset: int
 
 
-def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternKwargs]) -> NDArrayInt:
+def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternKwargs]) -> NDArrayU8:
     pattern: Pattern = kwargs["pattern"]
     if pattern.width > n_cols or pattern.height > n_rows:
         raise ValueError("Pattern is larger than grid")
@@ -112,7 +112,7 @@ def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternK
     if col_offset + pattern.width > n_cols:
         raise ValueError("Pattern with col offset exceeds grid bounds by {col_offset + pattern.width - n_cols}")
 
-    grid: NDArrayInt = np.zeros((n_rows, n_cols), dtype=np.uint8)
+    grid: NDArrayU8 = np.zeros((n_rows, n_cols), dtype=np.uint8)
 
     return pattern.populate_grid(row_offset, col_offset, grid)
 
@@ -136,16 +136,16 @@ class Grid:
         self.n_cols: int = n_cols
         self.wrap: bool = wrap
         self._generation: int = 0
-        self._grid: NDArrayInt = grid_init_callback(
+        self._grid: NDArrayU8 = grid_init_callback(
             n_rows, n_cols, **(callback_kwargs if callback_kwargs is not None else {})
         )
-        self._history: list[NDArrayInt] = [self._grid]
+        self._history: list[NDArrayU8] = [self._grid]
 
     def population(self) -> int:
         return int(self._grid.sum())
 
     @property
-    def grid(self) -> NDArrayInt:
+    def grid(self) -> NDArrayU8:
         return self._grid
 
     @property
@@ -153,10 +153,10 @@ class Grid:
         return self._generation
 
     @property
-    def history(self) -> NDArrayInt:
+    def history(self) -> NDArrayU8:
         return np.dstack(self._history)
 
-    def compute_next_generation(self) -> NDArrayInt:
+    def compute_next_generation(self) -> NDArrayU8:
         neighbours = (
             np.roll(np.roll(self._grid, 1, axis=0), 1, axis=1)
             + np.roll(np.roll(self._grid, 1, axis=0), -1, axis=1)
