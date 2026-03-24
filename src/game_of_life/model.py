@@ -29,7 +29,7 @@ class Pattern(BaseModel):
         pattern_for_counts = r"(\d+)([bo$])"
         for match in re.finditer(pattern_for_counts, without_end):
             if int(match.group(1)) == 0:
-                raise ValueError("Run count cannot be 0 at {match.start()}")
+                raise ValueError(f"Run count cannot be 0 at {match.start()}")
 
         return without_end
 
