@@ -197,5 +197,4 @@ class Grid:
     def step(self) -> None:
         self._generation += 1
         self._grid = self.compute_next_generation()
-        if self._history is not None:
-            self._history.append(self._grid)
+        self._history.append(self._grid)
