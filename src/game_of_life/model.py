@@ -132,7 +132,9 @@ pattern_initialiser: Final[GridInitialiser] = _initialise_with_pattern
 
 
 class Grid:
+    # Number of live neighbours to make a dead cell come to life or to survive
     N_BIRTH: ClassVar[int] = 3
+    # Number of live neighbours to survive
     N_SURVIVAL: ClassVar[int] = 2  # assumes that N_BIRTH is also a survival
 
     def __init__(
