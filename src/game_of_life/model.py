@@ -48,8 +48,16 @@ class Pattern(BaseModel):
 
     def populate_grid(self, row_offset: int, col_offset: int, grid: NDArrayU8) -> NDArrayU8:
         row_index: int = row_offset
+
+        # New line separate is "$" char => split by "$" yields each row's encoding
         for row_pattern in self.encoded_pattern.split("$"):
             col_index: int = col_offset
+
+            # Regex will match into two groups:
+            #   1. (\d*): All digits => gets the number of cells to set. If digit is not specfied, that group yields
+            #             an empty string, i.e. ""
+            #   2. ([bo]): Matches the characters "b" or "o" which specifies the liveness of a cell
+            #              b => dead cell, o => live cell
             for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern):
                 num_to_set: int = int(match) if (match := match_in_row.group(1)) else 1
 
