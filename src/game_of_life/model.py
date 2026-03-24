@@ -115,9 +115,9 @@ def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternK
     col_offset: int = kwargs["col_offset"]
 
     if row_offset + pattern.height > n_rows:
-        raise ValueError("Pattern with row offset exceeds grid bounds by {row_offset + pattern.height - n_rows}")
+        raise ValueError(f"Pattern with row offset exceeds grid bounds by {row_offset + pattern.height - n_rows}")
     if col_offset + pattern.width > n_cols:
-        raise ValueError("Pattern with col offset exceeds grid bounds by {col_offset + pattern.width - n_cols}")
+        raise ValueError(f"Pattern with col offset exceeds grid bounds by {col_offset + pattern.width - n_cols}")
 
     grid: NDArrayU8 = np.zeros((n_rows, n_cols), dtype=np.uint8)
 
