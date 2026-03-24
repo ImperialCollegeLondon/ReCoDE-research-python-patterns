@@ -164,6 +164,7 @@ class Grid:
         return np.dstack(self._history)
 
     def compute_next_generation(self) -> NDArrayU8:
+        # Finds the number of neighbours that are alive
         neighbours = (
             np.roll(np.roll(self._grid, 1, axis=0), 1, axis=1)
             + np.roll(np.roll(self._grid, 1, axis=0), -1, axis=1)
@@ -174,8 +175,13 @@ class Grid:
             + np.roll(self._grid, 1, axis=1)
             + np.roll(self._grid, -1, axis=1)
         )
-        # 3 neighbours => always alive
-        # 2 neighbours => must be alive to remain alive
+
+        # If the number of alive neighbours is N_BIRTH, then the cell will always be alive. This is as there must be
+        #   N_BIRTH neighbouring cells for a dead cell to come to life or for it to survive
+        # If the number of alive neighbours is N_SURVIVAL, then a cell only survives if it s currently alive.
+        # Hence, if
+        #   N_BIRTH neighbours => always alive
+        #   N_SURVIVAL neighbours => must be alive FIRST to remain alive => additional check
         next_generation = np.where(
             (neighbours == self.N_BIRTH) | ((self._grid == 1) & (neighbours == self.N_SURVIVAL)), 1, 0
         )
