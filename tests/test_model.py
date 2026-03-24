@@ -47,14 +47,16 @@ class TestGrid:
         grid.step()
         assert grid.population() == 0
 
-    def test_step_non_empty_grid_increase(self) -> None:
-        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.3})
+    @pytest.mark.parametrize("rng_seed", [1, 53, 100, 344, 1234576])
+    def test_step_non_empty_grid_increase(self, rng_seed: int) -> None:
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.3, "rng_seed": rng_seed})
         original_count: int = grid.population()
         grid.step()
         assert grid.population() > original_count
 
-    def test_step_non_empty_grid_decrease(self) -> None:
-        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.7})
+    @pytest.mark.parametrize("seed", [1, 53, 100, 344, 1234576])
+    def test_step_non_empty_grid_decrease(self, seed: int) -> None:
+        grid = Grid(grid_init_callback=random_initialiser, callback_kwargs={"density": 0.7, "rng_seed": seed})
         original_count: int = grid.population()
         grid.step()
         assert grid.population() < original_count

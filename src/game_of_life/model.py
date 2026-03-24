@@ -1,5 +1,5 @@
 import re
-from typing import Any, ClassVar, Final, Protocol, Self, TypedDict, Unpack, runtime_checkable
+from typing import Any, ClassVar, Final, NotRequired, Protocol, Self, TypedDict, Unpack, runtime_checkable
 
 import numpy as np
 import numpy.typing as npt
@@ -88,13 +88,17 @@ def _zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[NoKwargs]) -> 
 zeros_initialiser: Final[GridInitialiser] = _zeros_initialiser
 
 
-class RandomInitKwargs(TypedDict, total=False):
+class RandomInitKwargs(TypedDict):
     density: float
+    rng_seed: NotRequired[int]
 
 
 def _random_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[RandomInitKwargs]) -> NDArrayU8:
     density: float = kwargs.get("density", 0.2)
-    return np.random.default_rng().choice([0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density]))
+    rng_seed: int | None = kwargs.get("rng_seed")
+    return np.random.default_rng(seed=rng_seed).choice(
+        [0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density])
+    )
 
 
 random_initialiser: Final[GridInitialiser] = _random_initialiser
