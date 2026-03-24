@@ -52,12 +52,14 @@ class Pattern(BaseModel):
             col_index: int = col_offset
             for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern):
                 num_to_set: int = int(match) if (match := match_in_row.group(1)) else 1
-                is_alive: bool = match_in_row.group(2) == "o"
-                if is_alive:
-                    if num_to_set > 1:
-                        grid[row_index, col_index : col_index + num_to_set] = 1
-                    else:
-                        grid[row_index, col_index] = 1
+
+                # else case is where match_in_row.group(2) == "b". Thus, the cell value should be set to 0
+                liveness: int = 1 if match_in_row.group(2) == "o" else 0
+                if num_to_set > 1:
+                    grid[row_index, col_index : col_index + num_to_set] = liveness
+                else:
+                    grid[row_index, col_index] = liveness
+
                 col_index += num_to_set
             row_index += 1
         return grid
