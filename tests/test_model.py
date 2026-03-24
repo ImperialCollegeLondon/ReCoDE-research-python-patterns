@@ -94,7 +94,7 @@ class TestGrid:
         np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
         np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 2, 3, 2, 3]))
         grid.step()
-        assert len(np.nonzero(grid.grid)[0]) == 6  # noqa: PLR2004
+        assert len(np.nonzero(grid.grid)[0]) == 6
         np.testing.assert_array_equal(np.nonzero(grid.grid)[0], np.asarray([0, 0, 1, 1, 2, 2]))
         np.testing.assert_array_equal(np.nonzero(grid.grid)[1], np.asarray([2, 3, 1, 4, 2, 3]))
         grid.step()
