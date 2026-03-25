@@ -127,10 +127,10 @@ class TestGrid:
 
 class TestPatternValidation:
     def test_valid_light_weight_spaceship(self) -> None:
-        Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o!")
+        _ = Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o!")
 
     def test_valid_gosper_glider_gun(self) -> None:
-        Pattern(
+        _ = Pattern(
             width=36,
             height=16,
             encoded_pattern="27bo$26bobo$9b2o15b2obo4b2o$9bobo14b2ob2o3b2o$2o2b2o6bo13b2obo$2obo2bo2bo2bo13bobo$4b2o6bo8bo5bo$9bobo7bobo$9b2o9b2o5$28bo$29bo$27b3o!",
@@ -138,30 +138,30 @@ class TestPatternValidation:
 
     def test_empty_string(self) -> None:
         with pytest.raises(ValueError, match="Pattern string cannot be empty"):
-            Pattern(width=5, height=4, encoded_pattern="")
+            _ = Pattern(width=5, height=4, encoded_pattern="")
 
     def test_no_end_of_pattern(self) -> None:
         with pytest.raises(ValueError, match="Pattern string must end with an '!'"):
-            Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o")
+            _ = Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o")
 
     def test_only_end_of_pattern_pass(self) -> None:
-        Pattern(width=5, height=1, encoded_pattern="!")
+        _ = Pattern(width=5, height=1, encoded_pattern="!")
 
     def test_only_end_of_pattern_fails(self) -> None:
         with pytest.raises(ValueError, match="Number of new lines does not match specified pattern height"):
-            Pattern(width=5, height=4, encoded_pattern="!")
+            _ = Pattern(width=5, height=4, encoded_pattern="!")
 
     @pytest.mark.parametrize("pattern", ["o2kbo$4bo$o3bo$b4o!", "o2bo$4bio$o3bo$b4o!", "o2bo$4bo$o3$9999i$bo$b4o!"])
     def test_invalid_character_or_structure(self, pattern: str) -> None:
         with pytest.raises(ValueError, match="Pattern contains invalid characters or structure"):
-            Pattern(width=5, height=4, encoded_pattern=pattern)
+            _ = Pattern(width=5, height=4, encoded_pattern=pattern)
 
     @pytest.mark.parametrize("pattern", ["o0bo$4bo$o3bo$b4o!", "o2bo$4b0o$o3bo$b4o!", "o2bo0$4bo$o3bo$b4o!"])
     def test_count_starts_with_zero(self, pattern: str) -> None:
         with pytest.raises(ValueError, match="Run count cannot be 0 at"):
-            Pattern(width=5, height=4, encoded_pattern=pattern)
+            _ = Pattern(width=5, height=4, encoded_pattern=pattern)
 
     @pytest.mark.parametrize("pattern", ["$$$$!", "b$b$b$b$!", "4$!", "$!", "b$!", "2$!", "bo$5$!"])
     def test_num_rows_no_match_height(self, pattern: str) -> None:
         with pytest.raises(ValueError, match="Number of new lines does not match specified pattern height"):
-            Pattern(width=5, height=4, encoded_pattern=pattern)
+            _ = Pattern(width=5, height=4, encoded_pattern=pattern)
