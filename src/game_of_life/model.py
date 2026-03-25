@@ -24,11 +24,20 @@ class Pattern(BaseModel):
 
         without_end: str = pattern_str[:-1]
 
-        core_pattern = r"^(\d*[bo$])*$"
-        if re.match(core_pattern, without_end) is None:
+        # Regex pattern which checks that are no invalid characters and that it matches the structure of specifying
+        # the lines then the new line
+        #   ^ - Start of string anchor, i.e. match must begin here
+        #       (\d*[bo$])* - Zero or more occurrences of:
+        #           \d* - Zero or more digits
+        #           [bo$] - Followed by exactly one character that is either b, o, or $
+        #   $ - End of string anchor, i.e. match must end here
+        valid_character_pattern = r"^(\d*[bo$])*$"
+        if re.match(valid_character_pattern, without_end) is None:
             raise ValueError("Pattern contains invalid characters or structure")
 
         # Check that all numbers are > 0
+        #   Pattern contains two groups: 1) any digits (\d+), 2) token characters b, o or $ ([bo$])
+        #   Thus, group 1 will contain the count for a given token
         pattern_for_counts = r"(\d+)([bo$])"
         for match in re.finditer(pattern_for_counts, without_end):
             if int(match.group(1)) == 0:
