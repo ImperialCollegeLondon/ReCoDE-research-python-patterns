@@ -169,7 +169,10 @@ class Grid:
         return self._generation
 
     @property
-    def history(self) -> NDArrayU8:
+    def history(self) -> list[NDArrayU8]:
+        return self._history
+
+    def history_3d(self) -> NDArrayU8:
         return np.dstack(self._history)
 
     def compute_next_generation(self) -> NDArrayU8:
