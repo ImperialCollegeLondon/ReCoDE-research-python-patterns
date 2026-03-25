@@ -1,5 +1,6 @@
 import re
-from typing import Any, ClassVar, Final, NotRequired, Protocol, Self, TypedDict, Unpack, runtime_checkable
+from abc import ABC, abstractmethod
+from typing import ClassVar, Self, override
 
 import numpy as np
 import numpy.typing as npt
@@ -85,62 +86,55 @@ class Pattern(BaseModel):
         return grid
 
 
-@runtime_checkable
-class GridInitialiser(Protocol):
-    def __call__(self, n_rows: int, n_cols: int, **kwargs: Any) -> NDArrayU8: ...  # noqa: ANN401
+class GridCreator(ABC):
+    @abstractmethod
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8: ...
 
 
-class NoKwargs(TypedDict): ...
+class ZerosGridCreator(GridCreator):
+    def __init__(self) -> None:
+        super().__init__()
+
+    @override
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
+        return np.zeros((n_rows, n_cols), dtype=np.uint8)
 
 
-def _zeros_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[NoKwargs]) -> NDArrayU8:  # noqa: ARG001
-    return np.zeros((n_rows, n_cols), dtype=np.uint8)
+class RandomGridCreator(GridCreator):
+    def __init__(self, density: float = 0.2, rng_seed: int | None = None) -> None:
+        self._density: float = density
+        self._rng_seed: int | None = rng_seed
+
+    @override
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
+        return np.random.default_rng(seed=self._rng_seed).choice(
+            [0, 1], size=(n_rows, n_cols), p=np.asarray([1 - self._density, self._density])
+        )
 
 
-zeros_initialiser: Final[GridInitialiser] = _zeros_initialiser
+class PatternGridCreator(GridCreator):
+    def __init__(self, pattern: Pattern, *, row_offset: int = 0, col_offset: int = 0) -> None:
+        self._pattern: Pattern = pattern
+        self._row_offset: int = row_offset
+        self._col_offset: int = col_offset
 
+    @override
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
+        if self._pattern.width > n_cols or self._pattern.height > n_rows:
+            raise ValueError("Pattern is larger than grid")
 
-class RandomInitKwargs(TypedDict):
-    density: float
-    rng_seed: NotRequired[int]
+        if self._row_offset + self._pattern.height > n_rows:
+            raise ValueError(
+                f"Pattern with row offset exceeds grid bounds by {self._row_offset + self._pattern.height - n_rows}"
+            )
+        if self._col_offset + self._pattern.width > n_cols:
+            raise ValueError(
+                f"Pattern with col offset exceeds grid bounds by {self._col_offset + self._pattern.width - n_cols}"
+            )
 
+        grid: NDArrayU8 = np.zeros((n_rows, n_cols), dtype=np.uint8)
 
-def _random_initialiser(n_rows: int, n_cols: int, **kwargs: Unpack[RandomInitKwargs]) -> NDArrayU8:
-    density: float = kwargs.get("density", 0.2)
-    rng_seed: int | None = kwargs.get("rng_seed")
-    return np.random.default_rng(seed=rng_seed).choice(
-        [0, 1], size=(n_rows, n_cols), p=np.asarray([1 - density, density])
-    )
-
-
-random_initialiser: Final[GridInitialiser] = _random_initialiser
-
-
-class PatternKwargs(TypedDict):
-    pattern: Pattern
-    row_offset: int
-    col_offset: int
-
-
-def _initialise_with_pattern(n_rows: int, n_cols: int, **kwargs: Unpack[PatternKwargs]) -> NDArrayU8:
-    pattern: Pattern = kwargs["pattern"]
-    if pattern.width > n_cols or pattern.height > n_rows:
-        raise ValueError("Pattern is larger than grid")
-
-    row_offset: int = kwargs["row_offset"]
-    col_offset: int = kwargs["col_offset"]
-
-    if row_offset + pattern.height > n_rows:
-        raise ValueError(f"Pattern with row offset exceeds grid bounds by {row_offset + pattern.height - n_rows}")
-    if col_offset + pattern.width > n_cols:
-        raise ValueError(f"Pattern with col offset exceeds grid bounds by {col_offset + pattern.width - n_cols}")
-
-    grid: NDArrayU8 = np.zeros((n_rows, n_cols), dtype=np.uint8)
-
-    return pattern.populate_grid(row_offset, col_offset, grid)
-
-
-pattern_initialiser: Final[GridInitialiser] = _initialise_with_pattern
+        return self._pattern.populate_grid(self._row_offset, self._col_offset, grid)
 
 
 class Grid:
@@ -154,16 +148,13 @@ class Grid:
         n_rows: int = 50,
         n_cols: int = 50,
         wrap: bool = True,
-        grid_init_callback: GridInitialiser = zeros_initialiser,
-        callback_kwargs: dict[str, Any] | None = None,
+        grid_creator: GridCreator | None = None,
     ) -> None:
-        self.n_rows: int = n_rows
-        self.n_cols: int = n_cols
         self.wrap: bool = wrap
         self._generation: int = 0
-        self._grid: NDArrayU8 = grid_init_callback(
-            n_rows, n_cols, **(callback_kwargs if callback_kwargs is not None else {})
-        )
+        if grid_creator is None:
+            grid_creator = ZerosGridCreator()
+        self._grid: NDArrayU8 = grid_creator.initialise(n_rows, n_cols)
         self._history: list[NDArrayU8] = [self._grid]
 
     def population(self) -> int:
