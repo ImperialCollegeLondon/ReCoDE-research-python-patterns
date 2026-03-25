@@ -87,6 +87,11 @@ class Pattern(BaseModel):
 
 
 class GridCreator(ABC):
+    """Interface for grid creation
+
+    Additional key word arguments that are need for the initialisation of the grid should be passed to the constructor
+    """
+
     @abstractmethod
     def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8: ...
 
