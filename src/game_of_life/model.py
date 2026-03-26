@@ -177,6 +177,7 @@ class GameOfLife:
     def history(self) -> list[NDArrayU8]:
         return self._history
 
+    @property
     def history_3d(self) -> NDArrayU8:
         return np.dstack(self._history)
 
