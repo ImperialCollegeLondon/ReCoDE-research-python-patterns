@@ -169,3 +169,8 @@ class TestPatternValidation:
     def test_num_rows_no_match_height(self, pattern: str) -> None:
         with pytest.raises(ValueError, match="Number of new lines does not match specified pattern height"):
             _ = Pattern(width=5, height=4, encoded_pattern=pattern)
+
+    @pytest.mark.parametrize("pattern", ["o2bo$4bo$o3bo!", "4b$5bo$3o!", "obobo$4o$o!"])
+    def test_num_rows_too_wide(self, pattern: str) -> None:
+        with pytest.raises(ValueError, match="Number of cells is larger than specified pattern width"):
+            _ = Pattern(width=4, height=3, encoded_pattern=pattern)

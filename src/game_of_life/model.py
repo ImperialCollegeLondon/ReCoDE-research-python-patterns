@@ -62,6 +62,17 @@ class Pattern(BaseModel):
                 raise ValueError("Number of new lines does not match specified pattern height")
         return self
 
+    @model_validator(mode="after")
+    def check_width_matches_pattern(self) -> Self:
+        for row_pattern in self.encoded_pattern.split("$"):
+            row_sum: int = sum(
+                self.get_counts(match_in_row, group_num=1) for match_in_row in re.finditer(r"(\d*)([bo])", row_pattern)
+            )
+            if row_sum > self.width:
+                raise ValueError("Number of cells is larger than specified pattern width")
+
+        return self
+
     def populate_grid(self, row_offset: int, col_offset: int, grid: NDArrayU8) -> NDArrayU8:
         row_index: int = row_offset
 
