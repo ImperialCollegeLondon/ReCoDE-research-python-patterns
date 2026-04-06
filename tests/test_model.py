@@ -4,6 +4,7 @@ Tests for Game of Life model
 
 import numpy as np
 import pytest
+from pydantic import ValidationError
 
 from game_of_life.model import GameOfLife, Pattern, PatternGridCreator, RandomGridCreator
 
@@ -145,11 +146,11 @@ class TestPatternValidation:
         )
 
     def test_empty_string(self) -> None:
-        with pytest.raises(ValueError, match="Pattern string cannot be empty"):
+        with pytest.raises(ValidationError):
             _ = Pattern(width=5, height=4, encoded_pattern="")
 
     def test_no_end_of_pattern(self) -> None:
-        with pytest.raises(ValueError, match="Pattern string must end with an '!'"):
+        with pytest.raises(ValidationError):
             _ = Pattern(width=5, height=4, encoded_pattern="o2bo$4bo$o3bo$b4o")
 
     def test_only_end_of_pattern_pass(self) -> None:
@@ -161,7 +162,7 @@ class TestPatternValidation:
 
     @pytest.mark.parametrize("pattern", ["o2kbo$4bo$o3bo$b4o!", "o2bo$4bio$o3bo$b4o!", "o2bo$4bo$o3$9999i$bo$b4o!"])
     def test_invalid_character_or_structure(self, pattern: str) -> None:
-        with pytest.raises(ValueError, match="Pattern contains invalid characters or structure"):
+        with pytest.raises(ValidationError):
             _ = Pattern(width=5, height=4, encoded_pattern=pattern)
 
     @pytest.mark.parametrize("pattern", ["o0bo$4bo$o3bo$b4o!", "o2bo$4b0o$o3bo$b4o!", "o2bo0$4bo$o3bo$b4o!"])

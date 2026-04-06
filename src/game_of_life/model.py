@@ -4,11 +4,11 @@ Model for Game of Life
 
 import re
 from abc import ABC, abstractmethod
-from typing import ClassVar, Self, override
+from typing import Annotated, ClassVar, Self, override
 
 import numpy as np
 import numpy.typing as npt
-from pydantic import BaseModel, PositiveInt, field_validator, model_validator
+from pydantic import BaseModel, PositiveInt, StringConstraints, field_validator, model_validator
 
 NDArrayU8 = npt.NDArray[np.uint8]
 
@@ -16,29 +16,24 @@ NDArrayU8 = npt.NDArray[np.uint8]
 class Pattern(BaseModel):
     width: PositiveInt
     height: PositiveInt
-    encoded_pattern: str
+    # StringConstraints checks that:
+    #   1) min_length=1: String is not empty as it has a minimum length of 1
+    #   2) pattern=r"^(\d*[bo$])*!$": String matches this regex pattern which checks that are no invalid characters,
+    #                                 ends with an !, and that it matches the structure of specifying the cells in
+    #                                 a line then the new line
+    #                ^ - Start of string anchor, i.e. match must begin here
+    #                    (\d*[bo$])* - Zero or more occurrences of:
+    #                        \d* - Zero or more digits
+    #                        [bo$] - Followed by exactly one character that is either b, o, or $
+    #                $ - End of string anchor, i.e. match must end here
+    encoded_pattern: Annotated[
+        str, StringConstraints(strip_whitespace=True, to_lower=True, pattern=r"^(\d*[bo$])*!$", min_length=1)
+    ]
 
     @field_validator("encoded_pattern", mode="after")
     @classmethod
     def validate_pattern_string(cls, pattern_str: str) -> str:
-        if len(pattern_str) < 1:
-            raise ValueError("Pattern string cannot be empty")
-
-        if not pattern_str.endswith("!"):
-            raise ValueError("Pattern string must end with an '!'")
-
         without_end: str = pattern_str[:-1]
-
-        # Regex pattern which checks that are no invalid characters and that it matches the structure of specifying
-        # the lines then the new line
-        #   ^ - Start of string anchor, i.e. match must begin here
-        #       (\d*[bo$])* - Zero or more occurrences of:
-        #           \d* - Zero or more digits
-        #           [bo$] - Followed by exactly one character that is either b, o, or $
-        #   $ - End of string anchor, i.e. match must end here
-        valid_character_pattern = r"^(\d*[bo$])*$"
-        if re.match(valid_character_pattern, without_end) is None:
-            raise ValueError("Pattern contains invalid characters or structure")
 
         # Check that all numbers are > 0
         #   Pattern contains two groups: 1) any digits (\d+), 2) token characters b, o or $ ([bo$])
