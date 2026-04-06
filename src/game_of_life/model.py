@@ -101,9 +101,9 @@ class Pattern(BaseModel):
 
 
 class GridCreator(ABC):
-    """Interface for grid creation
+    """Interface for grid creation.
 
-    Additional key word arguments that are need for the initialisation of the grid should be passed to the constructor
+    Additional keyword arguments that are needed for the initialisation of the grid should be passed to the constructor.
     """
 
     @abstractmethod
