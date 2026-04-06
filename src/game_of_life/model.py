@@ -1,3 +1,7 @@
+"""
+Model for Game of Life
+"""
+
 import re
 from abc import ABC, abstractmethod
 from typing import ClassVar, Self, override

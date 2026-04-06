@@ -1,3 +1,7 @@
+"""
+Tests for Game of Life model
+"""
+
 import numpy as np
 import pytest
 
