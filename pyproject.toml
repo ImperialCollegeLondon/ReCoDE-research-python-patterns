@@ -27,6 +27,7 @@ docs = [
 dev = [
     "prek", # Pre-commit: run `prek install` to add to git config
     "pytest",
+    "pytest-cov",
     "ruff", # Linter and formatter
     "ty",   # Type checker and language server
 ]
@@ -41,3 +42,7 @@ game-of-life = "game_of_life.main:app" # Allows CLI to be launched in venv using
 [build-system]
 requires = ["uv_build>=0.10.8,<0.11.0"]
 build-backend = "uv_build"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
