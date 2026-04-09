@@ -45,3 +45,6 @@ ignore = ["ISC001", "COM812"]
 
 [format]
 docstring-code-format = true
+
+[lint.extend-per-file-ignores]
+"tests/*.py" = ["PLR2004"]
