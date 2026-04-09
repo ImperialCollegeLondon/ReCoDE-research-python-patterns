@@ -1,5 +1,7 @@
 """
-Model for Game of Life
+Model for Game of Life.
+
+Contains code for parsing input strings and running the game.
 """
 
 import re
