@@ -3,7 +3,7 @@ from typing import Annotated
 
 import typer
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_show_locals=True)
 
 
 @app.command()
