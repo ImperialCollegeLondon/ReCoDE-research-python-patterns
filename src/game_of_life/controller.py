@@ -64,6 +64,10 @@ def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
 
 
 class GoLIterator:
+    """
+    Iterator which can either be an infinite loop or a finite loop
+    """
+
     def __init__(self, max_iterations: int | None = None) -> None:
         self.max_iterations: int | None = max_iterations
         self.count: int = 0
