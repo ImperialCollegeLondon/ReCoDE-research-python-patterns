@@ -38,11 +38,11 @@ class PlotView(BaseView):
 
     @override
     def setup(self) -> None:
-        self.fig.suptitle("Game of Life")
+        _ = self.fig.suptitle("Game of Life")
 
         # Disable axis ticks
-        self.ax.set_xticks([])
-        self.ax.set_yticks([])
+        _ = self.ax.set_xticks([])
+        _ = self.ax.set_yticks([])
 
     @override
     def render(self, game: "GameOfLife") -> None:
