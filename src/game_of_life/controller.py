@@ -7,12 +7,8 @@ It is responsible for linking the model and the view
 from typing import Self, assert_never
 
 from game_of_life.config import (
-    CLIViewConfig,
-    DisplayInterface,
     GameOfLifeConfigFrom,
     GridInitialiser,
-    PlotViewConfig,
-    RunConfig,
 )
 from game_of_life.model import GameOfLife, GridCreator, PatternGridCreator, RandomGridCreator, ZerosGridCreator
 
@@ -43,20 +39,6 @@ class GridCreatorFactory:
                 return PatternGridCreator(target_pattern, row_offset=row_offset, col_offset=col_offset)
             case _ as unreachable:
                 assert_never(unreachable)
-
-
-def view_factory(run_config: RunConfig) -> None:
-    match run_config.interface:
-        case DisplayInterface.CLI:
-            if not isinstance(run_config.view_config, CLIViewConfig):
-                raise ValueError("View config must be of type CLIViewConfig for CLI interface")
-            print("create cli view with CLIViewConfig")
-        case DisplayInterface.PLOT:
-            if not isinstance(run_config.view_config, PlotViewConfig):
-                raise ValueError("View config must be of type PlotViewConfig for PLOT interface")
-            print("create plot view with PlotViewConfig")
-        case _ as unreachable:
-            assert_never(unreachable)
 
 
 def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
