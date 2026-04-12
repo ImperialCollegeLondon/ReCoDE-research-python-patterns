@@ -1,3 +1,7 @@
+"""
+Module for everything related to configuring how the game of life executes
+"""
+
 from enum import StrEnum
 from typing import TYPE_CHECKING, Annotated, Any, Self
 

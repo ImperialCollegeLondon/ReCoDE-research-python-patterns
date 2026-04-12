@@ -1,8 +1,15 @@
+"""
+Main module where the entry point to the code is defined
+"""
+
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
+# Enable locals to be shown to aid debugging
+# NOTE: Do not enable this if it will end up revealing secrets, e.g. passwords, ssh keys, API keys
+#       If a test fails in the CI, these secrets will be visible in the logs
 app = typer.Typer(pretty_exceptions_show_locals=True)
 
 
