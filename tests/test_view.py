@@ -33,6 +33,13 @@ class TestCLIView:
         cell_representation = view_instance.ALIVE_CELL if is_alive else view_instance.DEAD_CELL
         assert as_str == "\n".join(itertools.repeat(cell_representation * n_cols, n_row))
 
+    @pytest.mark.parametrize("multiplier", [-1, 2, 4, 5, 7])
+    @pytest.mark.parametrize("shape", [(2, 2), (5, 4), (4, 15)])
+    def test_map_to_str_not_ones_as_dead(self, view_instance: CliView, shape: tuple[int, int], multiplier: int) -> None:
+        as_str = view_instance.map_to_string(np.ones(shape, dtype=np.int8) * multiplier)
+        n_row, n_cols = shape
+        assert as_str == "\n".join(itertools.repeat(view_instance.DEAD_CELL * n_cols, n_row))
+
     def test_map_to_str_some_dead_or_alive(self, view_instance: CliView) -> None:
         as_str = view_instance.map_to_string(np.eye(2, dtype=np.uint8))
         alive, dead = view_instance.ALIVE_CELL, view_instance.DEAD_CELL
