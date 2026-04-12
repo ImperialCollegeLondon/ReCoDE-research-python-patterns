@@ -41,7 +41,7 @@ select = [
     "FURB", # refurb
     "RUF",  # Ruff-specific rules
 ]
-ignore = ["ISC001", "COM812"]
+ignore = ["ISC001", "COM812", "PLR2004"]
 
 [format]
 docstring-code-format = true
