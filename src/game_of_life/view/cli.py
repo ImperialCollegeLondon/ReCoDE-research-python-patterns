@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 
 
 class CliView(BaseView):
-    alive_cell: ClassVar[str] = "\u2588"  # Unicode for full block █
-    dead_cell: ClassVar[str] = " "
+    ALIVE_CELL: ClassVar[str] = "\u2588"  # Unicode for full block █
+    DEAD_CELL: ClassVar[str] = " "
 
     def __init__(self, refresh_per_second: int) -> None:
         super().__init__()
@@ -21,7 +21,7 @@ class CliView(BaseView):
         self.live_display: Live = Live(console=self.console, refresh_per_second=refresh_per_second, screen=True)
 
     def map_to_string(self, arr: np.ndarray) -> str:
-        chars = np.where(arr == 1, self.alive_cell, self.dead_cell)
+        chars = np.where(arr == 1, self.ALIVE_CELL, self.DEAD_CELL)
         return "\n".join("".join(row) for row in chars)
 
     @override
