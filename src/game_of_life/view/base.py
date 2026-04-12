@@ -6,6 +6,10 @@ if TYPE_CHECKING:
 
 
 class BaseView(ABC):
+    """
+    Interface which all view classes should inherit from.
+    """
+
     @abstractmethod
     def setup(self) -> None: ...
     @abstractmethod
