@@ -3,6 +3,7 @@ Test for the classes responsible for the interface which presents information to
 """
 
 import itertools
+from unittest.mock import Mock
 
 import numpy as np
 import pytest
@@ -50,3 +51,19 @@ class TestCLIView:
         target_output = "\nGame stopped.\n"
         assert captured.out == target_output
         assert captured.err == ""
+
+    def test_render(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
+        # Mock the GameOfLife class to isolate the functionality to be tested
+        mock_game = Mock()
+        mock_game.grid = np.ones((2, 2), dtype=np.uint8)
+        mock_game.generation = 1
+
+        view_instance.render(mock_game)
+
+        # No output to stdout or err as it goes in to a rich.LiveDisplay
+        captured = capsys.readouterr()
+        assert captured.out == ""
+        assert captured.err == ""
+
+        # Instance should not be invoked, only the properties which have been patched
+        mock_game.assert_not_called()
