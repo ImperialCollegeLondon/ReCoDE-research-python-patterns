@@ -14,6 +14,10 @@ from game_of_life.model import GameOfLife, GridCreator, PatternGridCreator, Rand
 
 
 class GridCreatorFactory:
+    """
+    Factory class which takes the config to create the GridCreator for the GameOfLife
+    """
+
     def __init__(self, input_config: GameOfLifeConfigFrom) -> None:
         self.input_config: GameOfLifeConfigFrom = input_config
 
@@ -42,6 +46,12 @@ class GridCreatorFactory:
 
 
 def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
+    """
+    Convenience method which takes the config and puts the args into the correct places to instantiate the GameOfLife
+
+    :param config: Configuration for the game of life
+    :return: GameOfLife
+    """
     return GameOfLife(config.num_rows, config.num_cols, grid_creator=GridCreatorFactory(config).create())
 
 
