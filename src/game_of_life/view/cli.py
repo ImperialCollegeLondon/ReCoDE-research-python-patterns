@@ -21,6 +21,7 @@ class CliView(BaseView):
         self.live_display: Live = Live(console=self.console, refresh_per_second=refresh_per_second, screen=True)
 
     def map_to_string(self, arr: np.ndarray) -> str:
+        assert arr.ndim == 2
         chars = np.where(arr == 1, self.ALIVE_CELL, self.DEAD_CELL)
         return "\n".join("".join(row) for row in chars)
 
