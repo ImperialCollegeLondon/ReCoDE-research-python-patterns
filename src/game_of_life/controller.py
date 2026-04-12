@@ -21,6 +21,10 @@ class GridCreatorFactory:
     def __init__(self, input_config: GameOfLifeConfigFrom) -> None:
         self.input_config: GameOfLifeConfigFrom = input_config
 
+    @staticmethod
+    def approximate_offset_to_center(full_length: int, to_center_length: int) -> int:
+        return (full_length // 2) - (to_center_length // 2)
+
     def create(self) -> GridCreator:
         match self.input_config.grid_initialiser:
             case GridInitialiser.ZEROS:
@@ -34,8 +38,8 @@ class GridCreatorFactory:
                     raise ValueError("Pattern must be specified for pattern grid initialiser")
                 target_pattern = self.input_config.pattern
                 # Approximately centre the pattern
-                row_offset = (self.input_config.num_rows // 2) - target_pattern.height // 2
-                col_offset = (self.input_config.num_cols // 2) - target_pattern.width // 2
+                row_offset = self.approximate_offset_to_center(self.input_config.num_rows, target_pattern.height)
+                col_offset = self.approximate_offset_to_center(self.input_config.num_cols, target_pattern.width)
                 return PatternGridCreator(target_pattern, row_offset=row_offset, col_offset=col_offset)
             case _ as unreachable:
                 assert_never(unreachable)
