@@ -12,6 +12,10 @@ if TYPE_CHECKING:
 
 
 class CliView(BaseView):
+    """
+    View interface for displaying in the command line
+    """
+
     ALIVE_CELL: ClassVar[str] = "\u2588"  # Unicode for full block █
     DEAD_CELL: ClassVar[str] = " "
 

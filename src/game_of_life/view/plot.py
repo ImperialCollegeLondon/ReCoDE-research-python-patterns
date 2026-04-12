@@ -7,6 +7,10 @@ if TYPE_CHECKING:
 
 
 class PlotView(BaseView):
+    """
+    View interface for displaying/exporting with matplotlib
+    """
+
     def __init__(self) -> None:
         super().__init__()
 
