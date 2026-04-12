@@ -36,3 +36,17 @@ class TestCLIView:
         as_str = view_instance.map_to_string(np.eye(2, dtype=np.uint8))
         alive, dead = view_instance.ALIVE_CELL, view_instance.DEAD_CELL
         assert as_str == f"{alive}{dead}\n{dead}{alive}"
+
+    def test_setup(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
+        view_instance.setup()
+        captured = capsys.readouterr()
+        target_output = "Conway's Game of Life\nPress Ctrl+C to stop\n\n"
+        assert captured.out == target_output
+        assert captured.err == ""
+
+    def test_teardown(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
+        view_instance.teardown()
+        captured = capsys.readouterr()
+        target_output = "\nGame stopped.\n"
+        assert captured.out == target_output
+        assert captured.err == ""
