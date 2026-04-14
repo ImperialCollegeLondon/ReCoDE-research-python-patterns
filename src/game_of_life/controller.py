@@ -86,9 +86,7 @@ def execute_game_of_life(
     # view: BaseView,
     num_generations: int | None,
 ) -> None:
-    # view.setup()
-    for _ in GoLIterator(num_generations):
+    # with view as opened_view:
+    for _ in GoLIterator(num_generations):  # indent once view class is merged
         # view.render(game)
         game.step()
-
-    # view.teardown()
