@@ -26,8 +26,10 @@ class GridCreatorFactory:
         return (full_length // 2) - (to_center_length // 2)
 
     def create(self) -> GridCreator:
+        # As GridInitialiser is an enum, it can only have values equal to the members defined in the class. This allows
+        # us to match different branches (like with `if` statements) directly to these values.
         match self.input_config.grid_initialiser:
-            case GridInitialiser.ZEROS:
+            case GridInitialiser.ZEROS:  # equivalent to: if self.input_config.grid_initialiser == GridInitialiser.ZEROS
                 return ZerosGridCreator()
             case GridInitialiser.RANDOM:
                 if self.input_config.density is not None:
@@ -42,6 +44,11 @@ class GridCreatorFactory:
                 col_offset = self.approximate_offset_to_center(self.input_config.num_cols, target_pattern.width)
                 return PatternGridCreator(target_pattern, row_offset=row_offset, col_offset=col_offset)
             case _ as unreachable:
+                # A benefit of using match ... case syntax on an Enum is that python's type checking system allow us to
+                # perform exhaustiveness checking. The `assert_never` signals to the reader and the type checker
+                # that all possible cases should be handled such that this code is unreachable. If not all cases
+                # have been handled, then the type checker will throw an error.
+                # At runtime, this will also raise an AssertionError if this branch is hit.
                 assert_never(unreachable)
 
 
