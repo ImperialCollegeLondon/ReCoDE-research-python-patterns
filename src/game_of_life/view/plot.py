@@ -50,8 +50,6 @@ class PlotView(BaseView):
 
     @override
     def teardown(self) -> None:
-        assert self._frame_artists, "List of artists must not be empty"
-
         animated = animation.ArtistAnimation(
             self.fig,
             self._frame_artists,
