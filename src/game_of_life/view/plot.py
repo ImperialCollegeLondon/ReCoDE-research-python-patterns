@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar, override
+from typing import TYPE_CHECKING, Any, ClassVar, Self, override
 
 from matplotlib import animation
 from matplotlib import pyplot as plt
@@ -37,19 +37,20 @@ class PlotView(BaseView):
         self._frame_artists = []
 
     @override
-    def setup(self) -> None:
+    def __enter__(self) -> Self:
         _ = self.fig.suptitle("Game of Life")
 
         # Disable axis ticks
         _ = self.ax.set_xticks([])
         _ = self.ax.set_yticks([])
+        return self
 
     @override
     def render(self, game: "GameOfLife") -> None:
         self._frame_artists.append([self.ax.imshow(game.grid, cmap=self._cmap, interpolation="nearest")])
 
     @override
-    def teardown(self) -> None:
+    def __exit__(self, *exc_details: Any) -> None:
         animated = animation.ArtistAnimation(
             self.fig,
             self._frame_artists,

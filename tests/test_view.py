@@ -12,6 +12,9 @@ from game_of_life.view.cli import CliView
 
 
 class TestCLIView:
+    _print_on_start: str = "Conway's Game of Life\nPress Ctrl+C to stop\n\n"
+    _print_on_stop: str = "\nGame stopped.\n"
+
     @pytest.fixture
     def view_instance(self) -> CliView:
         return CliView(1)
@@ -46,17 +49,22 @@ class TestCLIView:
         assert as_str == f"{alive}{dead}\n{dead}{alive}"
 
     def test_setup(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
-        view_instance.setup()
+        view_instance.__enter__()
         captured = capsys.readouterr()
-        target_output = "Conway's Game of Life\nPress Ctrl+C to stop\n\n"
-        assert captured.out == target_output
+        assert captured.out == self._print_on_start
         assert captured.err == ""
 
     def test_teardown(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
-        view_instance.teardown()
+        view_instance.__exit__(None, None, None)
         captured = capsys.readouterr()
-        target_output = "\nGame stopped.\n"
-        assert captured.out == target_output
+        assert captured.out == self._print_on_stop
+        assert captured.err == ""
+
+    def test_as_context_manager(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:
+        with view_instance:
+            pass
+        captured = capsys.readouterr()
+        assert captured.out == f"{self._print_on_start}{self._print_on_stop}"
         assert captured.err == ""
 
     def test_render(self, view_instance: CliView, capsys: pytest.CaptureFixture[str]) -> None:

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, ClassVar, override
+from typing import TYPE_CHECKING, Any, ClassVar, Self, override
 
 import numpy as np
 from rich.console import Console
@@ -30,10 +30,11 @@ class CliView(BaseView):
         return "\n".join("".join(row) for row in chars)
 
     @override
-    def setup(self) -> None:
+    def __enter__(self) -> Self:
         self.console.print("[bold cyan]Conway's Game of Life[/bold cyan]")
         self.console.print("[dim]Press Ctrl+C to stop[/dim]\n")
         self.live_display.start()
+        return self
 
     @override
     def render(self, game: "GameOfLife") -> None:
@@ -44,6 +45,6 @@ class CliView(BaseView):
         self.live_display.update(panel)
 
     @override
-    def teardown(self) -> None:
+    def __exit__(self, *exc_details: Any) -> None:
         self.console.print("\n[yellow]Game stopped.[/yellow]")
         self.live_display.stop()
