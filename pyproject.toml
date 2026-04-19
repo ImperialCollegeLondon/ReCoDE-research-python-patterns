@@ -43,3 +43,10 @@ build-backend = "uv_build"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules" # Runs examples in docstring as tests
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "NUMBER"
+]
