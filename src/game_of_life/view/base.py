@@ -2,7 +2,7 @@
 
 This module defines the abstract base class that all view implementations must inherit from.
 Views are responsible for displaying the current state of the Game of Life simulation
-to the user through various output methods (terminal, graphics, web, etc.).
+to the user through various output methods (e.g. terminal, etc.).
 """
 
 from abc import abstractmethod
