@@ -109,8 +109,7 @@ class CliView(BaseView):
         >>> import numpy as np
         >>> view = CliView(refresh_per_second=10)
         >>> grid = np.array([[1, 0], [0, 1]], dtype=np.uint8)
-        >>> output = view.map_to_string(grid)
-        >>> print(output)
+        >>> view.map_to_string(grid)
         █
          █
 

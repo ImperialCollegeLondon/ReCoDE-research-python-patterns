@@ -6,17 +6,6 @@ handling of different grid dimensions and cell states.
 
 These tests ensure that visualization output is correct and serve as documentation
 on how the view components work.
-
-Examples
---------
-Tests can be run using pytest:
-
-    pytest tests/test_view.py
-
-With uv, the command will be:
-
-    uv run pytest tests/test_view.py
-
 """
 
 import itertools

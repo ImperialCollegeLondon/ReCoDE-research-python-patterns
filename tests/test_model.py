@@ -8,17 +8,6 @@ This test module validates the core game logic including:
 
 These tests ensure the game engine behaves correctly according to Conway's
 Game of Life rules.
-
-Examples
---------
-Tests can be run using pytest:
-
-    pytest tests/test_model.py
-
-With uv, the command will be:
-
-    uv run pytest tests/test_model.py
-
 """
 
 import numpy as np
