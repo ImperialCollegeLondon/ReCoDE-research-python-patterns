@@ -32,7 +32,7 @@ from game_of_life.controller import create_game_of_life, execute_game_of_life
 app = typer.Typer(pretty_exceptions_show_locals=True)
 
 
-def _view_factory(run_config: RunConfig) -> None:
+def _create_view(run_config: RunConfig) -> None:
     """
     Factory function to create the appropriate view based on configuration.
 
@@ -112,7 +112,7 @@ def run(
     if run_config.interface == DisplayInterface.PLOT and generations is None:
         raise ValueError("Generations must be provided for plot interface")
 
-    _view_factory(run_config)
+    _create_view(run_config)
     game = create_game_of_life(run_config.gol_config)
     execute_game_of_life(game, generations)
 
