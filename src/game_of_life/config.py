@@ -114,14 +114,15 @@ class FromYaml(BaseModel):
         Uses `yaml.safe_load()` for security, preventing arbitrary code execution
         from untrusted YAML files.
         """
-        if path.is_file():
-            # Default mode of open is "r" => read. It is specified here to make it explicit
-            with path.open(mode="r", encoding="utf-8") as f:
-                data: dict[Hashable, Any] = yaml.safe_load(f)
+        if not path.is_file():
+            raise ValueError("Configuration file not found or is not a file.")
 
-            # raises ValidationError if it fails
-            return cls.model_validate(data)
-        raise ValueError("Configuration file not found or is not a file.")
+        # Default mode of open is "r" => read. It is specified here to make it explicit
+        with path.open(mode="r", encoding="utf-8") as f:
+            data: dict[Hashable, Any] = yaml.safe_load(f)
+
+        # raises ValidationError if it fails
+        return cls.model_validate(data)
 
 
 class GameOfLifeConfigFrom(FromYaml):
