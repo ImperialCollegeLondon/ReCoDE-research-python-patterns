@@ -162,7 +162,7 @@ class PlotView(BaseView):
 
     @override
     def __exit__(self, *exc_details: Any) -> None:
-        """Exit the context manager and create/save the animation.
+        """Exit magic method for plotting context manager.
 
         This method is called when exiting a `with` block. It combines all collected
         frames into an animation and either displays it on screen or saves it to file,

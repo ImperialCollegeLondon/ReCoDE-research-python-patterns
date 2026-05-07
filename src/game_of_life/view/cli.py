@@ -165,7 +165,7 @@ class CliView(BaseView):
 
     @override
     def __exit__(self, *exc_details: Any) -> None:
-        """Exit the context manager for the CLI view.
+        """Exit magic method for CLI context manager.
 
         This method is called when exiting a `with` block. It cleans up resources
         by stopping the live display and printing a final message.
