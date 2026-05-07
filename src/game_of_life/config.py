@@ -167,9 +167,9 @@ class DisplayInterface(StrEnum):
     Attributes
     ----------
     CLI : str
-        Command-line interface for displaying the simulation.
+        String constant to specify the command-line interface for displaying the simulation.
     PLOT : str
-        Plotting/visualization interface for displaying the simulation.
+        String constant to specify the plotting/visualization interface for displaying the simulation.
 
     Design Patterns
     ---------------
