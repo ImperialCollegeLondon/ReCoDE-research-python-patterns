@@ -115,9 +115,9 @@ class FromYaml(BaseModel):
         from untrusted YAML files.
         """
         if path.is_file():
-            data: dict[Hashable, Any] = {}
-            with path.open(mode="r") as f:
-                data = yaml.safe_load(f)
+            # Default mode of open is "r" => read. It is specified here to make it explicit
+            with path.open(mode="r", encoding="utf-8") as f:
+                data: dict[Hashable, Any] = yaml.safe_load(f)
 
             # raises ValidationError if it fails
             return cls.model_validate(data)
