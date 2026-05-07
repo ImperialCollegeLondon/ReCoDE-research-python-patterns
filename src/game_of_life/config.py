@@ -219,7 +219,7 @@ class PlotViewConfig(BaseModel):
     output_dir : DirectoryPath
         Directory path where output plots will be saved. Must be a valid directory.
     output_filename : str
-        Name of the output file (e.g., 'simulation.png').
+        Name of the output file (e.g., 'simulation.gif').
     """
 
     output_dir: DirectoryPath
