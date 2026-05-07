@@ -115,6 +115,8 @@ class CliView(BaseView):
 
         """
         assert arr.ndim == 2
+        if arr.ndim != 2:
+            raise ValueError("Array must have two dimensions")
         chars = np.where(arr == 1, self.ALIVE_CELL, self.DEAD_CELL)
         return "\n".join("".join(row) for row in chars)
 
