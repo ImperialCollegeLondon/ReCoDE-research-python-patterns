@@ -86,7 +86,7 @@ class CliView(BaseView):
         self.live_display: Live = Live(console=self.console, refresh_per_second=refresh_per_second, screen=True)
 
     def map_to_string(self, arr: np.ndarray) -> str:
-        """Convert a 2D numpy array to a string representation.
+        r"""Convert a 2D numpy array to a string representation.
 
         This method transforms the numeric grid (where 1 represents live cells and
         0 represents dead cells) into a visual string format using Unicode characters.
@@ -110,6 +110,8 @@ class CliView(BaseView):
         >>> view = CliView(refresh_per_second=10)
         >>> grid = np.array([[1, 0], [0, 1]], dtype=np.uint8)
         >>> view.map_to_string(grid)
+        '█ \n █'
+        >>> print(view.map_to_string(grid))
         █
          █
 
