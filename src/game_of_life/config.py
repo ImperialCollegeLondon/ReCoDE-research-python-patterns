@@ -9,6 +9,13 @@ Notes
 -----
 The module uses Pydantic's validation system to enforce constraints on configuration
 values, such as positive integers and proportions between 0 and 1.
+
+TODO: Add this to docs pages as well
+When a field uses an Enum in a Pydantic model, Pydantic automatically
+validates that the input matches one of these enum values. Invalid inputs
+raise a ValidationError. This is a form of declarative validation - the valid
+values are declared in the enum definition, and Pydantic handles the actual
+validation without requiring manual implementation.
 """
 
 from enum import StrEnum
@@ -181,11 +188,8 @@ class DisplayInterface(StrEnum):
     This demonstrates using enums for creating type-safe, enumerated constants
     that can be easily validated and serialized.
 
-    When a field uses DisplayInterface in a Pydantic model, Pydantic automatically
-    validates that the input matches one of these enum values. Invalid inputs
-    raise a ValidationError. This is a form of declarative validation - the valid
-    values are declared in the enum definition, and Pydantic handles the actual
-    validation without requiring manual implementation.
+    TODO: Add the link to the documentation page when it iscreated
+    See module docstring or this documentation page.
 
     """
 
