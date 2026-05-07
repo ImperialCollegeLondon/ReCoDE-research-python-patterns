@@ -99,6 +99,8 @@ class GridCreatorFactory:
         >>> GridCreatorFactory.approximate_offset_to_center(50, 31)
         10
         """
+        if full_length < to_center_length:
+            raise ValueError("Full length must be greater than length to center")
         return (full_length // 2) - (to_center_length // 2)
 
     def create(self) -> GridCreator:
