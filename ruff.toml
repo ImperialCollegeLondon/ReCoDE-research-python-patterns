@@ -30,6 +30,7 @@ select = [
     "PERF", # Linter for performance anti-patterns
     "PL",   # pylint - static code analyser
     "UP",   # Upgrade old Python syntax
+    "D",    # pydocstyle
     #"PD",  # linter for pandas
 
     "BLE",  # flake8-blind-except
@@ -41,10 +42,13 @@ select = [
     "FURB", # refurb
     "RUF",  # Ruff-specific rules
 ]
-ignore = ["ISC001", "COM812"]
+ignore = ["ISC001", "COM812", "PLR2004"]
+
+[lint.pydocstyle]
+convention = "numpy"
 
 [format]
 docstring-code-format = true
 
 [lint.extend-per-file-ignores]
-"tests/*.py" = ["PLR2004"]
+"tests/*.py" = ["PLR2004", "D"]

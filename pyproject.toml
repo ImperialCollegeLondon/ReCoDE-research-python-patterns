@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "matplotlib",
     "numpy",
     "pydantic",
     "pyyaml",
@@ -43,3 +44,10 @@ game-of-life = "game_of_life.main:app" # Allows CLI to be launched in venv using
 [build-system]
 requires = ["uv_build>=0.10.8,<0.11.0"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules" # Runs examples in docstring as tests
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "NUMBER"
+]

@@ -34,7 +34,7 @@ app = typer.Typer(pretty_exceptions_show_locals=True)
 
 def _create_view(run_config: RunConfig) -> None:
     """
-    Factory function to create the appropriate view based on configuration.
+    Create the appropriate view based on configuration using the Factory Pattern.
 
     This is a private function that demonstrates the Factory Pattern. It takes
     a RunConfig and instantiates the appropriate view type based on the
