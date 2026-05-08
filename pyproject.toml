@@ -10,6 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "numpy",
     "pydantic",
+    "pyyaml",
     "typer",
 ]
 
@@ -32,13 +33,13 @@ dev = [
     "ty",   # Type checker and language server
 ]
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [project.scripts]
-game-of-life = "game_of_life:main"
+game-of-life = "game_of_life.main:app" # Allows CLI to be launched in venv using `game-of-life` command
 
 [build-system]
 requires = ["uv_build>=0.10.8,<0.11.0"]
 build-backend = "uv_build"
-
-[tool.pyright]
-venvPath = "."
-venv = ".venv"
