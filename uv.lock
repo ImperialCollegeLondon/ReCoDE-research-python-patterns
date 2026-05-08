@@ -527,6 +527,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pydantic" },
+    { name = "pyyaml" },
     { name = "typer" },
 ]
 
@@ -560,6 +561,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "pydantic" },
     { name = "python-markdown-math", marker = "extra == 'docs'", specifier = "==0.9" },
+    { name = "pyyaml" },
     { name = "typer" },
 ]
 provides-extras = ["docs"]
