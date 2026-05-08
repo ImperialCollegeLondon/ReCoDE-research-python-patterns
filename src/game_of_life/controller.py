@@ -164,8 +164,7 @@ class GridCreatorFactory:
 
 
 def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
-    """
-    Convenience wrapper to create a GameOfLife instance from configuration.
+    """Create a GameOfLife instance from configuration.
 
     This is a simple factory function that creates a GameOfLife instance
     using GridCreatorFactory to obtain the appropriate grid creator based
