@@ -11,15 +11,6 @@ The package provides:
 
 """
 
+from game_of_life.main import app
 
-def main() -> None:
-    """Entry point for the Game of Life application.
-
-    This is a placeholder method.
-
-    Returns
-    -------
-    None
-
-    """
-    print("Hello from game-of-life!")
+app()
