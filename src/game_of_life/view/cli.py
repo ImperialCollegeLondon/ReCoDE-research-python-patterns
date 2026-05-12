@@ -52,7 +52,7 @@ class CliView(BaseView):
     --------
     >>> from game_of_life.model import GameOfLife, RandomGridCreator
     >>> game = GameOfLife(grid_creator=RandomGridCreator())
-    >>> view = CliView(refresh_per_second=10)
+    >>> view = CliView(time_between_generations=0.1)
     >>> with view:
     ...     for _ in range(100):
     ...         view.render(game)
@@ -112,7 +112,7 @@ class CliView(BaseView):
         Examples
         --------
         >>> import numpy as np
-        >>> view = CliView(refresh_per_second=10)
+        >>> view = CliView(time_between_generations=0.2)
         >>> grid = np.array([[1, 0], [0, 1]], dtype=np.uint8)
         >>> view.map_to_string(grid)
         '█ \n █'

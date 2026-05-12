@@ -10,7 +10,3 @@ The package provides:
 - Pattern encoding in Run Length Encoded (RLE) format
 
 """
-
-from game_of_life.main import app
-
-app()

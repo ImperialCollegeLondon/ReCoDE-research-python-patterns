@@ -327,11 +327,6 @@ def execute_game_of_life(
     The simulation progresses by calling game.step() once per generation,
     which updates all cells according to the Game of Life rules.
 
-    Examples
-    --------
-    >>> config = GameOfLifeConfigFrom(num_rows=50, num_cols=50)
-    >>> game = create_game_of_life(config)
-    >>> execute_game_of_life(game, num_generations=100)
     """
     with view as opened_view:
         for _ in GoLIterator(num_generations):  # indent once view class is merged
