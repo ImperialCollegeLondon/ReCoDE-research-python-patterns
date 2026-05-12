@@ -329,6 +329,6 @@ def execute_game_of_life(
 
     """
     with view as opened_view:
-        for _ in GoLIterator(num_generations):  # indent once view class is merged
+        for _ in GoLIterator(num_generations):
             opened_view.render(game)
             game.step()
