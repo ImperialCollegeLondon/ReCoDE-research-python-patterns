@@ -26,6 +26,7 @@ from game_of_life.config import (
     GridInitialiser,
 )
 from game_of_life.model import GameOfLife, GridCreator, PatternGridCreator, RandomGridCreator, ZerosGridCreator
+from game_of_life.view.base import BaseView
 
 
 class GridCreatorFactory:
@@ -295,7 +296,7 @@ class GoLIterator:
 
 def execute_game_of_life(
     game: GameOfLife,
-    # view: BaseView,
+    view: BaseView,
     num_generations: int | None,
 ) -> None:
     """
@@ -332,7 +333,7 @@ def execute_game_of_life(
     >>> game = create_game_of_life(config)
     >>> execute_game_of_life(game, num_generations=100)
     """
-    # with view as opened_view:
-    for _ in GoLIterator(num_generations):  # indent once view class is merged
-        # view.render(game)
-        game.step()
+    with view as opened_view:
+        for _ in GoLIterator(num_generations):  # indent once view class is merged
+            opened_view.render(game)
+            game.step()
