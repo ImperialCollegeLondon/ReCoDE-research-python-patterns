@@ -10,16 +10,3 @@ The package provides:
 - Pattern encoding in Run Length Encoded (RLE) format
 
 """
-
-
-def main() -> None:
-    """Entry point for the Game of Life application.
-
-    This is a placeholder method.
-
-    Returns
-    -------
-    None
-
-    """
-    print("Hello from game-of-life!")

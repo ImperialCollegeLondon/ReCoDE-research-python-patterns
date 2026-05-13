@@ -25,6 +25,9 @@ import typer
 
 from game_of_life.config import CLIViewConfig, DisplayInterface, GameOfLifeConfigFrom, PlotViewConfig, RunConfig
 from game_of_life.controller import create_game_of_life, execute_game_of_life
+from game_of_life.view.base import BaseView
+from game_of_life.view.cli import CliView
+from game_of_life.view.plot import PlotView
 
 # Enable locals to be shown to aid debugging
 # NOTE: Do not enable this if it will end up revealing secrets, e.g. passwords, ssh keys, API keys
@@ -32,7 +35,7 @@ from game_of_life.controller import create_game_of_life, execute_game_of_life
 app = typer.Typer(pretty_exceptions_show_locals=True)
 
 
-def _create_view(run_config: RunConfig) -> None:
+def _create_view(run_config: RunConfig) -> BaseView:
     """
     Create the appropriate view based on configuration using the Factory Pattern.
 
@@ -67,11 +70,11 @@ def _create_view(run_config: RunConfig) -> None:
         case DisplayInterface.CLI:
             if not isinstance(run_config.view_config, CLIViewConfig):
                 raise ValueError("View config must be of type CLIViewConfig for CLI interface")
-            print("create cli view with CLIViewConfig")
+            return CliView(run_config.view_config.speed)
         case DisplayInterface.PLOT:
             if not isinstance(run_config.view_config, PlotViewConfig):
                 raise ValueError("View config must be of type PlotViewConfig for PLOT interface")
-            print("create plot view with PlotViewConfig")
+            return PlotView(output_path=run_config.view_config.output_dir / run_config.view_config.output_filename)
         case _ as unreachable:
             assert_never(unreachable)
 
@@ -112,15 +115,15 @@ def run(
     if run_config.interface == DisplayInterface.PLOT and generations is None:
         raise ValueError("Generations must be provided for plot interface")
 
-    _create_view(run_config)
+    view = _create_view(run_config)
     game = create_game_of_life(run_config.gol_config)
-    execute_game_of_life(game, generations)
+    execute_game_of_life(game, view, generations)
 
 
 @app.command()
 def cli(
     gol_config: Annotated[Path, typer.Argument(exists=True, file_okay=True, dir_okay=False, readable=True)],
-    speed: Annotated[float, typer.Option(help="Seconds between generations", min=0)] = 0.2,
+    speed: Annotated[float, typer.Option(help="Seconds between generations", min=0)] = 0.1,
     generations: Annotated[int | None, typer.Option(help="Number of generations", min=1)] = None,
 ) -> None:
     """
@@ -146,17 +149,17 @@ def cli(
     a CLI view rather than loading a complete RunConfig, providing easier
     command-line usage for the common CLI use case.
     """
-    print(f"display speed: {speed}")
-    print("directly instantiated the CLI view class")
+    # CliView class is directly instantiated. Parent class is provided as the type
+    cli_view: BaseView = CliView(speed)
     game = create_game_of_life(GameOfLifeConfigFrom.from_yaml(gol_config))
-    execute_game_of_life(game, generations)
+    execute_game_of_life(game, cli_view, generations)
 
 
 @app.command()
 def plot(
     gol_config: Annotated[Path, typer.Argument(exists=True, file_okay=True, dir_okay=False, readable=True)],
-    output_file: Annotated[Path, typer.Option(file_okay=True, dir_okay=False, writable=True)],
     generations: Annotated[int, typer.Option(help="Number of generations", min=1)] = 100,
+    output_file: Annotated[Path | None, typer.Option(file_okay=True, dir_okay=False, writable=True)] = None,
 ) -> None:
     """
     Run the Game of Life and save visualization plots.
@@ -183,8 +186,7 @@ def plot(
     fit well in the YAML configuration, offering flexibility for command-line
     usage.
     """
-    print(f"output file: {output_file}")
-    print(f"generations: {generations}")
-    print("directly instantiated the PLOT view class")
+    # PlotView class is directly instantiated. Parent class is provided as the type
+    plot_view: BaseView = PlotView(output_path=output_file)
     game = create_game_of_life(GameOfLifeConfigFrom.from_yaml(gol_config))
-    execute_game_of_life(game, generations)
+    execute_game_of_life(game, plot_view, generations)

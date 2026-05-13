@@ -5,6 +5,7 @@ using the rich library for formatted text output. The CLI view displays the game
 in real-time with live updates, showing the current generation and board state.
 """
 
+import time
 from typing import TYPE_CHECKING, Any, ClassVar, Self, override
 
 import numpy as np
@@ -51,7 +52,7 @@ class CliView(BaseView):
     --------
     >>> from game_of_life.model import GameOfLife, RandomGridCreator
     >>> game = GameOfLife(grid_creator=RandomGridCreator())
-    >>> view = CliView(refresh_per_second=10)
+    >>> view = CliView(time_between_generations=0.1)
     >>> with view:
     ...     for _ in range(100):
     ...         view.render(game)
@@ -67,7 +68,7 @@ class CliView(BaseView):
     ALIVE_CELL: ClassVar[str] = "\u2588"  # Unicode for full block █
     DEAD_CELL: ClassVar[str] = " "
 
-    def __init__(self, refresh_per_second: int) -> None:
+    def __init__(self, time_between_generations: float) -> None:
         """Initialize the CLI view.
 
         Parameters
@@ -83,7 +84,11 @@ class CliView(BaseView):
         """
         super().__init__()
         self.console: Console = Console()
+        # When time between generations is < 1, +1 is to guarantee that refresh rate is higher than frequency of data
+        # Otherwise, it can refresh twice a second and still be faster than the refresh rate
+        refresh_per_second: int = int(np.ceil(1 / time_between_generations)) + 1 if time_between_generations < 1 else 2
         self.live_display: Live = Live(console=self.console, refresh_per_second=refresh_per_second, screen=True)
+        self._time_between_gens: float = time_between_generations
 
     def map_to_string(self, arr: np.ndarray) -> str:
         r"""Convert a 2D numpy array to a string representation.
@@ -107,7 +112,7 @@ class CliView(BaseView):
         Examples
         --------
         >>> import numpy as np
-        >>> view = CliView(refresh_per_second=10)
+        >>> view = CliView(time_between_generations=0.2)
         >>> grid = np.array([[1, 0], [0, 1]], dtype=np.uint8)
         >>> view.map_to_string(grid)
         '█ \n █'
@@ -137,6 +142,7 @@ class CliView(BaseView):
         """
         self.console.print("[bold cyan]Conway's Game of Life[/bold cyan]")
         self.console.print("[dim]Press Ctrl+C to stop[/dim]\n")
+        time.sleep(1)
         self.live_display.start()
         return self
 
@@ -160,8 +166,14 @@ class CliView(BaseView):
         # Render the game board
         board = self.map_to_string(game.grid)
         # Create a panel with the current state
-        panel = Panel(board, title=f"[bold]Generation {game.generation}[/bold]", border_style="green")
+        panel = Panel(
+            board,
+            title=f"[bold cyan]Conway's Game of Life[/bold cyan] [bold]Generation {game.generation}[/bold]",
+            subtitle="[dim]Press Ctrl+C to stop[/dim]",
+            border_style="green",
+        )
         self.live_display.update(panel)
+        time.sleep(self._time_between_gens)
 
     @override
     def __exit__(self, *exc_details: Any) -> None:
