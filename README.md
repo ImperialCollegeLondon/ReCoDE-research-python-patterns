@@ -17,16 +17,18 @@ throughout the development and plan accordingly.
 
 
 <!-- Your exemplar title. Make it sound catchy! -->
-# This is my exemplar title
+# Research Python Patterns
 
 <!-- A brief description of your exemplar, which may include an image -->
-This is a brief abstract of my exemplar, which includes a representative image.
-![Scikit Camera Image](docs/assets/readme-img.png)
+This exemplar explores software design patterns, tools, and Python packages that make code development easier and more maintainable. Since not all design patterns translate well to a research context, the focus here is on patterns that are practical and beneficial for research workflows, including concepts such as coupling and cohesion, dependency injection, linting, and Model-View-Controller (MVC) architecture. To demonstrate these concepts in action, we use [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) as our working example, a well-defined yet rich problem.
+
+This is a gif of the [Gosper glider gun](https://conwaylife.com/wiki/Gosper_glider_gun) pattern.
+![game of life - space rake](docs/assets/gosper-glider-gun.gif)
 
 <!-- Author information -->
-This exemplar was developed at Imperial College London by (YOUR NAME) in
-collaboration with (RSE MENTOR) from Research Software Engineering and
-(RCDS MENTOR) from Research Computing & Data Science at the Early Career
+This exemplar was developed at Imperial College London by [Hui Ling Wong](https://profiles.imperial.ac.uk/hui.wong16) in
+collaboration with Alex Dewar from Research Software Engineering and
+Chris Cooling from Research Computing & Data Science at the Early Career
 Researcher Institute.
 
 
@@ -35,17 +37,20 @@ Aim for 3 - 4 points that illustrate what knowledge and
 skills will be gained by studying your ReCoDE exemplar. -->
 ## Learning Outcomes 🎓
 
-After completing this exemplar, students will:
+Software development comes with common pain points. After completing this exemplar, students will:
 
-- Learning Outcome 1
-- Learning Outcome 2
-- Learning Outcome 3
+- Understand how linters can catch and prevent common code quality issues.
+- Understand the pain points that design patterns solve and how to apply them in a research context.
+- Understand why unvalidated user input can cause problems and how packages such as `pydantic` and `typer` can help, with an introduction to dependency injection and type checking.
+- Understand how type hinting in Python reduces ambiguity and makes code easier to maintain.
+- Understand how tooling such as `pre-commit` and type checkers can catch errors before they become problems.
+- Understand how to build a Python command line tool to make your code more accessible and reusable.
 
 
 <!-- Audience. Think broadly as to who will benefit. -->
 ## Target Audience 🎯
 
-Who will benefit from studying this exemplar.
+Anyone working with Python.
 
 
 <!-- Requirements.
