@@ -27,8 +27,8 @@ This is a gif of the [Gosper glider gun](https://conwaylife.com/wiki/Gosper_glid
 
 <!-- Author information -->
 This exemplar was developed at Imperial College London by [Hui Ling Wong](https://profiles.imperial.ac.uk/hui.wong16) in
-collaboration with Alex Dewar from Research Software Engineering and
-Chris Cooling from Research Computing & Data Science at the Early Career
+collaboration with [Alexander Dewar](https://profiles.imperial.ac.uk/a.dewar) from Research Software Engineering and
+[Chris Cooling](https://profiles.imperial.ac.uk/c.cooling10) from Research Computing & Data Science at the Early Career
 Researcher Institute.
 
 
