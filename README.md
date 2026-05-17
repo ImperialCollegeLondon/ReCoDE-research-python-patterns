@@ -89,8 +89,7 @@ e.g. Step-by-step guide:
 <!-- Background. Tell learners about why this exemplar is useful. -->
 ## Disciplinary Background 🔬
 
-Briefly describe how this project fits in your discipline, why you chose
-to work on it, and what other disciplines may find it useful.
+One of the most common challenges in research software development is knowing how to structure code in a way that is maintainable, readable, and reusable. After all, the most frequent user of your own code is yourself, and past you and future you need to be able to communicate clearly through it. Alongside this, there is a wealth of tooling available that can make developing research software significantly easier, yet much of it remains unknown to most researchers. This exemplar was born out of the pain points encountered first-hand when writing research software, and aims to address those challenges in a practical and accessible way. As these are fundamentally generic software development issues, this exemplar is relevant and useful across all research disciplines.
 
 
 <!-- Software. What languages, libraries, software you use. -->
@@ -209,12 +208,15 @@ Completed tasks are marked with an x between the square brackets.
 <!-- Best practice notes. -->
 ## Best Practice Notes 📝
 
-- Code testing and/or test examples
-- Use of continuous integration (if any)
-- Any other software development best practices
+- Code testing and/or test examples with `pytest` and docstring tests
+- Use of continuous integration
+- Use of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
+- Use of design patterns, dependency injection, static type checking, linting and pre-commit
 
 <!-- Estimate the time it will take for a learner to progress through the exemplar. -->
 ## Estimated Time ⏳
+
+TO BE UPDATED ONCE THIS IS FINISHED!!!
 
 | Task       | Time    |
 | ---------- | ------- |
