@@ -66,12 +66,12 @@ you must include a relevant section that helps with learning this library.
 
 ### Academic 📚
 
-- Required skills/knowledge (e.g. programming languages, libraries, theory, courses)
+- Foundational understanding of the Python programming language
+- Familiarity with installing software and packages.
 
 ### System 💻
 
-- System requirements (e.g. Python 3.11+, Anaconda, 50 GB disk space, etc.)
-- Hardware or HPC requirements (if any)
+- Ability to install new software on the machine
 
 
 <!-- Quick Start Guide. Tell learners how to engage with the exemplar. -->
@@ -96,33 +96,50 @@ to work on it, and what other disciplines may find it useful.
 <!-- Software. What languages, libraries, software you use. -->
 ## Software Tools 🛠️
 
-Programming language(s), libraries, and scientific software used.
+Programming language: Python
+
+<!--This renders magically as a code snippet on GitHub-->
+Libraries:
+https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/pyproject.toml#L11-L15
+
 
 
 <!-- Repository structure. Explain how your code is structured. -->
 ## Project Structure 🗂️
 
-Overview of code organisation and structure.
+<!--Initially generated using `tree --gitignore` and shortened for brevity-->
 
 ```
 .
-├── notebooks
-│ ├── ex1.ipynb
-├── src
-│ ├── file1.py
-│ ├── file2.cpp
-│ ├── ...
-│ └── data
+├── LICENSE.md
+├── README.md
 ├── docs
-└── test
+│   ├── assets
+│   │   ├── favicon.ico
+│   │   ├── ...
+│   │   └── gosper-glider-gun.gif
+│   ├── content.md
+│   └── index.md
+├── mkdocs.yml
+├── pyproject.toml
+├── ruff.toml
+├── src/game_of_life
+│   ├── __init__.py
+│   ├── main.py
+│   ├── ...
+│   └── view
+├── tests
+│   ├── __init__.py
+│   ├── ...
+│   └── test_view.py
+└── uv.lock
 ```
 
 Code is organised into logical components:
 
-- `notebooks` for tutorials and exercises
-- `src` for core code, potentially divided into further modules
-- `data` within `src` for datasets
 - `docs` for documentation
+  - `assets` for static files like images that are used in the documentation
+- `src` for core code, potentially divided into further modules
 - `test` for testing scripts
 
 
@@ -188,14 +205,6 @@ Completed tasks are marked with an x between the square brackets.
 - [ ] Extended visualisation options
     * [ ] Creative task: Design a custom plot
 
-<!-- Data availability (remove this section if no data used) -->
-## Data 📊
-
-List datasets used with:
-
-- Licensing info
-- Where they are included (in the repo or external links)
-
 
 <!-- Best practice notes. -->
 ## Best Practice Notes 📝
@@ -216,7 +225,8 @@ List datasets used with:
 <!-- Any references, or other resources. -->
 ## Additional Resources 🔗
 
-- Relevant sources, websites, images, AOB.
+- Book: [Conway's Game of Life - Mathematics and Construction](https://conwaylife.com/book/) by Nathaniel Johnston and Dave Greene. DOI: [10.5281/zenodo.6097284](https://doi.org/10.5281/zenodo.6097284)
+- Webpage: [Game of Life Patterns](https://conwaylife.com/book/#rle_files)
 
 <!-- LICENCE.
 Imperial prefers BSD-3. Please update the LICENSE.md file with the current year.
