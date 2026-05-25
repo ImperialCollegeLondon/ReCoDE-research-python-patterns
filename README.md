@@ -107,7 +107,7 @@ Tools:
 <!--This renders magically as a code snippet on GitHub-->
 Libraries:
 1. `numpy` for working with arrays
-2. `pytest` for testing code
+2. [`pytest`](https://docs.pytest.org/en/stable/) for testing code
 3. `matplotlib` for creating plots
 4. `pydantic` for handling input from users
 5. `pyyaml` for loading configuration files from [yaml file format](https://yaml.org/)
@@ -157,7 +157,7 @@ Code is organised into logical components:
 <!-- Best practice notes. -->
 ## Best Practice Notes 📝
 
-- Code testing and/or test examples with `pytest` and docstring tests
+- Code testing and/or test examples with [`pytest`](https://docs.pytest.org/en/stable/) and docstring tests
 - Use of continuous integration
 - Use of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
 - Use of design patterns, dependency injection, static type checking, linting and pre-commit
