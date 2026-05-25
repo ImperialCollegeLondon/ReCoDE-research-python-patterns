@@ -41,9 +41,9 @@ Software development comes with common pain points. After completing this exempl
 
 - Understand how linters can catch and prevent common code quality issues.
 - Understand the pain points that design patterns solve and how to apply them in a research context.
-- Understand why unvalidated user input can cause problems and how packages such as `pydantic` and `typer` can help, with an introduction to dependency injection and type checking.
+- Understand why unvalidated user input can cause problems and how packages such as [`pydantic`](https://pydantic.dev/docs/validation/latest/get-started/) and [`typer`](https://typer.tiangolo.com/) can help, with an introduction to dependency injection and type checking.
 - Understand how type hinting in Python reduces ambiguity and makes code easier to maintain.
-- Understand how tooling such as `pre-commit` and type checkers can catch errors before they become problems.
+- Understand how tooling such as [`pre-commit`](https://pre-commit.com/) and type checkers can catch errors before they become problems.
 - Understand how to build a Python command line tool to make your code more accessible and reusable.
 
 
