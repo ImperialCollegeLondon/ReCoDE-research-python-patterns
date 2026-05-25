@@ -198,8 +198,111 @@ $ ruff format .
 
 ## Git Commit Hooks
 
-- What are these hooks? Tools like `prek` and `pre-commit` do this job
-- Link this to the pyproject.toml
-- Explain what is going on in the .pre-commit-config.yaml file
-- Explain that ruff is invoked during this process so it runs to check that everything is sound statically and before any bad code is committed. This helps to keep a cleaner git history too
-- Don't go into details about `pyright` as that would be covered in the next tutorial
+### What Are Git Commit Hooks?
+
+Git allows you to automatically run scripts at certain points in the version control workflow, these are called *hooks*. A pre-commit hook runs automatically just before you commit, giving you an opportunity to check your work and reject the commit if issues are found. Pre-commit hooks are invaluable for maintaining code quality because they prevent bad code from entering your repository in the first place. Rather than discovering problems after commit (during code review or CI/CD), hooks catch them in your local workflow.
+
+Without automation, pre-commit checks require discipline and manual execution. The tools like [`pre-commit`](https://pre-commit.com/) and [`prek`](https://prek.j178.dev/) makes managing these hooks easy: it reads a configuration file, installs the hooks into your repository, and runs them automatically when you commit.
+
+In this project, both `pre-commit` and [`prek`](https://prek.j178.dev/) can be used to run the hooks. The latter does not need any additional set up as it part of the development dependencies. Simply activate the Python environment with the development dependencies to use it.
+
+### Managing Hooks with `prek`
+
+This project uses the `prek` to manage git hooks. As it is specified as a development dependency, it will be installed in the Python environment which has been synced using the `uv sync --all-extras` command. The [quick start guide](https://prek.j178.dev/quickstart/#new-to-pre-commit-style-workflows) in the documentation contains more information generic set up.
+
+The configuration is for this project is specified in `.pre-commit-config.yaml`:
+
+```yaml title=".pre-commit-config.yaml"
+{%
+    include-markdown "../.pre-commit-config.yaml"
+%}
+```
+
+This file declares which "repositories" (tools) should be run as hooks, along with their versions and which specific hooks to execute from each tool.
+
+#### Understanding Each Hook Repository
+
+**Pre-commit hooks (basic checks)**: The first repository provides general-purpose checks managed by the pre-commit framework itself:
+- `trailing-whitespace`: Removes trailing whitespace at the end of lines
+- `end-of-file-fixer`: Ensures files end with exactly one newline
+- `check-added-large-files`: Prevents accidentally committing large files
+- `check-case-conflict`: Detects files that differ only in case (problematic on case-insensitive filesystems)
+- `check-toml`: Validates that TOML files (like `pyproject.toml`) are syntactically correct
+- `check-yaml`: Validates YAML files
+
+**Ruff hooks (linting and formatting)**: The ruff-pre-commit repository runs your configured linting and formatting checks:
+- `ruff-check --fix`: Automatically fixes linting issues that can be auto-corrected
+- `ruff-format`: Formats code to match the configured style
+
+These hooks apply the same rules defined in `ruff.toml`, ensuring that all code entering the repository meets the project's code quality standards.
+
+**UV lock hook**: The `uv-lock` hook ensures that `uv.lock` is kept in sync with `pyproject.toml`. When you add or modify dependencies, this hook will update the lockfile automatically.
+
+**Type checking (pyright)**: The `pyright` hook runs static type analysis to catch type mismatches. Type checking is detailed in a [separate tutorial](2-types-tutorial.md); it's mentioned here only to show how it's integrated into the commit workflow.
+
+#### Workflow in Practice
+
+##### Before committing
+
+Before attempting to commit, the hooks can be run using `prek -a`. The example below shows a case where the formatting of the file had failed. As the issue can be fixed automatically, the hook fixes it.
+
+```console
+$ prek -a
+trim trailing whitespace.................................................Failed
+- hook id: trailing-whitespace
+- exit code: 1
+- files were modified by this hook
+
+  Fixing docs/1-tooling.md
+fix end of files.........................................................Passed
+check for added large files..............................................Passed
+check for case conflicts.................................................Passed
+check toml...............................................................Passed
+check yaml...............................................................Passed
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+uv-lock..................................................................Passed
+pyright..................................................................Passed
+```
+
+When `prek` is run again, all the checks pass,
+
+```console
+$ prek -a
+trim trailing whitespace.................................................Passed
+fix end of files.........................................................Passed
+check for added large files..............................................Passed
+check for case conflicts.................................................Passed
+check toml...............................................................Passed
+check yaml...............................................................Passed
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+uv-lock..................................................................Passed
+pyright..................................................................Passed
+```
+
+##### Making a commit
+
+When you attempt to commit:
+
+```console
+$ git commit -m "feat: Add feature"
+```
+
+Pre-commit automatically runs all configured hooks on the staged files. If any hook fails, your commit is blocked:
+
+```
+ruff check failed
+...
+# Fix the issues, then:
+$ git add .
+$ git commit -m "Add feature"  # Try again
+```
+
+Once all hooks pass, the commit succeeds.
+
+### Shift Left on Quality
+
+The term ["shift left"](https://en.wikipedia.org/wiki/Shift-left_testing) refers to catching issues as early as possible in development—moving quality checks leftward on the timeline from "after deployment" to "before commit". Pre-commit hooks are a means to achieving it. It helps by catching problems locally, before they ever reach a pull request or shared branch. This makes code review more productive (reviewers focus on logic, not formatting) and keeps the git history clean and consistent.
+
+In research software, where reproducibility depends on having a clear record of what was tested and why, maintaining a clean commit history via pre-commit hooks is particularly valuable.
