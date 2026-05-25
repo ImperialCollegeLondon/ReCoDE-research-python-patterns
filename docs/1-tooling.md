@@ -19,6 +19,23 @@ In addition to this, there another two features which makes `uv` a great tool. F
 A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://www.software.ac.uk/news/introducing-2026-fellowship-cohort-insights-and-celebrations).
 Instead, it is a general-purpose configuration file for Python projects which can be used beyond packaging for specifying settings for tools or dependencies.
 
+The `pyproject.toml` file can also be used to configure specify the entry point to your python project. For example, this project is a command line tool for users to run the game of life. Once the project is installed into the virtual environment (see [getting started for details](index.md#getting-started)), the tool can be run in the terminal, e.g. `game-of-life --help`.
+This is possible by through the [`[project.scripts]`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts),
+
+```toml title="pyproject.toml"
+{%
+    include-markdown "../pyproject.toml"
+    start="venv = \".venv\""
+    end="[build-system]"
+%}
+```
+
+In English the `game_of_life.main:app` reads as,
+
+- `game_of_life` $\Rightarrow$ go to the package called `game_of_life` defined in [`src/game_of_life/__init__.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/__init__.py)
+- `.main` $\Rightarrow$ in that package go to the module called `main` defined in [`src/game_of_life/main.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py)
+- `:app` $\Rightarrow$ invoke the function stored in the [variable called `app`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35)
+
 #### Adding dependencies to `pyproject.toml` with `uv`
 
 When using `conda`, dependencies are usually specified using an `environment.yml` file. When using `pip`, dependencies are specified using a `requirements.txt` file. The equivalent of this in the `pyproject.toml` is to specify `dependencies` under the `[project]` table. For this project, it has been specified as,
