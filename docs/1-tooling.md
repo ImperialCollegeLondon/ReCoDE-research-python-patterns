@@ -1,15 +1,18 @@
 # Tooling
 
-outline: Three main tools `uv`, linting using `ruff` and `pre-commit`
+This page explores three core tools that strengthen research software development: `uv` for dependency and environment management, `ruff` for automated linting and formatting, and `pre-commit` hooks for quality gates. Beyond `uv`, the latter two act as automated safeguards—they catch mistakes before you run your code, saving valuable debugging time.
 
-This page will explain what each of them are and their relationship, and how/why they are useful tools for research and make life easier when developing. Other than `uv` the others are about safe guards and spotting mistakes early so you don't need to wait how ever long it takes to run your code to spot a mistake.
+## Overview
+
+- `uv`: A fast, modern Python package manager and environment manager that integrates with `pyproject.toml` and produces reproducible lock files
+- `ruff`: A unified linter and formatter that enforces code style and catches common errors automatically
+- `pre-commit` hooks: Automated checks that run before each git commit, preventing problematic code from entering your repository
+- `ty` and `pyright`: Static type checkers which will be covered in the [next tutorial](2-type-hinting.md).
 
 
 ## Python Environment Management
 
-[`uv`](https://docs.astral.sh/uv/) is a Python package manager similar to `pip` and [`conda`](https://www.anaconda.com/docs/main). One of the key advantages of `uv` over `conda` is its significantly faster performance. Moreover, `uv` can install and manage the python version so you won't need to install python on your own.
-
-In addition to this, there another two features which makes `uv` a great tool. Firstly, is that it integrates with the `pyproject.toml` file. Secondly, that it has a universal lockfile (`uv.lock`).
+[`uv`](https://docs.astral.sh/uv/) is a Python package manager and environment manager, similar to `pip` and [`conda`](https://www.anaconda.com/docs/main). It offers a few advantages over those tools, namely: substantial performance improvements over `conda`, automatic Python version installation and management, integration with `pyproject.toml`, and a universal lock file (`uv.lock`) for reproducible environments.
 
 ### What is the `pyproject.toml` file? And how does it integrate with `uv`
 
@@ -19,8 +22,7 @@ In addition to this, there another two features which makes `uv` a great tool. F
 A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://www.software.ac.uk/news/introducing-2026-fellowship-cohort-insights-and-celebrations).
 Instead, it is a general-purpose configuration file for Python projects which can be used beyond packaging for specifying settings for tools or dependencies.
 
-The `pyproject.toml` file can also be used to configure specify the entry point to your python project. For example, this project is a command line tool for users to run the game of life. Once the project is installed into the virtual environment (see [getting started for details](index.md#getting-started)), the tool can be run in the terminal, e.g. `game-of-life --help`.
-This is possible by through the [`[project.scripts]`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts),
+The `pyproject.toml` file can also specify the entry point for your Python project. This is how users invoke your code from the command line. This project is a command-line tool for running Conway's Game of Life. Once installed into the virtual environment (see [getting started](index.md#getting-started)), users can invoke it with `game-of-life --help`. This is configured via the [`[project.scripts]`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts) section:
 
 ```toml title="pyproject.toml"
 {%
@@ -30,11 +32,11 @@ This is possible by through the [`[project.scripts]`](https://packaging.python.o
 %}
 ```
 
-In English the `game_of_life.main:app` reads as,
+The entry point `game_of_life.main:app` can be broken down as follows:
 
-- `game_of_life` $\Rightarrow$ go to the package called `game_of_life` defined in [`src/game_of_life/__init__.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/__init__.py)
-- `.main` $\Rightarrow$ in that package go to the module called `main` defined in [`src/game_of_life/main.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py)
-- `:app` $\Rightarrow$ invoke the function stored in the [variable called `app`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35)
+- `game_of_life` $\Rightarrow$ the package defined in [`src/game_of_life/__init__.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/__init__.py)
+- `.main` $\Rightarrow$ the module defined in [`src/game_of_life/main.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py)
+- `:app` $\Rightarrow$ the callable function stored in the [variable `app`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35)
 
 #### Adding dependencies to `pyproject.toml` with `uv`
 
@@ -48,7 +50,7 @@ When using `conda`, dependencies are usually specified using an `environment.yml
 %}
 ```
 
-`uv` integrates with the `pyproject.toml` file as you can add a dependency using the [`uv add` command](https://docs.astral.sh/uv/reference/cli/#uv-add). For example here, to add `matplotlib` as a dependency it would be
+`uv` integrates with `pyproject.toml` through the [`uv add` command](https://docs.astral.sh/uv/reference/cli/#uv-add). For example, to add `matplotlib` as a dependency:
 
 ```console
 $ uv add matplotlib
@@ -65,9 +67,7 @@ This would add `matplotlib` under `dependencies`.
     ```
     For more info about the differences, [check this page out](https://pydevtools.com/handbook/explanation/what-are-optional-dependencies-and-dependency-groups/)
 
-
-
-Optional dependencies in a `pyproject.toml` are dependencies which provide optional features that some users may want. For example, in one of our dependencies, `pydantic`, it has [two optional dependencies](https://pydantic.dev/docs/validation/latest/get-started/install/#optional-dependencies): `email` and `timezone`. These features are useful but not every use may want to have them. For this project, running the documentation locally is an optional feature for users, as such they have been placed in a `docs` group as follows,
+Optional dependencies are features that some users may want, but not all require. For example, `pydantic` offers [two optional dependencies](https://pydantic.dev/docs/validation/latest/get-started/install/#optional-dependencies): `email` and `timezone`. In this project, documentation tools are grouped as an optional `docs` feature, allowing users who don't need documentation to avoid installing the extra dependencies:
 
 ```toml title="pyproject.toml"
 [project.optional-dependencies]
@@ -93,7 +93,7 @@ The specifics on what each of these dependencies are and why they are useful wil
 For more information about dependency groups, [see this webpage on dependency group in uv](https://pydevtools.com/handbook/explanation/understanding-dependency-groups-in-uv/).
 
 !!! info
-    The main difference between optional dependencies and dependency groups is at the packaging level. If you're not planning to package your code, then there isn't much of a different even though it is good practice to separate it accordingly.
+    The main difference between optional dependencies and dependency groups lies at the packaging level. If you're not planning to distribute your code as a package, the distinction matters less, though it remains good practice to organise them appropriately.
 
 `uv`'s [documentation on managing dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/) has more information about the different types of dependencies and how to manage them.
 
@@ -103,15 +103,15 @@ For more information about dependency groups, [see this webpage on dependency gr
 
 One of the most common frustrations in software development is when code works perfectly on your machine but fails on someone else's. This is often down to differences in the versions of dependencies being used, a problem that gets worse the longer dependencies go without being updated and can quickly spiral into what is known as [dependency hell](https://en.wikipedia.org/wiki/Dependency_hell).
 
-In research software this is a particularly common problem, as keeping dependencies up to date is rarely anyone's priority. This matters beyond ensuring it is convenient for your users as the [reproducibility of your research](https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/) depends on other being able to run the code that produced them in the first place.
-
-To learn more about best practices for research reproducibility, [The Turing Way](https://book.the-turing-way.org/) has a [fantastic guide](https://book.the-turing-way.org/reproducible-research/reproducible-research/).
+In research software, this is particularly prevalent as keeping dependencies up to date is rarely prioritised. Beyond convenience for users, [reproducibility](https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/)reproducibility depends on others being able to run the exact code that produced your results. [The Turing Way](https://book.the-turing-way.org/) offers [excellent guidance](https://book.the-turing-way.org/reproducible-research/reproducible-research/) on research reproducibility best practices.
 
 !!! quote "What does a lock file do?"
     A [lockfile](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) ensures that developers working on the project are using a consistent set of package versions. Additionally, it ensures when deploying the project as an application that the exact set of used package versions is known
 
-`uv` addresses this problem through the [`uv.lock` file](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) which contains the specific versions of the packages used. `uv`'s documentation on [locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing) contains more information on this topic.
-A useful command in `uv` to update all dependencies is,
+`uv` solves this through the [`uv.lock` file](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile), which records the specific versions of all installed packages. See `uv`'s documentation on [locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing) for more details.
+
+To update all dependencies, use:
+
 ```console
 $ uv lock --upgrade
 ```
