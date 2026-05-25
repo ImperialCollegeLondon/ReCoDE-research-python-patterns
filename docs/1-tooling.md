@@ -121,5 +121,15 @@ Recently, Python introduced the [`pylock.toml` specification](https://packaging.
 
 ## Linting and Formatting
 
+- Explain what is a linter and why it is useful
+- Configured with the ruff.toml file
+- Explain what the various things specified in the toml file do
+- Mention that the configuration in the ruff.toml file can be placed in the pyproject.toml file and is part of what the pyproject.toml file is for. This has been separated out to make it neater and easier to read
 
 ## Git Commit Hooks
+
+- What are these hooks? Tools like `prek` and `pre-commit` do this job
+- Link this to the pyproject.toml
+- Explain what is going on in the .pre-commit-config.yaml file
+- Explain that ruff is invoked during this process so it runs to check that everything is sound statically and before any bad code is committed. This helps to keep a cleaner git history too
+- Don't go into details about `pyright` as that would be covered in the next tutorial
