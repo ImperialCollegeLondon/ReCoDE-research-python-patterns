@@ -60,6 +60,8 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tasklist:
       custom_checkbox: true
+  - admonition
+  - pymdownx.details
 
 # Render math in mkdocs
 extra_javascript:
