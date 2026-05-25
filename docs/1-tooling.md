@@ -95,11 +95,29 @@ For more information about dependency groups, [see this webpage on dependency gr
 !!! info
     The main difference between optional dependencies and dependency groups is at the packaging level. If you're not planning to package your code, then there isn't much of a different even though it is good practice to separate it accordingly.
 
-
+`uv`'s [documentation on managing dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/) has more information about the different types of dependencies and how to manage them.
 
 ### Universal lock file for dependencies
 
-`uv.lock`
+![it works on my machine meme](https://raw.githubusercontent.com/DXHeroes/knowledge-base-content/master/files/it_works.jpg){ width="320" align=right }
+
+One of the most common frustrations in software development is when code works perfectly on your machine but fails on someone else's. This is often down to differences in the versions of dependencies being used, a problem that gets worse the longer dependencies go without being updated and can quickly spiral into what is known as [dependency hell](https://en.wikipedia.org/wiki/Dependency_hell).
+
+In research software this is a particularly common problem, as keeping dependencies up to date is rarely anyone's priority. This matters beyond ensuring it is convenient for your users as the [reproducibility of your research](https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/) depends on other being able to run the code that produced them in the first place.
+
+To learn more about best practices for research reproducibility, [The Turing Way](https://book.the-turing-way.org/) has a [fantastic guide](https://book.the-turing-way.org/reproducible-research/reproducible-research/).
+
+!!! quote "What does a lock file do?"
+    A [lockfile](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) ensures that developers working on the project are using a consistent set of package versions. Additionally, it ensures when deploying the project as an application that the exact set of used package versions is known
+
+`uv` addresses this problem through the [`uv.lock` file](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) which contains the specific versions of the packages used. `uv`'s documentation on [locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing) contains more information on this topic.
+A useful command in `uv` to update all dependencies is,
+```console
+$ uv lock --upgrade
+```
+
+Recently, Python introduced the [`pylock.toml` specification](https://packaging.python.org/en/latest/specifications/pylock-toml/) which is a tooling independent file "for specifying dependencies to enable reproducible installation in a Python environment".
+
 
 ## Linting and Formatting
 
