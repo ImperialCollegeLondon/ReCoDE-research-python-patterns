@@ -22,7 +22,8 @@ throughout the development and plan accordingly.
 <!-- A brief description of your exemplar, which may include an image -->
 This exemplar explores software design patterns, tools, and Python packages that make code development easier and more maintainable. Since not all design patterns translate well to a research context, the focus here is on patterns that are practical and beneficial for research workflows, including concepts such as coupling and cohesion, dependency injection, linting, and Model-View-Controller (MVC) architecture. To demonstrate these concepts in action, we use [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) as our working example, a well-defined yet rich problem.
 
-This is a gif of the [Gosper glider gun](https://conwaylife.com/wiki/Gosper_glider_gun) pattern.
+The Game of Life is a simulation of an array of pixels which can be "alive" or "dead". Each generation, the state of the pixel is determined by the state of pixels around it in the previous generation. This leads to a complex and interesting system from a simple set of rules.
+This is a gif of the [Gosper glider gun](https://conwaylife.com/wiki/Gosper_glider_gun) pattern which creates cells that glide across the screen.
 ![game of life - space rake](docs/assets/gosper-glider-gun.gif)
 
 <!-- Author information -->
