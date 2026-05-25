@@ -118,13 +118,83 @@ $ uv lock --upgrade
 
 Recently, Python introduced the [`pylock.toml` specification](https://packaging.python.org/en/latest/specifications/pylock-toml/) which is a tooling independent file "for specifying dependencies to enable reproducible installation in a Python environment".
 
-
 ## Linting and Formatting
 
-- Explain what is a linter and why it is useful
-- Configured with the ruff.toml file
-- Explain what the various things specified in the toml file do
-- Mention that the configuration in the ruff.toml file can be placed in the pyproject.toml file and is part of what the pyproject.toml file is for. This has been separated out to make it neater and easier to read
+### Why Linting and Formatting Matter
+
+In research software development, it's easy to focus solely on getting your code to work; making sure your simulation runs and your analysis produces the right output. However, code that only "works" can still be problematic. A linter is a tool that automatically scans your code *before* you run it to spot issues, such as: unused variables, inconsistent naming conventions, import problems, or code that violates style guidelines. Rather than discovering these issues when tests fail or code is reviewed, a linter catches them immediately while you're working.
+
+A formatter is complements it by automatically rewriting your code to follow consistent style conventions, such as line length, spacing, and quote style. Together, linters and formatters serve as an automated code reviewer that enforces standards without requiring human effort. In a research context, this is helps to reduces cognitive load (you don't have to think about style), prevents sneaky bugs (unused imports or variables often indicate logic errors), and makes your code more readable to collaborators and your future self.
+
+!!! tip
+    Most editors and IDEs can run a linter in the background as you write. The shorter the feedback loop, the easier the fix. Catching a style or logic issue while you are still in that part of the code beats finding it later in testing or code review.
+
+
+### Ruff for Linting and Formatting
+
+This project uses [`ruff`](https://docs.astral.sh/ruff/), a fast, all-in-one linter and formatter written in Rust. Ruff combines the functionality of several traditional Python tools (like `flake8`, `isort`, `black`) into a single tool that is substantially faster than running them separately.
+
+#### Configuration: `ruff.toml`
+
+Rather than embedding ruff configuration in the `pyproject.toml` file, this project maintains a separate `ruff.toml` file. This separation improves readability and makes it easier to reason about linting rules without scrolling through project metadata. However, this configuration could equivalently be placed under a `[tool.ruff]` section in `pyproject.toml`. Both are standard and valid approaches.
+
+The configuration starts by specifying the that the format for the project.
+Here, the `line-length = 120` setting allows lines up to 120 characters. This is more relaxed than the Python default (79 characters) which is very restrictive and not necessary for modern screens and terminal.
+
+```toml title="ruff.toml"
+{%
+    include-markdown "../ruff.toml"
+    end="[lint]"
+%}
+```
+
+The next section specifies which linting rules to enforce.
+By default, `ruff` only enforces a subset of rules, namely [`Pyflake` (`F`)](https://docs.astral.sh/ruff/rules/#pyflakes-f) and some [`pycodestyle` (`E`)](https://docs.astral.sh/ruff/rules/#error-e) rules. If you're just starting out with Python, that is a good place to begin without being overwhelmed. If you have some experience with Python, extending the rule set is particularly useful for learning best practices and common pitfalls.
+In the `ruff.toml` file, the `[lint]` section uses `select` to explicitly list which rule categories ruff should apply. This is better than extending the default rules because it makes the chosen rules explicit and visible.
+
+```toml title="ruff.toml (excerpt)"
+{%
+    include-markdown "../ruff.toml"
+    start="line-length = 120"
+    end="[lint.pydocstyle]"
+%}
+```
+
+Some of the key categories active in this project are,
+
+- `F` (PyFlakes): Detects undefined names, unused imports, unused variables
+- `E`, `W` (pycodestyle): Enforces PEP 8 style guidelines
+- `I` (isort): Ensures imports are sorted and organized consistently
+- `ANN` (annotations): Encourages type annotations on function arguments and returns
+- `D` (pydocstyle): Checks that docstrings follow the NumPy convention (specified via `convention = "numpy"`)
+- `NPY`, `PT`, `PL`: Domain-specific rules for NumPy, pytest, and pylint
+
+The `ignore` list carves out specific rules that would otherwise conflict or be too strict for this project.
+
+The `ruff` documentation provides more information on [rule selection](https://docs.astral.sh/ruff/linter/#rule-selection) and [details on what each of these rules contain](https://docs.astral.sh/ruff/rules/).
+
+!!! tip
+    Part of gaining mastery in a programming language is learning when some of these rules should be broken.
+
+#### Running ruff
+
+To [check your code with ruff](https://docs.astral.sh/ruff/linter/#ruff-check), run:
+
+```console
+$ ruff check .
+```
+
+To automatically fix issues that ruff can resolve, use:
+
+```console
+$ ruff check . --fix
+```
+
+To [format your code](https://docs.astral.sh/ruff/formatter/) consistently, use:
+
+```console
+$ ruff format .
+```
 
 ## Git Commit Hooks
 
