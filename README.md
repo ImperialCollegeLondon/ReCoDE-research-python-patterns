@@ -78,13 +78,29 @@ you must include a relevant section that helps with learning this library.
 <!-- Quick Start Guide. Tell learners how to engage with the exemplar. -->
 ## Getting Started 🚀
 
-e.g. Step-by-step guide:
-
-1. Start by (instruction).
-2. Visit the sections of this notebook in some particular order.
-3. Attempt exercises `1a`, `1b`, etc.
-4. Progress to advanced materials in the Github repository linked here.
-5. Compare with solutions available in the `solutions` folder.
+1. Install `uv` [by following the instructions here](https://docs.astral.sh/uv/getting-started/installation/).
+2. Create a clone of the repository using,
+   ```console
+   $ git clone https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns.git
+   ```
+3. Move into the root directory of the project. On linux, this would be,
+   ```console
+   $ cd ReCoDE-research-python-patterns
+   ```
+4. In the root directory of the project, create a virtual environment with `uv` using
+   ```console
+   $ uv venv
+   ```
+5. Activate the Python environment based on the instructions that appeared from running `uv venv`
+6. Install the Game of Life Python package in the virtual environment using,
+   ```console
+   $ uv sync
+   ```
+7. Run the game of life in the command line using,
+   ```console
+   $ game-of-life cli basic-config.yaml
+   ```
+   This runs the game of life in the terminal rather than creating an output file. This runs indefinitely to stop it press `ctrl+c`. Note: the [basic-config.yaml](basic-config.yaml) file is the root of the repository.
 
 
 <!-- Background. Tell learners about why this exemplar is useful. -->
