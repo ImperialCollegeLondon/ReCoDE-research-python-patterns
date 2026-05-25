@@ -62,6 +62,7 @@ markdown_extensions:
       custom_checkbox: true
   - admonition
   - pymdownx.details
+  - attr_list
 
 # Render math in mkdocs
 extra_javascript:
