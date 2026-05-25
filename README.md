@@ -97,11 +97,22 @@ One of the most common challenges in research software development is knowing ho
 
 Programming language: Python
 
+Tools:
+1. [`uv`](https://docs.astral.sh/uv/#highlights) - for package and environment management
+2. [`ruff`](https://docs.astral.sh/ruff/) - for linting and formatting
+3. [`prek`](https://prek.j178.dev/) or [`pre-commit`](https://pre-commit.com/) - for git hook script to check code quality before committing to git
+4. [`ty`](https://docs.astral.sh/ty/) or [`pyright`](https://github.com/microsoft/pyright) - for Python static type checking
+
 <!--This renders magically as a code snippet on GitHub-->
 Libraries:
-https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/pyproject.toml#L11-L15
+1. `numpy` for working with arrays
+2. `pytest` for testing code
+3. `matplotlib` for creating plots
+4. `pydantic` for handling input from users
+5. `pyyaml` for loading configuration files from [yaml file format](https://yaml.org/)
+6. `typer` for building a command line tool
 
-
+All dependencies for this project can be found in the [`pyproject.toml`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/pyproject.toml) file
 
 <!-- Repository structure. Explain how your code is structured. -->
 ## Project Structure 🗂️
