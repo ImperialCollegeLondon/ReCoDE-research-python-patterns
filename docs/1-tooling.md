@@ -7,7 +7,8 @@ This page explores three core tools that strengthen research software developmen
 - `uv`: A fast, modern Python package manager and environment manager that integrates with `pyproject.toml` and produces reproducible lock files
 - `ruff`: A unified linter and formatter that enforces code style and catches common errors automatically
 - `pre-commit` hooks: Automated checks that run before each git commit, preventing problematic code from entering your repository
-- `ty` and `pyright`: Static type checkers which will be covered in the [next tutorial](2-type-hinting.md).
+<!-- ADD LINK IN THE NEXT PR: [next tutorial](2-type-hinting.md)  -->
+- `ty` and `pyright`: Static type checkers which will be covered in the next tutorial.
 
 
 ## Python Environment Management
@@ -238,7 +239,8 @@ These hooks apply the same rules defined in `ruff.toml`, ensuring that all code 
 
 **UV lock hook**: The `uv-lock` hook ensures that `uv.lock` is kept in sync with `pyproject.toml`. When you add or modify dependencies, this hook will update the lockfile automatically.
 
-**Type checking (pyright)**: The `pyright` hook runs static type analysis to catch type mismatches. Type checking is detailed in a [separate tutorial](2-types-tutorial.md); it's mentioned here only to show how it's integrated into the commit workflow.
+<!-- ADD LINK IN NEXT PR [separate tutorial](2-type-hinting.md) -->
+**Type checking (pyright)**: The `pyright` hook runs static type analysis to catch type mismatches. Type checking is detailed in a separate tutorial. It's mentioned here only to show how it's integrated into the commit workflow.
 
 #### Workflow in Practice
 
