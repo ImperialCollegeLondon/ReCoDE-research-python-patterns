@@ -13,7 +13,7 @@ In addition to this, there another two features which makes `uv` a great tool. F
 
 ### What is the `pyproject.toml` file? And how does it integrate with `uv`
 
-!!! quote
+!!! quote "What is the pyproject.toml file?"
     [`pyproject.toml`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) is a configuration file used by packaging tools, as well as other tools such as linters, type checkers, etc.
 
 A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://www.software.ac.uk/news/introducing-2026-fellowship-cohort-insights-and-celebrations).
@@ -23,7 +23,7 @@ Instead, it is a general-purpose configuration file for Python projects which ca
 
 When using `conda`, dependencies are usually specified using an `environment.yml` file. When using `pip`, dependencies are specified using a `requirements.txt` file. The equivalent of this in the `pyproject.toml` is to specify `dependencies` under the `[project]` table. For this project, it has been specified as,
 
-```toml
+```toml title="pyproject.toml"
 {%
     include-markdown "../pyproject.toml"
     start="requires-python = \">=3.12\""
@@ -52,7 +52,7 @@ This would add `matplotlib` under `dependencies`.
 
 Optional dependencies in a `pyproject.toml` are dependencies which provide optional features that some users may want. For example, in one of our dependencies, `pydantic`, it has [two optional dependencies](https://pydantic.dev/docs/validation/latest/get-started/install/#optional-dependencies): `email` and `timezone`. These features are useful but not every use may want to have them. For this project, running the documentation locally is an optional feature for users, as such they have been placed in a `docs` group as follows,
 
-```toml
+```toml title="pyproject.toml"
 [project.optional-dependencies]
 {%
     include-markdown "../pyproject.toml"
@@ -63,7 +63,7 @@ Optional dependencies in a `pyproject.toml` are dependencies which provide optio
 
 When working on a coding project there are often dependencies that are useful for development but are not required to use and run the code in the project. For example, `pytest` is used for running and writing test but isn't required to run the core code of the project. Such dependencies are called development dependencies. These have been specified in the `pyproject.toml` as follows,
 
-```toml
+```toml title="pyproject.toml"
 [dependency-groups]
 {%
     include-markdown "../pyproject.toml"
