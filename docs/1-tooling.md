@@ -226,7 +226,7 @@ This file declares which "repositories" (tools) should be run as hooks, along wi
 
 **Pre-commit hooks (basic checks)**: The first repository provides general-purpose checks managed by the pre-commit framework itself:
 - `trailing-whitespace`: Removes trailing whitespace at the end of lines
-- `end-of-file-fixer`: Ensures files end with exactly one newline
+- `end-of-file-fixer`: Ensures files end with exactly one newline at the end of the file
 - `check-added-large-files`: Prevents accidentally committing large files
 - `check-case-conflict`: Detects files that differ only in case (problematic on case-insensitive filesystems)
 - `check-toml`: Validates that TOML files (like `pyproject.toml`) are syntactically correct
