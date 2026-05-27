@@ -20,7 +20,6 @@ This page explores three core tools that strengthen research software developmen
 !!! quote "What is the pyproject.toml file?"
     [`pyproject.toml`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) is a configuration file used by packaging tools, as well as other tools such as linters, type checkers, etc.
 
-A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://www.software.ac.uk/news/introducing-2026-fellowship-cohort-insights-and-celebrations).
 Instead, it is a general-purpose configuration file for Python projects which can be used beyond packaging for specifying settings for tools or dependencies.
 
 The `pyproject.toml` file can also specify the entry point for your Python project. This is how users invoke your code from the command line. This project is a command-line tool for running Conway's Game of Life. Once installed into the virtual environment (see [getting started](index.md#getting-started)), users can invoke it with `game-of-life --help`. This is configured via the [`[project.scripts]`](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts) section:
@@ -38,6 +37,8 @@ The entry point `game_of_life.main:app` can be broken down as follows:
 - `game_of_life` $\Rightarrow$ the package defined in [`src/game_of_life/__init__.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/__init__.py)
 - `.main` $\Rightarrow$ the module defined in [`src/game_of_life/main.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py)
 - `:app` $\Rightarrow$ the callable function stored in the [variable `app`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35)
+
+A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://pypi.org/).
 
 #### Adding dependencies to `pyproject.toml` with `uv`
 
