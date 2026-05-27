@@ -165,7 +165,7 @@ In the `ruff.toml` file, the `[lint]` section uses `select` to explicitly list w
 Some of the key categories active in this project are,
 
 - `F` (PyFlakes): Detects undefined names, unused imports, unused variables
-- `E`, `W` (pycodestyle): Enforces PEP 8 style guidelines
+- `E`, `W` (pycodestyle): Enforces [PEP 8](https://peps.python.org/pep-0008/) style guidelines
 - `I` (isort): Ensures imports are sorted and organized consistently
 - `ANN` (annotations): Encourages type annotations on function arguments and returns
 - `D` (pydocstyle): Checks that docstrings follow the NumPy convention (specified via `convention = "numpy"`)
