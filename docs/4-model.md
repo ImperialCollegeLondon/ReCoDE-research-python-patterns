@@ -78,17 +78,17 @@ This is an example of [composition in object-oriented design](https://realpython
 
 ## Grid Initialization
 
-How the Game of Life progresses is directly liked to how the grid is initialized. As such, we want to give the user the ability to specify how to initialize the grid. In this project, we want to be able to,
+How the Game of Life progresses is directly linked to how the grid is initialized. We want to give the user the ability to choose from multiple initialization strategies:
 
 - Start with all dead cells
 - Start with a random configuration
 - Start with a specific pattern
 
-### Abstract Classes
+We could write three separate constructors for `GameOfLife`, but that quickly becomes messy. Each constructor would duplicate code. More importantly, adding a fourth strategy would require modifying `GameOfLife` again.
 
-We could write three separate constructors for `GameOfLife`, but that quickly becomes messy.
-It also becomes difficult to maintain due to the code repetition. One would need to update all 3 constructors to implement a single change change.
-Instead, we use an abstract base class called `GridCreator` to define a contract for initialization strategies.
+### The Strategy Pattern
+
+The solution is to use the [Strategy Pattern](https://en.wikipedia.org/wiki/Strategy_pattern). This pattern encapsulates different algorithms into separate classes that all follow the same interface. In this case, each initialization strategy becomes its own class. The `GameOfLife` object doesn't care which strategy is used. It just knows that whatever it receives implements the `GridCreator` interface. We define this interface as an abstract base class,
 
 ```python title="model.py" linenums="1"
 class GridCreator(ABC):
@@ -97,9 +97,60 @@ class GridCreator(ABC):
         ...
 ```
 
-In Line 1 of the above snippet, we have defined that the `GridCreator` class inherits from [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC). This is what makes it an abstract base class. The decorator in line 2 marks the `initialise` method as an [abstract method](https://docs.python.org/3/library/abc.html#abc.abstractmethod). This requires any class which inherits from `GridCreator` to implement this method.
+The `GridCreator` class inherits from [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC), which marks it as an abstract base class. The [`@abstractmethod` decorator](https://docs.python.org/3/library/abc.html#abc.abstractmethod) on `initialise()` requires any concrete subclass to implement this method. This contract ensures that every strategy provides the same interface.
 
 !!! note
     [Interface](https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)) is another term for abstract classes. The exact term used varies by programming language, e.g. Java uses `interface` and Rust uses `traits`.
 
-As the `GridCreator` class is an abstract class, it cannot be instantiated, i.e. `foo = GridCreator()` is not valid. Thus, we need to implement concrete classes which implement this abstract class.
+Since the abstract class itself cannot be instantiated, it forces us to provide concrete implementations for each strategy.
+
+To initialize the grid, the `GameOfLife` constructor receives an object which implements the `GridCreator` interface and uses it to initialize the grid:
+
+```python title="model.py (excerpt)"
+class GameOfLife:
+    def __init__(
+        self,
+        n_rows: int = 50,
+        n_cols: int = 50,
+        wrap: bool = True,
+        grid_creator: GridCreator | None = None,
+    ) -> None:
+        if grid_creator is None:
+            grid_creator = ZerosGridCreator()
+        self._grid: NDArrayU8 = grid_creator.initialise(n_rows, n_cols)
+```
+
+By depending on an abstraction rather than a concrete implementation, GameOfLife requires no knowledge of which strategies exist. It contains no conditional logic for selecting between them.
+Instead, it delegates the work to whatever strategy object it receives. The decision about which strategy to use happens elsewhere, typically in the controller or a factory class.
+
+This design directly supports the Open-Closed Principle — the system is open for extension but closed for modification. Consider a scenario common in research: a new initialization strategy is required that loads a predefined pattern from an experimental dataset. This is achieved by implementing a new class, for example, `ExperimentalDataGridCreator`, that inherits from `GridCreator` and provides a concrete implementation of `initialise()`. Crucially, the `GameOfLife` class requires no modification. The system has been extended without altering existing, validated code. Without this abstraction, each new strategy would require changes to `GameOfLife` itself, introducing complexity and the risk of regressions with every addition.
+
+### Concrete Classes
+
+To achieve our goal, we have defined three concrete classes for creating our grid,
+
+- `ZerosGridCreator`: Returns a grid of all zeros
+- `RandomGridCreator`: Fills the grid with random live and dead cells of a specified density of live cells
+- `PatternGridCreator`: Places a specific pattern in the grid
+
+Each of the grid creators need different information in order to achieve it's goal. For example, the `RandomGridCreator` requires information about the density of the live cells while `PatternGridCreator` does not need this information but needs the pattern to be passed in. However, the `initialise()` method is fixed [method signature](https://en.wikipedia.org/wiki/Type_signature#Signature) and doesn't allow us to provide more information. So, how do we solve this problem?
+
+As each concrete implementation is a class, we can store this information as an [instance variable](https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables). For example,
+
+```python title="model.py"
+class RandomGridCreator(GridCreator):
+    def __init__(self, density: float = 0.2, rng_seed: int | None = None) -> None:
+        self._density: float = density
+        self._rng_seed: int | None = rng_seed
+```
+
+When instantiating the `RandomGridCreator` class, we're able to pass in additional variables that are stored. These stored variables are then used in the concrete implementation of the `initialise()` method.
+
+```python
+class RandomGridCreator(GridCreator):
+    @override
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
+        return np.random.default_rng(seed=self._rng_seed).choice(
+            [0, 1], size=(n_rows, n_cols), p=np.asarray([1 - self._density, self._density])
+        )
+```
