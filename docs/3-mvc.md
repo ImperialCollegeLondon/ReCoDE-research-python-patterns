@@ -60,7 +60,19 @@ Someone reading your paper should trust the results because they can independent
 
 The Controller is the middleman. It receives input from outside (a person typing a command, clicking a button, writing a Python script). It figures out what that input means, tells the model to do something, and asks the view to update. It's the coordinator.
 
-## Why Separate Them?
+### The Flow in Practice
+
+When someone runs the application via the command line, here's the high-level sequence:
+
+1. **Input**: User provides commands and arguments from the terminal.
+2. **Controller Interprets**: The controller parses what the user wants and creates the necessary model and view instances.
+3. **Model Works**: The controller tells the model to evolve, step by step.
+4. **View Updates**: After each step, the view reads the model's current state and displays it.
+5. **Output**: The user sees the result.
+
+The salient feature in this is that each part stays independent. The model doesn't know about the view, the view doesn't direct the model. The controller connects them but doesn't do the actual work.
+
+## Why Separate Them? And what makes it possible?
 
 Imagine your research code wasn't structured this way. Your simulation logic would be tangled with visualization code. Your analysis would be mixed with the interface for running it. This creates problems in any context. It's harder to understand, harder to test, harder to reuse. But in research, the consequences are particularly serious.
 
@@ -79,4 +91,21 @@ These principles also matter the moment you start writing tests. A well-structur
 
 One approach that makes this concrete is [Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development). This is the practice of writing your test before you write the code. This might sound counterintuitive at first, but it's a powerful tool. If you find it difficult to write a simple, focused test for a piece of code, that difficulty is telling you something: the code is probably doing too much. TDD naturally steers you towards the Single Responsibility Principle, because code that is hard to test in isolation is code that needs to be broken up. For researchers, this is particularly valuable, if your model is cleanly separated and well-tested, you can be confident that your results reflect your science, not an accidental interaction between unrelated parts of your code.
 
-Finally, polymorphism is what enables the MVC architecture to work. The controller doesn't need to know which view it's talking to. There's an abstract interface which captures "what methods must a view have?". Thus, as long as something implements that interface, the controller works without changes. This is useful in any application. If a colleague wants a new visualization, they implement a new view interface, leaving the model stays untouched. If someone wants to run your model in their own analysis pipeline, they can import the model directly and they never use the CLI or views. With your model living independently of how it's used, extensions don't risk breaking the core science.
+Finally, [polymorphism](https://www.baeldung.com/cs/polymorphism) is what enables the MVC architecture to work. The controller doesn't need to know which view it's talking to. There's an abstract interface which captures "what methods must a view have?". Thus, as long as something implements that interface, the controller works without changes. This is useful in any application. If a colleague wants a new visualization, they implement a new view interface, leaving the model stays untouched. If someone wants to run your model in their own analysis pipeline, they can import the model directly and they never use the CLI or views. With your model living independently of how it's used, extensions don't risk breaking the core science.
+
+## MVC Is the Architecture, Not the Whole Story
+
+MVC describes how the big pieces fit together. It's a generic pattern used in countless applications. But within each piece, you use other techniques and patterns to handle specific challenges unique to your domain or problem.
+
+For example, in a research model, you might use strategies for initializing data differently (zeros, random, specific patterns). In the controller, you might use [factories](https://en.wikipedia.org/wiki/Factory_method_pattern) to decide which strategy to create based on configuration. In the view, you might use [abstract base classes](https://docs.python.org/3/glossary.html#term-abstract-base-class) to define what any view must implement.
+
+!!! abstract "TL;DR"
+    These patterns are details. MVC is the skeleton.
+
+## Bringing It Together
+
+MVC is useful in any software project because it provides clear boundaries and reduces dependencies. But in research software, these benefits become essential. Separation of concerns is not just cleaner design; it directly enables reproducibility, re-usability, and collaboration.
+
+When different parts of your code focus on different things (e.g. science, presentation, or interface) they become easier to understand independently, easier to test rigorously, and easier for others to reuse or extend. A collaborator shouldn't have to understand your visualization code to use your model. A code reviewer shouldn't have to trace through interface logic to verify your science. And future researchers building on your work should be able to extract your model and repurpose it without the overhead of display code.
+
+The following pages go deeper into each part: how the model is structured for clarity, how views work together through abstraction, and how the controller coordinates everything while staying independent of the science. Each page shows not just what the code does, but *why* it's organized that way.
