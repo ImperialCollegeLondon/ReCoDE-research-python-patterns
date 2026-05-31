@@ -86,6 +86,26 @@ How the Game of Life progresses is directly linked to how the grid is initialize
 
 We could write three separate constructors for `GameOfLife`, but that quickly becomes messy. Each constructor would duplicate code. More importantly, adding a fourth strategy would require modifying `GameOfLife` again.
 
+In our MVC diagram, this is where input from the user can flow from the controller to manipulate the model.
+
+```mermaid
+---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user -->|provides input| controller
+  controller -->|manipulates| model
+  model -->|updates| view
+  view -->|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style model fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0,1 stroke:#7455FF,stroke-width:4px
+```
+
 ### The Strategy Pattern
 
 The solution is to use the [Strategy Pattern](https://en.wikipedia.org/wiki/Strategy_pattern). This pattern encapsulates different algorithms into separate classes that all follow the same interface. In this case, each initialization strategy becomes its own class. The `GameOfLife` object doesn't care which strategy is used. It just knows that whatever it receives implements the `GridCreator` interface. We define this interface as an abstract base class,
