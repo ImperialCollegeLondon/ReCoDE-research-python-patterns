@@ -66,12 +66,40 @@ flowchart TD
 
 The grid is represented as a 2D NumPy array in which each cell holds a value of either 0 (dead) or 1 (alive). The `GameOfLife` object owns and manages this array, external components do not have direct write access to it. This encapsulation is intentional. By restricting modification to the GameOfLife object itself, the state of the grid remains predictable and controlled throughout the program's execution.
 
-This is an example of [composition in object-oriented design](https://realpython.com/inheritance-composition-python/#whats-composition). This a relationship in which one object owns another as an attribute. Here, the grid is a constituent part of the `GameOfLife` object, not an external dependency. This can be understood through a simple distinction: a grid _is not_ a `GameOfLife` (which rules out inheritance), but a GameOfLife _has a_ grid (which confirms composition). This _has-a_ relationship is what determines how the two are structured and how ownership is assigned in the code.
-
 ![inheritance vs composition](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A1200%2F1*mcv2uIZnDYodmTBJGjtwXg.png&f=1&nofb=1&ipt=89cd9ae1631b28c9ddd09029c33d3816b82e24841be716ce7d432cd2d15594da){width="400" align=right}
+
+This is an example of [composition in object-oriented design](https://realpython.com/inheritance-composition-python/#whats-composition). This a relationship in which one object owns another as an attribute. Here, the grid is a constituent part of the `GameOfLife` object, not an external dependency. This can be understood through a simple distinction: a grid _is not_ a `GameOfLife` (which rules out inheritance), but a GameOfLife _has a_ grid (which confirms composition). This _has-a_ relationship is what determines how the two are structured and how ownership is assigned in the code.
 
 !!! tip
     There are two major concepts in object oriented programming (OOP): inheritance and composition. A heuristic to determine what the most appropriate relationship between the two is to use the _is-a_ and _has-a_ test. For example, a cat _is a_ animal. So, a `Cat` class should inherit from a parent `Animal` class. And a cat _has a_ tail. So, a `Cat` should contain an object of `Tail`. It would be incorrect for the `Tail` to inherit from the `Cat` class as a `Tail` is not a `Cat`.
 
 !!! abstract "Further Reading"
     Another design pattern related to inheritance and composition is to [favour composition over inheritance](https://en.wikipedia.org/wiki/Composition_over_inheritance) to give a design more flexibility.
+
+## Grid Initialization
+
+How the Game of Life progresses is directly liked to how the grid is initialized. As such, we want to give the user the ability to specify how to initialize the grid. In this project, we want to be able to,
+
+- Start with all dead cells
+- Start with a random configuration
+- Start with a specific pattern
+
+### Abstract Classes
+
+We could write three separate constructors for `GameOfLife`, but that quickly becomes messy.
+It also becomes difficult to maintain due to the code repetition. One would need to update all 3 constructors to implement a single change change.
+Instead, we use an abstract base class called `GridCreator` to define a contract for initialization strategies.
+
+```python title="model.py" linenums="1"
+class GridCreator(ABC):
+    @abstractmethod
+    def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
+        ...
+```
+
+In Line 1 of the above snippet, we have defined that the `GridCreator` class inherits from [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC). This is what makes it an abstract base class. The decorator in line 2 marks the `initialise` method as an [abstract method](https://docs.python.org/3/library/abc.html#abc.abstractmethod). This requires any class which inherits from `GridCreator` to implement this method.
+
+!!! note
+    [Interface](https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)) is another term for abstract classes. The exact term used varies by programming language, e.g. Java uses `interface` and Rust uses `traits`.
+
+As the `GridCreator` class is an abstract class, it cannot be instantiated, i.e. `foo = GridCreator()` is not valid. Thus, we need to implement concrete classes which implement this abstract class.
