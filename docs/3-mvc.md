@@ -33,7 +33,21 @@ The Model is where the core logic lives. In any MVC application, it holds the da
 
 Independence here means that doesn't depend on how a user asked it to run or how results will be displayed. This means that someone should be able to run your model in their own pipeline, test it against your published results, modify it to ask different questions, or integrate it into a larger analysis, all without struggling with display code or interface details tangled into the science. That's the difference between research code that can be reused and code that's locked into one specific context.
 
-The beauty of this is that your research code can now serve multiple purposes. Firstly, as a tool which runs the pipeline that you need to perform your analysis. This would have all three components of the MVC architecture. Secondly, as a library which other people could use. In this project, everything in the `model.py` file could be a separate library that your users can use to for their own analysis and aren't restricted to the flow of the program specified in your pipeline.
+The beauty of this is that your research code can now serve multiple purposes. The first as a tool which runs the pipeline that you need to perform your analysis. This would have all three components of the MVC architecture. In this project, a researcher which runs in their terminal `game-of-life cli basic-config.yaml` it runs the simulation with specific parameters and down the code paths you have defined.
+This is convenient for end users who want to explore with different inputs and reproduce experiments.
+
+The second purpose is as a library which other people could use. In this project, everything in the `model.py` file could be a separate library that your users can use to for their own analysis and aren't restricted to the flow of the program specified in your pipeline. In this project, a researcher who wants to build on your work imports the model directly:
+
+```python
+from game_of_life.model import GameOfLife
+
+game = GameOfLife(n_rows=50, n_cols=50)
+for generation in range(100):
+    game.step()
+    # Analyze the state, integrate with other code, etc.
+```
+
+As your model doesn't assume how it will be used, it exposes a clean interface. Whether that interface is called from a CLI, a Jupyter notebook, another group's analysis pipeline, or a test suite, the model works the same way. That flexibility is what enables your work to be built upon.
 
 ### View
 
