@@ -154,3 +154,81 @@ class RandomGridCreator(GridCreator):
             [0, 1], size=(n_rows, n_cols), p=np.asarray([1 - self._density, self._density])
         )
 ```
+
+## Encoding Patterns with Run Length Encoding
+
+Testing and initializing the Game of Life with known patterns requires a compact and reliable way to represent grid states. Storing a full 2D array for each pattern is inefficient — the majority of cells in a typical pattern are dead, making dense representation unnecessarily costly. Instead, grid patterns are encoded using [Run Length Encoding (RLE)](https://en.wikipedia.org/wiki/Run-length_encoding), a compression format well-suited to sparse data of this kind.
+
+### What is the Encoding?
+
+The encoding selected here is to be compatible with other Game of Life software like [Golly](https://golly.sourceforge.io/). Moreover, [this website](https://conwaylife.com/book/patterns/) provides example patterns in this encoding. The RLE format works as follows:
+
+- `'b'` represents a dead cell
+- `'o'` represents a live cell
+- `'$'` represents end of line (row separator)
+- Numbers before a character indicate repetition (e.g., `'3b'` = `'bbb'`)
+- `'!'` marks the end of the pattern
+
+The example $3 \times 3$ pattern string: `"3b$bob$2b!"` represents,
+```
+    b b b
+    b o b
+    b b (b)
+```
+
+The final cell is `(b)` as it is not explicitly set as being a dead cell by the pattern. But, it would be equivalent to setting it as a dead cell.
+
+This encoding offers two practical advantages: compactness and human-readability. A pattern can be inspected and understood directly from its RLE representation, without the need to load image files or deserialize large arrays.
+
+### Validating Patterns with Pydantic
+
+The `Pattern` class is responsible for storing the RLE encoding of a given pattern and decoding it into a populated 2D array for use by the simulation. It is implemented using [Pydantic](https://pydantic.dev/docs/validation/latest/get-started/), a data validation library for Python. `Pydantic` models extend the functionality of standard data classes by performing automatic validation at instantiation. This ensures that any malformed or unexpected data is caught at the point of entry, before it can propagate through the rest of the system.
+
+In this way, `Pattern` acts as the receptacle for user input and serves as a natural point of dependency injection whereby a validated `Pattern` instance is constructed from user-provided data and injected into the relevant `GridCreator`, which uses it to initialize the grid without needing to know where the data originated or how it was validated. This reflects two of the SOLID principles established earlier. Firstly, the Single Responsibility Principle, in that `Pattern` is solely concerned with the storage and decoding of pattern data and nothing else, and the Dependency Inversion Principle, in that higher-level components such as `GridCreator` depend on the abstraction of a validated `Pattern` object rather than on the specifics of how that data was sourced or constructed. Together, these properties ensure that the input handling, validation, and initialization concerns remain cleanly separated and independently testable.
+
+```python title="model.py"
+from pydantic import BaseModel, PositiveInt, StringConstraints
+
+class Pattern(BaseModel):
+    width: PositiveInt
+    height: PositiveInt
+    encoded_pattern: Annotated[
+        str, StringConstraints(strip_whitespace=True, to_lower=True, pattern=r"^(\d*[bo$])*!$", min_length=1)
+    ]
+```
+
+This class uses two `pydantic` constructs to perform the validation,
+
+1. `PositiveInt` type automatically rejects negative or zero values.
+2. `StringConstraints` validates the RLE string against two conditions. The first ensures the string is not empty by enforcing a minimum length of 1. The second checks that the string matches the regular expression `^(\d*[bo$])*!$`, which ensures there are no invalid characters and that the string conforms to the expected RLE structure, i.e. there are zero or more occurrences of an optional digit count followed by a cell character (`b`, `o`, or `$`), terminated by `!`.
+
+If the user passes invalid input, a `ValidationError` is raised immediately.
+
+!!! note
+    These validations are performed during the instantiation of the `Pattern` class, i.e. within the `__init__()` method. Thus, instances of `Pattern` must have passed the validation.
+
+As these checks are not sufficient to ensure that pattern is valid, there are two additional levels of check. The first occurs at the [field level](https://pydantic.dev/docs/validation/latest/concepts/validators/#field-validators) using the `pydantic` [`@field_validator` decorator](https://pydantic.dev/docs/validation/latest/api/pydantic/functional_validators/#pydantic.functional_validators.field_validator) on the `encoded_pattern` instance variable after the initial checks (mentioned above) are performed.
+
+```python
+class Pattern(BaseModel):
+    @field_validator("encoded_pattern", mode="after")
+    @classmethod
+    def validate_pattern_string(cls, pattern_str: str) -> str:
+        without_end: str = pattern_str[:-1]
+
+        # Check that all numbers are > 0
+        #   Pattern contains two groups: 1) any digits (\d+), 2) token characters b, o or $ ([bo$])
+        #   Thus, group 1 will contain the count for a given token
+        pattern_for_counts = r"(\d+)([bo$])"
+        for match in re.finditer(pattern_for_counts, without_end):
+            if int(match.group(1)) == 0:
+                raise ValueError(f"Run count cannot be 0 at {match.start()}")
+
+        return without_end
+```
+
+This validation is required as the regex pattern can only check for digits. However, our RLE is only valid for non-zero digits. The [`validate_pattern_string()` method](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L92-L129) checks for counts which are `0` and raises an error if one is found. Since this additional step is required, we take this opportunity to remove the terminating `!` to make decoding the pattern easier.
+
+As the user specifies the width and height of the pattern, we are able to check that this aligns with the pattern provided. Since multiple fields are required to perform this validation, it must be performed at the [model level](https://pydantic.dev/docs/validation/latest/concepts/validators/#model-validators) using the `pydantic` [`@model_validator()`decorator](https://pydantic.dev/docs/validation/latest/api/pydantic/functional_validators/#pydantic.functional_validators.model_validator) after all of the aforementioned checks have been completed. The `Pattern` methods [`check_height_matches_pattern()`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L161-L192) and [`check_width_matches_pattern()`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L194-L224) define these validations.
+
+These validators enforce correctness at the point of instantiation, in keeping with the principle of [defensive programming](https://en.wikipedia.org/wiki/Defensive_programming). This is the practice of writing code that anticipates and guards against invalid or unexpected inputs rather than assuming they will never occur. This is particularly important in research software, where silent failures can be difficult to detect and may propagate through an analysis unnoticed, producing results that appear plausible but are subtly incorrect. If a `Pattern` is constructed with inconsistent data (for example, `width=3`, `height=3` paired with an RLE string encoding a $4 \times 4$ pattern), Pydantic will reject the object immediately, raising a validation error before the inconsistency can propagate through the system and produce a silent or difficult-to-diagnose failure downstream.
