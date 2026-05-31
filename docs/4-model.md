@@ -90,7 +90,7 @@ We could write three separate constructors for `GameOfLife`, but that quickly be
 
 The solution is to use the [Strategy Pattern](https://en.wikipedia.org/wiki/Strategy_pattern). This pattern encapsulates different algorithms into separate classes that all follow the same interface. In this case, each initialization strategy becomes its own class. The `GameOfLife` object doesn't care which strategy is used. It just knows that whatever it receives implements the `GridCreator` interface. We define this interface as an abstract base class,
 
-```python title="model.py" linenums="1"
+```python title="model.py (excerpt)"
 class GridCreator(ABC):
     @abstractmethod
     def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
@@ -137,7 +137,7 @@ Each of the grid creators need different information in order to achieve it's go
 
 As each concrete implementation is a class, we can store this information as an [instance variable](https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables). For example,
 
-```python title="model.py"
+```python title="model.py (excerpt)"
 class RandomGridCreator(GridCreator):
     def __init__(self, density: float = 0.2, rng_seed: int | None = None) -> None:
         self._density: float = density
@@ -146,7 +146,7 @@ class RandomGridCreator(GridCreator):
 
 When instantiating the `RandomGridCreator` class, we're able to pass in additional variables that are stored. These stored variables are then used in the concrete implementation of the `initialise()` method.
 
-```python
+```python title="model.py (excerpt)"
 class RandomGridCreator(GridCreator):
     @override
     def initialise(self, n_rows: int, n_cols: int) -> NDArrayU8:
