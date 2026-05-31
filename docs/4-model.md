@@ -14,25 +14,6 @@ Conway's Game of Life is a cellular automaton where cells on a grid live or die 
 
 That's it. From these three rules, complex and often unpredictable patterns emerge. Some configurations oscillate endlessly. Others move across the grid like spaceships. Still others produce intricate structures that change in fascinating ways.
 
-In this section, we are focusing solely on the model (purple rectangle in the diagram below) in our MVC architecture.
-
-```mermaid
----
-config:
-  look: handDrawn
-  theme: base
----
-flowchart TD
-  user([User])
-  user -->|provides input| controller
-  controller -->|manipulates| model
-  model -->|updates| view
-  view -->|renders for| user
-
-  style user fill:#DDF9FF,stroke:#82E8FF
-  style model fill:#E3DDFF,stroke:#BDAEFF
-```
-
 ### From Rules to Code: The Single Responsibility Principle
 
 When we translate these rules into code, we face an interesting design decision. We could write one large method that computes the next generation and updates the grid. But notice that Conway's rules describe two distinct concerns,
@@ -61,7 +42,25 @@ This method computes the next generation by first determining how many neighbour
         self._history.append(self._grid)
 ```
 
-This method is responsible for coordinating all the different components involved in moving from one time step to the next.
+This method is responsible for coordinating all the different components involved in moving from one time step to the next. It is also the means for controller to manipulate the model such that it updates for the view. This corresponds to the parts in purple in the MVC diagram below
+
+```mermaid
+---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user -->|provides input| controller
+  controller -->|manipulates| model
+  model -->|updates| view
+  view -->|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style model fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 1,2 stroke:#7455FF,stroke-width:4px
+```
 
 ### Grid as a Data Container
 
