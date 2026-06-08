@@ -105,6 +105,8 @@ Type hints encourage better code design. When you must explicitly declare input 
 
 Python is built on a principle called **duck typing**: "If it walks like a duck and quacks like a duck, then it's a duck." In other words, Python cares less about what something *is* and more about what it can *do*.
 
+![duck typing comic](https://4loc.wordpress.com/wp-content/uploads/2009/02/ducktyping1.jpg){ width=320, align=right }
+
 Consider this function:
 
 ```python
