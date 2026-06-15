@@ -2,9 +2,10 @@
 
 The View is the presentation layer of the MVC architecture. While the Model holds the game state and knows nothing about how it's displayed, and the Controller orchestrates the flow, the View is responsible for making the game visible to the user. In Conway's Game of Life, multiple visualization strategies might be equally valid: a terminal display, a plotting window, or even a web interface. The View layer enables this flexibility.
 
+
 ## The MVC Loop
 
-Recall the MVC diagram from the Model section. The flow is unidirectional in one direction: the Model updates the View. When the controller tells the model to step forward in time, the model computes the next generation. The view then displays this new state to the user.
+Recall the MVC diagram from the Model section. The flow is unidirectional from the Model to the View by updating it. When the controller tells the model to step forward in time, the model computes the next generation. The view then displays this new state to the user.
 
 ```mermaid
 ---
@@ -24,7 +25,7 @@ flowchart TD
   linkStyle 2,3 stroke:#7455FF,stroke-width:4px
 ```
 
-The Model emits no output itself. It simply holds state. The View asks the Model for its current state, specifically, the grid and the generation number—and transforms that data into a human-readable format. This separation is intentional. It ensures that adding a new visualization method requires only a new View implementation, not changes to the Model.
+The Model emits no output itself. It simply holds state. The View asks the Model for its current state, specifically, the grid and the generation number and transforms that data into a human-readable format. This separation ensures that adding a new visualization method requires only a new View implementation, not changes to the Model.
 
 ## Polymorphism Through Abstraction
 
@@ -32,7 +33,7 @@ In the `src/game_of_life/view` directory, there are three files: `base.py`, `cli
 
 ### The `BaseView` Abstract Class
 
-All view implementations inherit from `BaseView`, which itself inherits from `AbstractContextManager`:
+All view implementations inherit from `BaseView`, which itself inherits from `AbstractContextManager`,
 
 ```python title="view/base.py"
 from abc import abstractmethod
@@ -47,11 +48,18 @@ class BaseView(AbstractContextManager):
         ...
 ```
 
-Why inherit from `AbstractContextManager`? This is a design decision that makes resource management explicit. Views often need to allocate resources, for example, a CLI view sets up a live display, a plotting view opens a figure window. By inheriting from `AbstractContextManager`, we enforce that concrete views implement `__enter__` and `__exit__` methods. This ensures these resources are properly initialized when we enter a `with` block and cleanly released when we exit, even if an error occurs.
+!!! quote "Definition - context manager"
 
-This pattern is an application of the *context manager protocol*, which is a Python idiom for reliable resource management. Combined with the `@abstractmethod` decorator on `render`, it means any concrete view *must* implement three methods to satisfy the interface: `__enter__`, `__exit__`, and `render`.
+    In Python, a [context manager](https://docs.python.org/3/reference/datamodel.html#with-statement-context-managers) "is an object that defines the runtime context to be established when executing a with statement. The context manager handles the entry into, and the exit from, the desired runtime context for the execution of the block of code"
 
-The design choice here reflects a principle: *make constraints explicit in code*. By using abstract base classes, we communicate to other programmers (or our future selves) exactly what a view must do, before they write a single line of a new view class.
+By inheriting from [`AbstractContextManager`](https://docs.python.org/3/library/contextlib.html#contextlib.AbstractContextManager), it makes the resource management explicit. Views often need to allocate resources, for example, a CLI view sets up a live display, a plotting view opens a figure window. By inheriting from `AbstractContextManager`, we enforce that concrete views implement [`__enter__()`](https://docs.python.org/3/reference/datamodel.html#object.__enter__) and [`__exit__()`](https://docs.python.org/3/reference/datamodel.html#object.__exit__) methods.  This ensures these resources are properly initialized when we enter a [`with`](https://docs.python.org/3/reference/compound_stmts.html#with) block and cleanly released when we exit, even if an error occurs.
+
+??? note "Note on Python `__magic__()` methods"
+    These methods which start and end with a double underline, e.g. `__name-of-method__()`, are called [magic or special methods](https://realpython.com/python-magic-methods/#getting-to-know-pythons-magic-or-special-methods) in Python.
+
+This pattern is an application of the *context manager protocol*, which is a Python idiom for reliable resource management. Combined with the [`@abstractmethod`](https://docs.python.org/3/library/abc.html#abc.abstractmethod) [decorator](https://realpython.com/primer-on-python-decorators/) on `render()`, it means any concrete view *must* implement three methods to satisfy the interface: `__enter__()`, `__exit__(()`, and `render()`.
+
+The design choice ensure that the constraints are made explicit in code. By using [abstract base classes](https://docs.python.org/3/library/abc.html), we communicate to other programmers (or our future selves) exactly what a view must do, before they write a single line of a new view class.
 
 ### Concrete Views
 
