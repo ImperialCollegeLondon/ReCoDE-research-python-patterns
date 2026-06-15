@@ -155,8 +155,6 @@ The `PlotView` takes a different approach. Rather than displaying live in the te
 
 ```python title="view/plot.py"
 class PlotView(BaseView):
-    """Matplotlib-based view for visualizing and exporting Game of Life simulations."""
-
     def __init__(self, output_path: Path | None = None) -> None:
         self.output_path = output_path
         self._cmap = ListedColormap(["white", "black"])
@@ -164,36 +162,63 @@ class PlotView(BaseView):
         self._frame_artists = []
 ```
 
-The `_cmap` is a custom colormap, white for dead cells, black for live cells. The `_frame_artists` list accumulates frames for later animation.
+- The `#!py self._cmap` is a custom colourmap, white for dead cells, black for live cells.
+- The `matplotlib` [`Figure`](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure) and [`Axes`](https://matplotlib.org/stable/api/axes_api.html#the-axes-class) (stored in `#!py self.fig` and `#!py self.ax` respectively) have been instantiated using the `#!py plt.subplots()`. When instantiated, the [`constrained_layout=True`](https://matplotlib.org/stable/users/explain/axes/constrainedlayout_guide.html) flag is passed to used to plots cleaner with less white space. For users familiar with `tight_layout()`, this is preferred over `tight_layout()` (see [tight layout guide tip](https://matplotlib.org/stable/users/explain/axes/tight_layout_guide.html)) as constrained layout uses a more modern algorithm.
+- The `#!py self._frame_artists` list accumulates frames for later animation.
 
-The `render` method is minimal,
+The setup of the plotting view is fairly straightforward whereby the title is set and axis ticks are disabled.
 
 ```python title="view/plot.py"
-def render(self, game: "GameOfLife") -> None:
-    self._frame_artists.append([self.ax.imshow(game.grid, cmap=self._cmap, interpolation="nearest")])
+class PlotView(BaseView):
+    @override
+    def __enter__(self) -> Self:
+        # Set title of figure
+        _ = self.fig.suptitle("Game of Life")
+
+        # Disable axis ticks
+        _ = self.ax.set_xticks([])
+        _ = self.ax.set_yticks([])
+        return self
 ```
 
-It simply stores a matplotlib image of the current grid. No animation happens here. Instead, all the animation logic lives in `__exit__`:
+!!! note
+
+    In `__enter__()`, the `matplotlib` methods have the side effect  of setting values and does return a value. However, the returned value is not used. Hence, it has been set to the variable `_` to indicate that it is not used.
+
+    This is not strictly necessary, especially for `matplotlib` methods. However, it is a style that I find useful when working with functions that I know return a value but that has been discarded as only the side effects are desired.
 
 ```python title="view/plot.py"
-def __exit__(self, *exc_details: Any) -> None:
-    animated = animation.ArtistAnimation(
-        self.fig,
-        self._frame_artists,
-        interval=self.INTERVAL,
-        blit=True,
-        repeat=True,
-    )
+class PlotView(BaseView):
+    @override
+    def render(self, game: "GameOfLife") -> None:
+        self._frame_artists.append([self.ax.imshow(game.grid, cmap=self._cmap, interpolation="nearest")])
+```
 
-    if self.output_path is None:
-        plt.show()
-    else:
-        animated.save(
-            self.output_path,
-            savefig_kwargs={"bbox_inches": "tight"},
+To render the changes to the model, the `matplotlib` [`Axes.imshow()`](https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.imshow.html) method is used to display the information. This returns an `AxesImage` instance which implements the `matplotlib.artist.Artist` abstract base class. Thus, the rendering step simply stores a matplotlib image of the current grid. No animation happens here. Instead, all the animation logic lives in `__exit__`,
+
+```python title="view/plot.py"
+class PlotView(BaseView):
+    @override
+    def __exit__(self, *exc_details: Any) -> None:
+        animated = animation.ArtistAnimation(
+            self.fig,
+            self._frame_artists,
+            interval=self.INTERVAL,
+            blit=True,
+            repeat=True,
         )
-    plt.close(self.fig)
+
+        if self.output_path is None:
+            plt.show()
+        else:
+            animated.save(
+                self.output_path,
+                savefig_kwargs={"bbox_inches": "tight"},
+            )
+        plt.close(self.fig)
 ```
+
+Upon exiting the `PlotView` context, the animation is created using [`ArtistAnimation`](https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ArtistAnimation.html#matplotlib.animation.ArtistAnimation). This uses the created artists stored in `!#py self._frame_artists` as each frame of the animation.
 
 This design decision in `PlotView` defers expensive operations (animation creation and saving) until the end. This is more efficient as you avoid recreating the animation after every single render. Instead, the frames are collected and the animation is assembled once when the context exits. If `output_path` is `None`, the animation is displayed interactively; otherwise, it's saved to file (MP4, GIF, etc.).
 
@@ -203,14 +228,13 @@ For more details on how matplotlib animations work, see the [matplotlib animatio
 
 ### Design patterns used
 
-- *Strategy Pattern*: Each view class is a different strategy for visualization. The controller doesn't know or care which strategy is active—it just calls `render()` on whatever view it was given.
-- *Polymorphism*: Because all views implement the same interface, the controller can treat them uniformly. This is polymorphism in action: one method call, different behaviors depending on the object's type.
-- *Template Method Pattern*: The abstract `BaseView` defines the structure (you must have `__enter__`, `__exit__`, and `render`), but leaves the details to subclasses. This ensures consistency while allowing flexibility.
+- *Strategy Pattern*: Each view class is a different strategy for visualization. The controller doesn't know or care which strategy is active, it just calls `render()` on whatever view it was given.
+- *Polymorphism*: Because all views implement the same interface, the controller can treat them uniformly. The polymorphism is what enables the strategy pattern to be effective as a given method results in different behaviours depending on the object's type.
 - *Context Manager Protocol*: By using `with` statements, resources (display windows, file handles, live terminals) are guaranteed to be cleaned up, even if an exception occurs.
 
-## Putting It Together
+### Putting It Together
 
-The controller doesn't instantiate views directly with complex logic. Instead, it receives a view and uses it like this:
+The controller doesn't instantiate views directly with complex logic. Instead, it receives a view and uses it like this,
 
 ```python
 with view:
@@ -219,6 +243,6 @@ with view:
         game.step()
 ```
 
-This is simple and clear. The view's job is to display; the model's job is to compute; the controller's job is to coordinate. Each has a single responsibility, and they communicate through well-defined interfaces.
+The simplicity makes it clear. The view's job is to display; the model's job is to compute; the controller's job is to coordinate. Each has a single responsibility, and they communicate through well-defined interfaces.
 
-By designing views as interchangeable strategies that adhere to a common abstract interface, we've made it trivial to add new visualizations—a web view, a 3D visualization, a sound-based output—without modifying the existing code. This is the power of good abstraction.
+By designing views as interchangeable strategies that adhere to a common abstract interface, we've made it trivial to add new visualizations without modifying the existing code.
