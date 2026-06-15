@@ -57,65 +57,73 @@ By inheriting from [`AbstractContextManager`](https://docs.python.org/3/library/
 ??? note "Note on Python `__magic__()` methods"
     These methods which start and end with a double underline, e.g. `__name-of-method__()`, are called [magic or special methods](https://realpython.com/python-magic-methods/#getting-to-know-pythons-magic-or-special-methods) in Python.
 
-This pattern is an application of the *context manager protocol*, which is a Python idiom for reliable resource management. Combined with the [`@abstractmethod`](https://docs.python.org/3/library/abc.html#abc.abstractmethod) [decorator](https://realpython.com/primer-on-python-decorators/) on `render()`, it means any concrete view *must* implement three methods to satisfy the interface: `__enter__()`, `__exit__(()`, and `render()`.
+This pattern is an application of the *context manager protocol*, which is a Python idiom for reliable resource management. Combined with the [`@abstractmethod`](https://docs.python.org/3/library/abc.html#abc.abstractmethod) [decorator](https://realpython.com/primer-on-python-decorators/) on `render()`, it means any concrete view *must* implement three methods to satisfy the interface: `__enter__()`, `__exit__()`, and `render()`.
 
 The design choice ensure that the constraints are made explicit in code. By using [abstract base classes](https://docs.python.org/3/library/abc.html), we communicate to other programmers (or our future selves) exactly what a view must do, before they write a single line of a new view class.
 
 ### Concrete Views
 
-Polymorphism means "many forms." Here, we have one interface (`BaseView`) but multiple implementations.
+[Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(programming_language_theory)) means "many forms." Here, we have one interface (`BaseView`) but multiple implementations which all conform to the interface.
 
 #### CLI View: Terminal Output with `rich`
 
-The `CliView` displays the Game of Life in the terminal using the `rich` library, which provides tools for beautiful text formatting:
+The `CliView` displays the Game of Life in the terminal using the [`rich`](https://rich.readthedocs.io/en/stable/) library, which provides tools for beautiful text formatting:
 
-```python title="view/cli.py"
+```python title="view/cli.py" linenums="1"
 class CliView(BaseView):
-    """Terminal-based view for displaying the Game of Life simulation."""
-
     ALIVE_CELL: ClassVar[str] = "\u2588"  # Unicode for full block █
     DEAD_CELL: ClassVar[str] = " "
 
-    def __init__(self, time_between_generations: float) -> None:
+   def __init__(self, time_between_generations: float) -> None:
+        super().__init__() # (1)
         self.console: Console = Console()
-        refresh_per_second: int = int(np.ceil(1 / time_between_generations)) + 1
-        self.live_display: Live = Live(
-            console=self.console,
-            refresh_per_second=refresh_per_second,
-            screen=True
-        )
+        # When time between generations is < 1, +1 is to guarantee that refresh rate is higher than frequency of data
+        # Otherwise, it can refresh twice a second and still be faster than the refresh rate
+        refresh_per_second: int = int(np.ceil(1 / time_between_generations)) + 1 if time_between_generations < 1 else 2
+        self.live_display: Live = Live(console=self.console, refresh_per_second=refresh_per_second, screen=True)
         self._time_between_gens: float = time_between_generations
+
 ```
 
-Notice the class variables `ALIVE_CELL` and `DEAD_CELL`. These represent the visual symbols, a full Unicode block character for live cells and a space for dead cells. Using Unicode allows the display to look professional and handle different terminal widths gracefully.
+1. Calls that parent `__init__()` method. As the parent's (`BaseView`) has an empty initializer, this is not strictly necessary. However, it is good coding practice and will catch issues if the parent's `__init__()` method changes.
 
-The `Console` object from `rich` manages the terminal output, and the `Live` object provides live-updating capabilities. The refresh rate is calculated to always be faster than the generation interval, ensuring smooth animation.
+In line 2 and 3 in the code block above are the class variables `ALIVE_CELL` and `DEAD_CELL`. The naming convention of [`UPPER_CASE_WITH_UNDERSCORES`](https://peps.python.org/pep-0008/#descriptive-naming-styles) has been used to signal to readers that this is a [constant](https://peps.python.org/pep-0008/#constants). In addition, the `ClassVar` type annotation, further signals to readers that this is class variable.
+These class variables store the visual symbols for live cells and a space for dead cells. Here, a full Unicode block character has been used to allow for the display to look professional and handle different terminal widths gracefully.
 
-The `map_to_string` method transforms the numeric grid into visual output:
+The [`Console` object from `rich`](https://rich.readthedocs.io/en/stable/reference/console.html#module-rich.console) is their abstraction of the console and manages the terminal output. The [`Live` object](https://rich.readthedocs.io/en/stable/reference/live.html#rich.live.Live) provides live-updating capabilities. By initializing the `Live` instance with the `Console` instance in line 83, it allows for the console output to be updated with a specified refresh rate. In line 82, the refresh rate is calculated to always be faster than the generation interval, ensuring smooth animation.
+
+As the model stores the grid in an array of ones and zeros, we need to convert this into a string which can be displayed by the terminal. This is performed using the `map_to_string()` method which transforms the numeric grid into visual output,
 
 ```python title="view/cli.py"
-def map_to_string(self, arr: np.ndarray) -> str:
-    """Convert a 2D numpy array to a string representation."""
-    assert arr.ndim == 2
-    chars = np.where(arr == 1, self.ALIVE_CELL, self.DEAD_CELL)
-    return "\n".join("".join(row) for row in chars)
+class CliView(BaseView):
+    def map_to_string(self, arr: np.ndarray) -> str:
+        if arr.ndim != 2: # (1)
+            raise ValueError("Array must have two dimensions")
+        chars = np.where(arr == 1, self.ALIVE_CELL, self.DEAD_CELL)
+        return "\n".join("".join(row) for row in chars)
 ```
 
-This is a pure function, it takes in a grid and produces a string, with no side effects. Here, it use NumPy's `where` to swap 1s and 0s for visual characters, then join them into a multi-line string.
+1. Defensively perform check to ensure that the array only has two dimensions
 
-The `render` method then wraps this string in a `Panel` for visual formatting:
+This is a [pure function](https://en.wikipedia.org/wiki/Pure_function), it takes in a grid and produces a string, with no side effects. Here, it use [NumPy's `where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where) to swap 1s and 0s for visual characters, then join them into a multi-line string.
+
+The `render()` method then wraps this string in a [`Panel`](https://rich.readthedocs.io/en/stable/panel.html) for visual formatting which is used to update the `#!py self.live_display`,
 
 ```python title="view/cli.py"
-def render(self, game: "GameOfLife") -> None:
-    board = self.map_to_string(game.grid)
-    panel = Panel(
-        board,
-        title=f"Conway's Game of Life - Generation {game.generation}",
-        border_style="green",
-    )
-    self.live_display.update(panel)
-    time.sleep(self._time_between_gens)
+class CliView(BaseView):
+    def render(self, game: "GameOfLife") -> None:
+        board = self.map_to_string(game.grid) # (1)
+        panel = Panel(
+            board,
+            title=f"Conway's Game of Life - Generation {game.generation}",
+            border_style="green",
+        )
+        self.live_display.update(panel)
+        time.sleep(self._time_between_gens) # (2)
 ```
+
+1. Maps the model state to a format that can be "understood" by the view
+2. `time.sleep()` is to prevent everything from being displayed at once. This forces some time between the generations such that the progression between the generations is can be seen by the human.
 
 When you call `render`, it asks the game for its grid and generation, converts the grid to a visual string, and updates the live display. The sleep ensures the animation plays at the intended speed.
 
