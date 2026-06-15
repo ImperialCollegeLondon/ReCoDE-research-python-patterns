@@ -92,7 +92,28 @@ These class variables store the visual symbols for live cells and a space for de
 
 The [`Console` object from `rich`](https://rich.readthedocs.io/en/stable/reference/console.html#module-rich.console) is their abstraction of the console and manages the terminal output. The [`Live` object](https://rich.readthedocs.io/en/stable/reference/live.html#rich.live.Live) provides live-updating capabilities. By initializing the `Live` instance with the `Console` instance in line 83, it allows for the console output to be updated with a specified refresh rate. In line 82, the refresh rate is calculated to always be faster than the generation interval, ensuring smooth animation.
 
-As the model stores the grid in an array of ones and zeros, we need to convert this into a string which can be displayed by the terminal. This is performed using the `map_to_string()` method which transforms the numeric grid into visual output,
+When the `CliView` class is invoked with a `with` statement, the `__enter__()` method is executed,
+
+```python title="view/cli.py" linenums="1"
+class CliView(BaseView):
+    @override
+    def __enter__(self) -> Self:
+        self.console.print("[bold cyan]Conway's Game of Life[/bold cyan]")
+        self.console.print("[dim]Press Ctrl+C to stop[/dim]\n")
+        time.sleep(1) # (1)
+        self.live_display.start()
+        return self # (2)
+```
+
+1. Sleeps for 1 second so that the text printed to the console remains there for a while before being replaced by the live display
+2. To conform to the `__enter__()` signature, `self` needs to be returned
+
+The [`@override`](https://typing.python.org/en/latest/spec/class-compat.html#override) decorator in line 2 is to signal to the type checker and readers that this [method overriding](https://en.wikipedia.org/wiki/Method_overriding) takes place here. This means that this class is replacing the implementation of the implementation of the parent class. In this case, it is providing a concrete implementation of the parent `BaseView`.
+
+This method instructs the user what this is for and how to stop it in lines 4 and 5. [`rich` allows for colours and styles](https://rich.readthedocs.io/en/stable/markup.html) to be specified for the output in the console. This simplifies the process of building a pretty CLI tool that highlights the right information to your user. For the example here, the name of this tool is in bold while the exit information (which is less important) has been dimmed.
+In line 7, the live display that was instantiated is started. This replaces any text in the terminal with this display.
+
+When it comes to rendering, it is important to note that the model stores the grid in an array of ones and zeros. Thus, we need to convert this into a string which can be displayed by the terminal. This is performed using the `map_to_string()` method which transforms the numeric grid into visual output,
 
 ```python title="view/cli.py"
 class CliView(BaseView):
@@ -111,6 +132,7 @@ The `render()` method then wraps this string in a [`Panel`](https://rich.readthe
 
 ```python title="view/cli.py"
 class CliView(BaseView):
+    @override
     def render(self, game: "GameOfLife") -> None:
         board = self.map_to_string(game.grid) # (1)
         panel = Panel(
