@@ -3,9 +3,33 @@
 The Controller is the orchestrator of the MVC architecture. While the Model knows nothing about the user or the display, and the View knows nothing about the game rules, the Controller coordinates between them. It interprets user input, transforms it into commands for the Model, and ensures the View receives updated state at the right time.
 
 In our Game of Life application, the Controller's responsibilities include:
+
 - Creating and configuring the Model with the right initialization strategy
 - Managing the simulation loop
 - Coordinating between Model and View
+
+In the diagram below, the user provides input through the configuration to the controller. This allows it to manipulated the model and configure it to have the right initialization strategy. It then orchestrates the the interactions between the view and the model by managing the simulation loop.
+
+```mermaid
+---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart BT
+  user([User])
+  user -->|provides input| controller
+  controller --> |manipulates model| a
+  subgraph a [orchestrated by controller]
+    direction RL
+    model -->|updates| view
+  end
+  a -->|view renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style controller fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0,1 stroke:#7455FF,stroke-width:4px
+```
 
 The genius of MVC is that the Controller logic remains simple and stable as long as the Model and View interfaces are well-defined.
 
