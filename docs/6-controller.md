@@ -31,11 +31,29 @@ flowchart BT
   linkStyle 0,1 stroke:#7455FF,stroke-width:4px
 ```
 
-The genius of MVC is that the Controller logic remains simple and stable as long as the Model and View interfaces are well-defined.
+The MVC architecture enables the Controller logic remains simple and stable as long as the Model and View interfaces are well-defined.
 
-## Configuration as a Design Decision
+## Configuration to Facilitate Dependency Injection
 
-Before the Controller can orchestrate anything, it needs instructions. In well-designed research software, configuration should be explicit, validated, and separate from code. This is handled through configuration files and Pydantic models.
+Before the Controller can orchestrate anything, it needs instructions. In well-designed research software, configuration should be explicit, validated, and separate from code. This is handled through configuration files and [`pydantic` models](https://pydantic.dev/docs/validation/latest/concepts/models/).
+
+```mermaid
+---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user -->|provides input| controller
+  controller -->|manipulates| model
+  model -->|updates| view
+  view -->|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style controller fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0 stroke:#7455FF,stroke-width:4px
+```
 
 ### From YAML to Typed Configuration
 
