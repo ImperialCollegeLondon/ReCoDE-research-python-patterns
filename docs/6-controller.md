@@ -55,11 +55,11 @@ flowchart TD
   linkStyle 0 stroke:#7455FF,stroke-width:4px
 ```
 
-### From YAML to Typed Configuration
+### Deserialization: From Input File Format to Python Object
 
-The journey begins with a YAML configuration file. But configuration files are just strings—they need to be validated and transformed into typed Python objects. This is where Pydantic comes in:
+The journey begins with a YAML configuration file. But these configuration files are just text. They need to (magically) be validated and transformed into typed Python objects. This is where `pydantic` comes in,
 
-```python title="config.py"
+```python title="config.py" linenums="1"
 class FromYaml(BaseModel):
     """Base class providing YAML loading functionality for configuration classes."""
 
@@ -72,10 +72,16 @@ class FromYaml(BaseModel):
         with path.open(mode="r", encoding="utf-8") as f:
             data: dict[Hashable, Any] = yaml.safe_load(f)
 
+        # raises ValidationError if it fails
         return cls.model_validate(data)
 ```
 
-This pattern separates concerns: YAML loading logic lives in one place, and subclasses inherit this capability. When `cls.model_validate(data)` is called, Pydantic performs validation—checking types, enforcing constraints, and raising clear errors if something is wrong. This *fails fast*: invalid configurations are caught immediately, before any simulation begins.
+This class inherits from the [`pydantic.BaseModel`](https://pydantic.dev/docs/validation/latest/concepts/models/#basic-model-usage) to provide it with all the validation functionalities of `pydantic`. The method shown here is a [class method](https://docs.python.org/3.14/library/functions.html#classmethod) as the class defines what validation the data is performed on.
+When `cls.model_validate(data)` is called on line 14, `pydantic` performs validation by checking types, enforcing constraints, and raising clear errors if something is wrong. This *fails fast*, any invalid configurations are caught immediately, before the simulation begins.
+
+!!! note
+
+    By default, `pydantic` provides an [interface for deserialization of JSON files](https://pydantic.dev/docs/validation/latest/concepts/json/). However, I find JSON files unwieldy and less human readable. My personal preference for configuration files are [YAML files](https://yaml.org/).
 
 ### Enumerations for Type Safety
 
