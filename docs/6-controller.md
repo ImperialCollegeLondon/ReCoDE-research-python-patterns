@@ -83,38 +83,48 @@ When `cls.model_validate(data)` is called on line 14, `pydantic` performs valida
 
     By default, `pydantic` provides an [interface for deserialization of JSON files](https://pydantic.dev/docs/validation/latest/concepts/json/). However, I find JSON files unwieldy and less human readable. My personal preference for configuration files are [YAML files](https://yaml.org/).
 
-### Enumerations for Type Safety
+### Using Enumerations for Input Validation
 
-Configuration often involves selecting from a fixed set of options. Rather than using strings that can have typos or be misunderstood, we use enums:
+Configuration often involves selecting from a fixed set of options. Rather than using strings that can have typos or be misunderstood, we use enums,
 
 ```python title="config.py"
 class GridInitialiser(StrEnum):
-    """Enumeration of supported grid initialization strategies."""
     ZEROS = "zeros"
     RANDOM = "random"
     PATTERN = "pattern"
 
 class DisplayInterface(StrEnum):
-    """Enumeration of supported display/view interfaces."""
     CLI = "cli"
     PLOT = "plot"
 ```
 
-When a Pydantic model field uses an enum, Pydantic automatically validates that the input matches one of the defined values. Typos in YAML configuration are caught and reported to the user. At the code level, you can exhaustively pattern-match on the enum (more on this below), and the type checker can verify you've handled all cases.
+When a `pydantic` model field uses an enum, `pydantic` automatically validates that the input matches one of the defined values. Typos in YAML configuration are caught and reported to the user. At the code level, you can [exhaustively match patterns](https://realpython.com/structural-pattern-matching/) on the enum (more on this below), and the type checker can verify you've handled all cases. We talk about this more in [The Factory Pattern for Grid Creation](<6-controller#The Factory Pattern for Grid Creation>).
 
 ### Composition of Configuration Objects
 
-Configuration objects themselves are composed into higher-level configurations:
+Configuration objects themselves are composed into higher-level configurations. For example, to configure the full game of life simulation we have this class,
 
 ```python title="config.py"
+Proportion = Annotated[NonNegativeFloat, Field(le=1)]
+
 class GameOfLifeConfigFrom(FromYaml):
     """Configuration for Game of Life simulation parameters."""
-    num_rows: PositiveInt = 50
-    num_cols: PositiveInt = 50
+    num_rows: Annotated[PositiveInt, Field(description="Number of rows in game of life grid")] = 50
+    num_cols: Annotated[PositiveInt, Field(description="Number of cols in game of life grid")] = 50
     grid_initialiser: GridInitialiser = GridInitialiser.ZEROS
-    density: Proportion | None = None
-    pattern: Pattern | None = None
+    density: Annotated[Proportion | None, Field(description="Density of cells in game of life grid")] = None
+    pattern: Annotated[Pattern | None, Field(description="Pattern to initialise grid with")] = None
+```
 
+The syntax of the type annotation for the fields here is a little complicated. It follows [`pydantic`'s annotated pattern](https://pydantic.dev/docs/validation/latest/concepts/fields/#the-annotated-pattern) which allows us to specify a constrain and attach the [`Field()` function](https://pydantic.dev/docs/validation/latest/api/pydantic/fields/#pydantic.fields.Field) to provide additional information about a field. In this case, it provides a description of the field which would be useful for the user or a new developer.
+
+1. The `num_rows` and `num_cols` fields of the class which are constrained to be a positive `int` through the [`pydantic` `PositiveInt` class](https://pydantic.dev/docs/validation/2.3/usage/types/number_types/#constrained-integers).
+2. The `grid_initialiser` field uses the `GridInitialiser` enum thus the only valid values for this field will be `#!py "zeros", "random", "pattern"`
+3. The `density` field uses the type alias of `Proportion`. This pattern is useful when a type will be reused in another case as it avoids code duplication.
+4. The `pattern` field is the class [`Pattern` from our Model](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/model.py#L30-L90). If this is provided, it will perform the validations defined in that class. This is an example of how we can have [nested models](https://pydantic.dev/docs/validation/latest/concepts/models/#nested-models), i.e. a child class of `pydantic.BaseModel` can be composed of other children of `pydantic.BaseModel`.
+
+
+```py
 class RunConfig(FromYaml):
     """Top-level configuration combining game and view settings."""
     interface: DisplayInterface
@@ -122,7 +132,9 @@ class RunConfig(FromYaml):
     gol_config: GameOfLifeConfigFrom
 ```
 
-`RunConfig` composes both game configuration and view configuration. This reflects the composition pattern mentioned in the Model section: a `RunConfig` *has a* `GameOfLifeConfigFrom` (it is not one). By structuring configuration this way, we make the relationships between components explicit and testable.
+The `RunConfig` class enables a single configuration file to be provided to specify both the game and the view configurations.
+<!--As mentioned in the [Model section](4-model#)-->
+This reflects the composition pattern mentioned in the Model section: a `RunConfig` *has a* `GameOfLifeConfigFrom` (it is not one). By structuring configuration this way, we make the relationships between components explicit and testable.
 
 ## The Factory Pattern for Grid Creation
 
