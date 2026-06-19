@@ -136,7 +136,10 @@ The `RunConfig` class enables a single configuration file to be provided to spec
 <!--As mentioned in the [Model section](4-model#)-->
 This reflects the composition pattern mentioned in the Model section: a `RunConfig` *has a* `GameOfLifeConfigFrom` (it is not one). By structuring configuration this way, we make the relationships between components explicit and testable.
 
-## The Factory Pattern for Grid Creation
+## Turning Configurations into Objects
+
+The controller's job is to take user input and manipulate the model accordingly. To kick off the simulation, the `GameOfLife` needs to be instantiated which requires the `GridCreator` class to be instantiated with the information from the user. As the controller sits between the user input and the model, it is responsible for injecting this information into the `GameOfLife`. This is a form of [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), specifically this is a form of [constructor dependency injection](https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection) as the instance of `GridCreator` is passed in as argument to the constructor of the `GameOfLife`.
+
 
 Looking back at the Model, we learned that `GameOfLife` accepts a `GridCreator` strategy. But which strategy should be used? That depends on user configuration. The `GridCreatorFactory` encapsulates this selection logic:
 
