@@ -140,8 +140,14 @@ This reflects the composition pattern mentioned in the Model section: a `RunConf
 
 The controller's job is to take user input and manipulate the model accordingly. To kick off the simulation, the `GameOfLife` needs to be instantiated which requires the `GridCreator` class to be instantiated with the information from the user. As the controller sits between the user input and the model, it is responsible for injecting this information into the `GameOfLife`. This is a form of [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), specifically this is a form of [constructor dependency injection](https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection) as the instance of `GridCreator` is passed in as argument to the constructor of the `GameOfLife`.
 
+!!! quote
+    "As an analogy, cars can be thought of as services which perform the useful work of transporting people from one place to another. Car engines can require gas, diesel or electricity, but this detail is unimportant to the client (e.g. a passenger) who only cares if it can get them to their destination.
 
-Looking back at the Model, we learned that `GameOfLife` accepts a `GridCreator` strategy. But which strategy should be used? That depends on user configuration. The `GridCreatorFactory` encapsulates this selection logic:
+    Cars present a uniform interface through their pedals, steering wheels and other controls. As such, which engine they were 'injected' with on the factory line ceases to matter and drivers can switch between any kind of car as needed."
+
+    [From Wikipedia](https://en.wikipedia.org/wiki/Dependency_injection#Analogy)
+
+Due to the multiple permutations of the `GridCreator` and the complexity of instantiating each child class, we want to use a [creational design design pattern](https://en.wikipedia.org/wiki/Creational_pattern) - as we want to create an object - called a [factory](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)). The `GridCreatorFactory` encapsulates this selection logic,
 
 ```python title="controller.py"
 class GridCreatorFactory:
@@ -174,9 +180,10 @@ class GridCreatorFactory:
                 assert_never(unreachable)
 ```
 
-Notice the `match` statement. This is Python 3.10+ exhaustive pattern matching. Each `case` corresponds to an enum member. The type checker verifies that all cases are covered. The `assert_never()` acts as a safety net—if an unexpected value somehow reaches this code at runtime, it raises an error.
+Which child class is instantiated depends on the enum specified in the `GameOfLifeConfigFrom.grid_initialiser` field. As the initializer for each child class requires a unique logic, this branching has been achieved using [Python's `match` statement](https://docs.python.org/3/reference/compound_stmts.html#the-match-statement).
+This is a Python 3.10+ feature which enables exhaustive pattern matching. Each `case` corresponds to an enum member. The type checker verifies that all cases are covered. The [`assert_never()`](https://typing.python.org/en/latest/guides/unreachable.html#assert-never-and-exhaustiveness-checking) acts as a safety net, if an unexpected value somehow reaches this code at runtime, it raises an error. It also allows for some code to be [marked as being unreachable to the static type checker](https://typing.python.org/en/latest/guides/unreachable.html#marking-code-as-unreachable).
 
-This design choice—using `match` on an enum—makes the code self-documenting: a reader immediately sees all possible initialization strategies. It's also maintainable: if you add a new `GridInitialiser` member, the type checker will alert you that the `match` statement is incomplete.
+By using `match` on an enum, it makes the code self-documenting. A reader would immediately see all possible initialization strategies and makes it maintainable. If you add a new `GridInitialiser` member, the type checker will alert you that the `match` statement is incomplete.
 
 ### Why a Factory?
 
