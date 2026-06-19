@@ -187,7 +187,7 @@ By using `match` on an enum, it makes the code self-documenting. A reader would 
 
 ### Why a Factory?
 
-Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the **Single Responsibility Principle** in action: `GridCreatorFactory` has one job—decide which grid creator to instantiate based on configuration.
+Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the application of the single responsibility principle, `GridCreatorFactory` has one job, decide which grid creator to instantiate based on configuration. This allows the [`create_game_of_life()` method](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/controller.py#L167-L194) which is responsible for instantiating the `GameOfLife` to be extremely simple and only be responsible for that.
 
 ## The Iterator Pattern for Control
 
@@ -240,28 +240,6 @@ The logic is straightforward:
 3. Exit the View's context manager (resources are cleaned up)
 
 Notice what's *not* here: no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.
-
-## Factory Pattern for Views
-
-Just as the Model uses a factory to select grid creators, the Controller needs a factory to select views:
-
-```python title="main.py"
-def _create_view(run_config: RunConfig) -> BaseView:
-    """Create the appropriate view based on configuration using the Factory Pattern."""
-    match run_config.interface:
-        case DisplayInterface.CLI:
-            if not isinstance(run_config.view_config, CLIViewConfig):
-                raise ValueError("View config must be of type CLIViewConfig for CLI interface")
-            return CliView(run_config.view_config.speed)
-        case DisplayInterface.PLOT:
-            if not isinstance(run_config.view_config, PlotViewConfig):
-                raise ValueError("View config must be of type PlotViewConfig for PLOT interface")
-            return PlotView(output_path=run_config.view_config.output_dir / run_config.view_config.output_filename)
-        case _ as unreachable:
-            assert_never(unreachable)
-```
-
-Again, exhaustive pattern matching ensures all interface types are handled. The type guards (`isinstance` checks) provide runtime validation that the configuration matches the selected interface. This prevents subtle bugs where, for example, someone selects CLI interface but provides plot configuration.
 
 ## The Command-Line Interface
 
