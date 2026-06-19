@@ -189,9 +189,13 @@ By using `match` on an enum, it makes the code self-documenting. A reader would 
 
 Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the application of the single responsibility principle, `GridCreatorFactory` has one job, decide which grid creator to instantiate based on configuration. This allows the [`create_game_of_life()` method](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/controller.py#L167-L194) which is responsible for instantiating the `GameOfLife` to be extremely simple and only be responsible for that.
 
-## The Iterator Pattern for Control
+## Orchestrating the Model and the View
 
-Once the Model is created, how does the Controller advance the simulation? It could write a simple loop, but a better approach is to abstract the iteration logic:
+The controller is responsible for updating the model such that the view updates accordingly. Thus, it specifies how the two should interact with each other.
+
+### The Iterator Pattern for Control
+
+Once the Model is created, how does the Controller advance the simulation? It could be a simple loop, but a better approach is to abstract the iteration logic,
 
 ```python title="controller.py"
 class GoLIterator:
@@ -211,11 +215,13 @@ class GoLIterator:
         return self.count - 1
 ```
 
+The main driver behind this abstraction is our requirement to have the CLI interface to run indefinitely while requiring a maximum number of iterations for the plotting view. This could be avoided by restricting the functionality to be such that a maximum number of iterations must be specified for the CLI interface. This additional complexity was chosen to be able to introduce the [iterator pattern](https://en.wikipedia.org/wiki/Iterator_pattern). Otherwise, one should apply the [KISS principle - "keep it simple, stupid"](https://en.wikipedia.org/wiki/KISS_principle)
+
 This implements Python's **Iterator Protocol**. By doing so, `GoLIterator` works seamlessly with Python's `for` loop. The iterator pattern decouples iteration logic from the code that uses it. Want to add a pause or checkpoint between iterations? Modify the iterator. Want to log each generation? Add it to `__next__`. The code using the iterator doesn't need to change.
 
-## The Orchestration Loop
+### The Orchestration Loop
 
-The Controller's main orchestration happens here:
+The Controller's main orchestration happens here,
 
 ```python title="controller.py"
 def execute_game_of_life(
@@ -223,76 +229,43 @@ def execute_game_of_life(
     view: BaseView,
     num_generations: int | None,
 ) -> None:
-    """Execute the Game of Life simulation for a specified number of generations."""
     with view as opened_view:
         for _ in GoLIterator(num_generations):
             opened_view.render(game)
             game.step()
 ```
 
-This is elegant in its simplicity. The function receives already-constructed objects: a Model (game), a View, and a generation count. It doesn't create them—they're passed in. This is **Dependency Injection**: dependencies are provided rather than created internally, making the function easy to test and flexible to use.
+This is elegant in its simplicity. The function receives already-constructed objects: a Model (i.e. `GameOfLife` instance), a View, and a maximum generation count. It doesn't create them, they're passed in.
+By using dependency injection - where dependencies are provided rather than created internally - it makes the function easy to test and flexible to use.
 
-The logic is straightforward:
+The logic is straightforward,
 1. Enter the View's context manager (resources are initialized)
 2. For each generation:
    - Ask the View to render the current state
    - Tell the Model to step forward one generation
 3. Exit the View's context manager (resources are cleaned up)
 
-Notice what's *not* here: no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.
+Notice what's *not* here, there is no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.
 
-## The Command-Line Interface
+## Bringing it All Together
 
-The Controller's role extends to the command-line interface, implemented in `main.py`. This is where Typer (a modern CLI framework) bridges user input to the Controller:
+### Design Patterns Summary
 
-```python title="main.py"
-@app.command()
-def run(
-    config: Annotated[Path, typer.Argument(exists=True, file_okay=True, dir_okay=False)],
-    generations: Annotated[int | None, typer.Option(help="Number of generations", min=1)] = None,
-) -> None:
-    """Run the Game of Life with configuration from a YAML file."""
-    run_config = RunConfig.from_yaml(config)
+Several patterns work together in the Controller,
 
-    if run_config.interface == DisplayInterface.PLOT and generations is None:
-        raise ValueError("Generations must be provided for plot interface")
+- **Factory Pattern**: `GridCreatorFactory` encapsulate object creation, hiding complexity from callers.
+- **Iterator Pattern**: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
+- **Dependency Injection**: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
+- **Enum Pattern**: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
+- **Composition Pattern**: Configuration objects are composed together, reflecting the structure of the system.
+- **Strategy Pattern**: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
 
-    view = _create_view(run_config)
-    game = create_game_of_life(run_config.gol_config)
-    execute_game_of_life(game, view, generations)
-```
-
-Observe the flow:
-1. User provides a config file path
-2. `RunConfig.from_yaml()` loads and validates the configuration
-3. `_create_view()` instantiates the appropriate View (Factory Pattern)
-4. `create_game_of_life()` instantiates the Model with the appropriate grid creator
-5. `execute_game_of_life()` orchestrates the simulation
-
-Each step transforms and passes data forward. There's minimal branching logic—decisions about which objects to create are delegated to factories. This makes the code readable and maintainable.
-
-## Design Patterns Summary
-
-Several patterns work together in the Controller:
-
-**Factory Pattern**: `GridCreatorFactory` and `_create_view` encapsulate object creation, hiding complexity from callers.
-
-**Iterator Pattern**: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
-
-**Dependency Injection**: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
-
-**Enum Pattern**: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
-
-**Composition Pattern**: Configuration objects are composed together, reflecting the structure of the system.
-
-**Strategy Pattern**: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
-
-## The Power of Good Architecture
+### The Power of Good Architecture
 
 The Controller layer demonstrates why good architecture matters. The orchestration loop is just five lines of code. It's simple because the Model and View have clean interfaces, and because configuration is explicit and validated before it reaches the orchestration logic.
 
-Compare this to what might happen without this architecture: mixed concerns, hard-coded configuration, tight coupling between components. Adding a new visualization mode would require modifying multiple files. Bugs would be hard to isolate because no clear boundary exists between simulation and display.
+Compare this to what might happen without this architecture. The mixture of concerns, hard-coded configuration, tight coupling between components. Adding a new visualization mode would require modifying multiple files. Bugs would be hard to isolate because no clear boundary exists between simulation and display.
 
-Instead, our architecture makes adding features straightforward—add a new Grid Creator? Update the factory. Add a new View? Implement BaseView and update the view factory. Add new configuration options? Extend the Pydantic model. Each change is localized and minimal.
+Instead, our architecture makes adding features straightforward. To add a new `GridCreator`? Update the factory. Add a new View? Implement `BaseView` and update the view factory. Add new configuration options? Extend the `pydantic` model. Each change is localized and minimal.
 
-This is the goal of the Controller layer: keep orchestration logic simple by making the pieces it orchestrates (Model and View) well-designed and isolated.
+The goal of the controller layer is to keep orchestration logic simple by making the pieces it orchestrates (Model and View) well-designed and isolated.
