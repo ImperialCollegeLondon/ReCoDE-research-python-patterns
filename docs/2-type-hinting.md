@@ -377,13 +377,11 @@ If a type is not immediately clear, add a docstring,
 ```python
 from typing import Annotated
 from pydantic import Field, NonNegativeFloat
-
-Proportion = Annotated[NonNegativeFloat, Field(le=1)]
-"""Type alias for a proportion value constrained to [0, 1].
-
-A validated type that ensures non-negative floats do not exceed 1.0, useful for
-representing probabilities and density values.
-"""
+{%
+  include-markdown "../src/game_of_life/config.py"
+  start="from game_of_life.model import Pattern"
+  end="if TYPE_CHECKING:"
+%}
 ```
 
 ### 5. Use Type Checkers in CI/CD
