@@ -5,18 +5,17 @@ We've explored the Model, View, and Controller in isolation. Each layer has clea
 This focuses on the use of [`typer`](https://typer.tiangolo.com/).
 Typer is a modern Python CLI framework that translates Python functions into command-line commands. In addition, Typer validates inputs, generates help text, and enables a pattern that eliminates large branching logic from your code. These enable it to fail fast should there be any issues with the information provided to the command line application and makes it easy for your user to use it.
 
-## The Power of Validation at the Boundary
+## Validation at the Boundary
 
-The entry point for users is not Python code or configuration objects—it's the command line. Users type commands like:
+For users, the entry point is not the Python code or the configuration objects. Instead, it is the command line where users would type commands like,
 
 ```bash
 game-of-life cli config.yaml --speed 0.2 --generations 100
-game-of-life plot config.yaml --generations 200 --output-file animation.gif
 ```
 
-One critical principle in software design is **fail fast at the boundary**. Before data enters your application logic, it should be validated. This is where Typer and Pydantic work together powerfully.
+One critical principle in software design is fail fast at the boundary. Before data enters your application logic, it should be validated. This is where `typer` and `pydantic` work together.
 
-Consider the `cli` command:
+Consider the `cli` command which launches the game of life to be rendered in the command line interface,
 
 ```python title="main.py"
 @app.command()
