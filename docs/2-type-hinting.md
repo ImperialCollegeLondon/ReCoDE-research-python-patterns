@@ -138,7 +138,7 @@ This makes the contract is clear. `process` expects something of type `DataProce
     If a static type checker is not run before running the code or enabled in your IDE to scream at you, then the code will fail regardless of whether type hints are present.
 
 
-This is why type hints are best paired with:
+This is why type hints are best paired with,
 
 - Type checkers (such as, [mypy](https://mypy-lang.org/), [pyright](https://github.com/microsoft/pyright), [ty](https://docs.astral.sh/ty/)) that catch mismatches before runtime
     - [basedpyright](https://docs.basedpyright.com/latest/) is "a fork of pyright with various type checking improvements, pylance features and more." This is a much stricter type checker. I would only recommend this if you're more experienced with Python type hinting and know how to use their judgment to balance flexibility, safety and simplicity due to [its benefit](https://docs.basedpyright.com/latest/benefits-over-pyright/new-diagnostic-rules/).
@@ -147,9 +147,37 @@ This is why type hints are best paired with:
 
 Type hints improve code quality and developer experience, but they're not a substitute for careful testing and design.
 
-## Common Types
+### Type Checkers
 
-Python provides basic types you can use in hints:
+As mentioned, type hints alone don't enforce anything. A type checker is a necessary tool that analyzes your code and reports type mismatches. The two main type checkers for Python are,
+
+- [`mypy`](https://www.mypy-lang.org/): The original type checker, widely used
+- [`pyright`](https://github.com/microsoft/pyright): Made by Microsoft, more modern and faster
+- [`ty`](https://docs.astral.sh/ty/): A newer type checker that is faster than `mypy` and `pyright`. However, it is currently (June 2026) not as full-featured as `pyright` and `mypy` (e.g. it does not have a pre-commit hook).
+
+In the `pyproject.toml`, `ty` has been installed as a dev dependency,
+
+```toml title="excerpt of pyproject.toml"
+[dependency-groups]
+dev = [
+    ...
+    "ty",   # Type checker and language server
+]
+```
+
+`ty` can be run from the command line using,
+
+```console
+$ ty check .
+```
+
+It analyzes your code and reports any type inconsistencies. You can also configure your IDE to show type checker warnings in real time, where the warnings appear inline as you code.
+
+## A Short Tour of Python Types
+
+### Common Types
+
+Python provides basic types you can use in hints,
 
 ```python
 name: str = "Alice"           # Text, i.e. strings
@@ -158,7 +186,7 @@ ratio: float = 0.5            # Floating point numbers
 is_active: bool = True        # True or False
 ```
 
-For collections, you specify both the container and the element type:
+For collections, you specify both the container and the element type,
 
 ```python
 numbers: list[int] = [1, 2, 3]
@@ -169,13 +197,22 @@ config: dict[str, int] = {"rows": 50, "cols": 100}
 !!! note
     In Python 3.9+, you can use `list[int]` instead of `List[int]` from the `typing` module. The built-in generic syntax is more concise and preferred.
 
-## Optional and Union Types
+Sometimes, it's advantageous to type hint using the [abstract base class of the built-in types](https://docs.python.org/3/library/collections.abc.html#collections-abstract-base-classes). For example, lists and tuples are [sequence types](https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range) and dictionaries are [mapping types](https://docs.python.org/3/library/stdtypes.html#mapping-types-dict) which maps a [hashable value](https://docs.python.org/3/glossary.html#term-hashable) to an arbitrary object.
 
-What if a variable can be `None` (absent or unset)? Use [`Optional`](https://docs.python.org/3/library/typing.html#typing.Optional):
+```python
+from collections.abc import Sequence, Mapping, Hashable
+
+numbers: Sequence[int] = [1, 2, 3]
+names: Sequence[str, str, str] = ("Alice", "Bob", "Carol")
+config: Mapping[Hashable, int] = {"rows": 50, "cols": 100}
+```
+
+### Optional and Union Types
+
+What if a variable can be `None` (absent or unset)? Use [`Optional`](https://docs.python.org/3/library/typing.html#typing.Optional),
 
 ```python
 def get_config_value(key: str) -> Optional[str]:
-    """Return the config value, or None if not found."""
     if key in config:
         return config[key]
     return None
@@ -183,29 +220,27 @@ def get_config_value(key: str) -> Optional[str]:
 
 `Optional[str]` means the return value is either a `str` or `None`. If the user forgets to handle the `None` case, a type checker will warn them.
 
-Alternatively (and more explicitly in Python 3.10+):
+Alternatively and more explicitly in Python 3.10+,
 
 ```python
 def get_config_value(key: str) -> str | None:
-    """Return the config value, or None if not found."""
     ...
 ```
 
-The `|` operator is [syntactic sugar for union types](https://docs.python.org/3/library/stdtypes.html#types.UnionType). It reads more naturally: "string or None".
+The `|` operator is [syntactic sugar for union types](https://docs.python.org/3/library/stdtypes.html#types.UnionType). It reads more naturally as "string or None".
 
-Sometimes a function can accept multiple types:
+This is also useful when a function can accept multiple types,
 
 ```python
 def log(message: str | int | bool) -> None:
-    """Log a message of various types."""
     print(f"[LOG] {message}")
 ```
 
 This says `message` can be a string, integer, or boolean.
 
-## Generic Types and Type Variables
+### Generic Types and Type Variables
 
-Sometimes a function works with any type. For example, a function that doubles whatever it receives:
+Sometimes a function works with any type. For example, a function that doubles whatever it receives,
 
 ```python
 from typing import TypeVar
@@ -216,21 +251,20 @@ def double(x: T) -> T:
     return x * 2
 ```
 
-Here, `T` is a [**type variable**](https://docs.python.org/3/library/typing.html#typing.TypeVar). It's a placeholder for any type. The function says: "whatever type you pass in, I'll return the same type." If you pass an `int`, you get an `int` back. If you pass a `float`, you get a `float` back.
+Here, `T` is a [*type variable*](https://docs.python.org/3/library/typing.html#typing.TypeVar). It's a placeholder for any type. The function says: "whatever type you pass in, I'll return the same type." If you pass an `int`, you get an `int` back. If you pass a `float`, you get a `float` back.
 
-This is useful for [generic containers](https://docs.python.org/3/library/typing.html#generics) like lists:
+This is useful for [generic containers](https://docs.python.org/3/library/typing.html#generics) like lists,
 
 ```python
 def first_element(items: list[T]) -> T:
-    """Return the first element of a list."""
     return items[0]
 ```
 
 The type of the returned element matches the type of elements in the list. If `items` is `list[str]`, you get a `str` back.
 
-## Type Aliases
+### Type Aliases
 
-Long type hints can become unwieldy. Create [type aliases](https://docs.python.org/3/library/typing.html#type-aliases) for readability:
+Long type hints can become unwieldy. Creating [type aliases](https://docs.python.org/3/library/typing.html#type-aliases) helps with readability,
 
 ```python
 from typing import Annotated
@@ -240,44 +274,17 @@ from pydantic import Field, NonNegativeFloat
 Proportion = Annotated[NonNegativeFloat, Field(le=1)]
 
 def set_density(density: Proportion) -> None:
-    """Set the cell density (must be 0-1)."""
     ...
 ```
 
-This is especially useful in the Game of Life project, where `Proportion` appears throughout the codebase. Define it once, use it everywhere. If requirements change, update the definition in one place.
+This is especially useful in projects, where a type such as `Proportion` appears throughout the codebase. By defining it once, it can then be easily used everywhere. If requirements change, update the definition in one place.
 
-## Type Checkers
-
-Type hints alone don't enforce anything. You need a **type checker**—a tool that analyzes your code and reports type mismatches. The two main type checkers for Python are:
-
-- [**mypy**](https://www.mypy-lang.org/): The original type checker, widely used
-- [**pyright**](https://github.com/microsoft/pyright): Made by Microsoft, more modern and faster, used in this project
-
-In the `pyproject.toml` you configured in the first tutorial, you can see:
-
-```toml
-[dependency-groups]
-dev = [
-    "pyright",
-    ...
-]
-```
-
-Pyright can be run from the command line:
-
-```console
-$ pyright src/
-```
-
-It analyzes your code and reports any type inconsistencies. You can also configure your IDE to show type checker warnings in real time—Pyright warnings appear inline as you code.
-
-## Type Hints in This Project
+### Type Hints in This Project
 
 Throughout the Game of Life project, you'll see type hints extensively:
 
 ```python title="model.py"
 def compute_next_generation(self) -> NDArrayU8:
-    """Compute the next generation grid."""
     ...
 ```
 
@@ -287,9 +294,9 @@ def compute_next_generation(self) -> NDArrayU8:
 NDArrayU8 = npt.NDArray[np.uint8]
 ```
 
-This communicates to readers: "this function returns a NumPy array of bytes (0-255 values)." Without the type hint, it's ambiguous.
+This communicates to readers that "this function returns a NumPy array of bytes (0-255 values)." Without the type hint, it's ambiguous.
 
-Another example:
+Another example,
 
 ```python title="controller.py"
 def execute_game_of_life(
@@ -297,7 +304,6 @@ def execute_game_of_life(
     view: BaseView,
     num_generations: int | None,
 ) -> None:
-    """Execute the Game of Life simulation."""
     with view as opened_view:
         for _ in GoLIterator(num_generations):
             opened_view.render(game)
@@ -316,7 +322,7 @@ If you pass a `str` as `num_generations`, a type checker will catch it.
 
 ### 1. Always Annotate Function Signatures
 
-Function signatures are the contract between a function and its callers. Always include type hints for parameters and return types:
+Function signatures are the contract between a function and its callers. Always include type hints for parameters and return types,
 
 ```python
 # Good
@@ -330,7 +336,7 @@ def add(x, y):
 
 ### 2. Use Specific Types
 
-Be as specific as practical. `list[str]` is better than `list`, which is better than no hint at all:
+Be as specific as practical. `list[str]` is better than `list`, which is better than no hint at all,
 
 ```python
 # Good
@@ -348,7 +354,7 @@ def process_names(names):
 
 ### 3. Use Type Aliases for Complex Types
 
-If a type hint is long or repeated, create an alias. The Game of Life project does this:
+If a type hint is long or repeated, create an alias. The Game of Life project does this,
 
 ```python
 # Type alias for a grid of unsigned 8-bit integers
@@ -366,7 +372,7 @@ Define it once, use it everywhere. If you need to change the type, update the al
 
 ### 4. Document Complex Types
 
-If a type is not immediately clear, add a docstring:
+If a type is not immediately clear, add a docstring,
 
 ```python
 from typing import Annotated
@@ -382,84 +388,33 @@ representing probabilities and density values.
 
 ### 5. Use Type Checkers in CI/CD
 
-Configure your type checker to run as part of your continuous integration. If code has type inconsistencies, the build fails. This prevents type-related bugs from reaching production:
+Configure your type checker to run as part of your continuous integration. If code has type inconsistencies, the build fails. This is a safeguard to prevent bad code from being added to protected branches.
 
-```toml title="pyproject.toml"
-[tool.pyright]
-include = ["src"]
-exclude = ["**/__pycache__", "**/.*"]
+```yaml title="excerpt from .github/workflows/ci.yml"
+{%
+  include-markdown "../.github/workflows/ci.yml"
+  start="uses: astral-sh/ruff-action@v3"
+  end="- name: Test with pytest"
+%}
 ```
 
-## Common Pitfalls
+### 6. Learn from Experience
 
-### Mutable Default Arguments
-
-A classic Python gotcha—mutable default arguments are shared across function calls:
-
-```python
-# Problematic
-def add_item(item: str, items: list[str] = []) -> None:
-    items.append(item)
-    print(items)
-
-add_item("apple")   # prints: ['apple']
-add_item("banana")  # prints: ['apple', 'banana'] - unexpected!
-```
-
-The default list is created once when the function is defined, then reused. The fix:
-
-```python
-# Correct
-def add_item(item: str, items: list[str] | None = None) -> None:
-    if items is None:
-        items = []
-    items.append(item)
-    print(items)
-```
-
-Type hints help catch this. A type checker might warn about the shared mutable default.
-
-### Overly Permissive Types
-A classic Python gotcha—mutable default arguments are shared across function calls:
-
-```python
-# Problematic
-def initialize_history(initial_state: NDArrayU8, history: list[NDArrayU8] = []) -> None:
-    history.append(initial_state)
-    print(f"History length: {len(history)}")
-
-initialize_history(grid1)  # prints: History length: 1
-initialize_history(grid2)  # prints: History length: 2 - unexpected! grid1 is still there!
-```
-
-The default list is created once when the function is defined, then reused across calls. The fix:
-
-```python
-# Correct
-def initialize_history(initial_state: NDArrayU8, history: list[NDArrayU8] | None = None) -> None:
-    if history is None:
-        history = []
-    history.append(initial_state)
-    print(f"History length: {len(history)}")
-```
-
-Type hints help make this pattern explicit. Using `| None` makes it clear that `None` is the default, signaling "create a new list each time."
-
+Basic use of type hints with Python is quite easy to pick up. However, acquiring the finesse to use type hints in a way that balances flexibility, control, safety and simplicity takes time. It is with experience that you learn how best to use type hints and more importantly, how *not* to use type hints.
 
 ## Looking Ahead
 
-Type hints are foundational for understanding the subsequent tutorials. The Game of Life project uses:
+Type hints are foundational for understanding the subsequent tutorials. The Game of Life project uses,
 
-- **Pydantic models** with type hints for configuration validation (covered in the Controller and Bringing It Together tutorials)
-- [**Generic types**](https://docs.python.org/3/library/typing.html#generics) like `BaseView` with subclasses `CliView` and `PlotView` (covered in the View tutorial)
-- [**Type variables**](https://docs.python.org/3/library/typing.html#typing.TypeVar) and [**Annotated types**](https://docs.python.org/3/library/typing.html#typing.Annotated) for flexible, constrained types (used throughout)
-- [**Union types**](https://docs.python.org/3/library/stdtypes.html#types.UnionType) (`|`) for expressing multiple valid types (used in configuration and view selection)
+- [Pydantic models](https://pydantic.dev/docs/validation/latest/concepts/models/) with type hints for configuration validation (covered in the Controller and Bringing It Together tutorials)
+- [Type variables](https://docs.python.org/3/library/typing.html#typing.TypeVar) and [annotated types](https://docs.python.org/3/library/typing.html#typing.Annotated) for flexible, constrained types (used throughout)
+- [Union types](https://docs.python.org/3/library/stdtypes.html#types.UnionType) (`|`) for expressing multiple valid types (used in configuration and view selection)
 
 Each of these relies on type hints to work correctly and provide IDE support.
 
 ## Conclusion
 
-Type hints are not a burden—they're an investment. The upfront cost of writing them is repaid many times over:
+Type hints are an investment. The upfront cost of writing and learning them is reaped many times over as,
 
 - Your IDE can help you more effectively
 - Bugs are caught before runtime
@@ -469,4 +424,4 @@ Type hints are not a burden—they're an investment. The upfront cost of writing
 
 In the context of research software, type hints are especially valuable. Research often involves complex data structures and transformations. Type hints make implicit assumptions explicit, improving reproducibility and reducing misunderstandings.
 
-As you work through the subsequent tutorials, pay attention to how type hints are used. They're not just decorations—they're part of the architecture, enabling clean separation of concerns and modular design.
+As you work through the subsequent tutorials, pay attention to how type hints are used. They're not just decorations, they're there to help you understand what the code more easily and provide a safety net.
