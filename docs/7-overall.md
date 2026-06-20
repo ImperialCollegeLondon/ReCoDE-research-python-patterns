@@ -10,52 +10,66 @@ Typer is a modern Python CLI framework that translates Python functions into com
 For users, the entry point is not the Python code or the configuration objects. Instead, it is the command line where users would type commands like,
 
 ```bash
-game-of-life cli config.yaml --speed 0.2 --generations 100
+game-of-life cli basic-config.yaml
 ```
 
 One critical principle in software design is fail fast at the boundary. Before data enters your application logic, it should be validated. This is where `typer` and `pydantic` work together.
 
-Consider the `cli` command which launches the game of life to be rendered in the command line interface,
+### Using `typer` and `pydantic` to Perform Validations
 
-```python title="main.py"
+In the example above,
+
+- `game-of-life` is the [command](https://en.wikipedia.org/wiki/Command_(computing)) that is being run
+- `cli` is a [subcommand](https://typer.tiangolo.com/tutorial/commands/#command-or-subcommand) which specifies the view to be the command line interface
+- `basic-config.yaml` is an argument to the subcommand
+
+!!! note
+    This is analogous to `git`. When making a commit using `git commit -m "my commit message"`, `git` is the command being invoked, `commit` is the subcommand and `-m "my commit message"` is the argument being passed to it.
+
+This `cli` subcommand is implemented in the `cli()` method,
+
+```python title="main.py" linenums="1"
+app = typer.Typer()
+
 @app.command()
 def cli(
     gol_config: Annotated[Path, typer.Argument(exists=True, file_okay=True, dir_okay=False, readable=True)],
-    speed: Annotated[float, typer.Option(help="Seconds between generations", min=0)],
+    speed: Annotated[float, typer.Option(help="Seconds between generations", min=0)] = 0.1,
     generations: Annotated[int | None, typer.Option(help="Number of generations", min=1)] = None,
 ) -> None:
-    """Run the Game of Life with a command-line interface display."""
     cli_view: BaseView = CliView(speed)
     game = create_game_of_life(GameOfLifeConfigFrom.from_yaml(gol_config))
     execute_game_of_life(game, cli_view, generations)
 ```
 
-What validations happen before this function even runs?
+The [`#!py @app.command()` decorator](https://typer.tiangolo.com/tutorial/commands/#a-cli-application-with-multiple-commands) in line 3 tells `typer` that for my command line application stored in the variable `app` (defined in line 1), I want to add a new command using the name of my function (i.e., `cli`).
 
-1. **Typer checks** if the `gol_config` path exists, is a file (not a directory), and is readable—all automatically.
-2. **Typer enforces** that `speed` is a non-negative float (min=0). If the user types `--speed -5`, Typer rejects it immediately with a clear error message.
-3. **Typer enforces** that `generations`, if provided, is at least 1. Invalid values never reach the function.
-4. **Pydantic validates** the YAML file when `GameOfLifeConfigFrom.from_yaml()` is called, catching malformed configurations before they reach game logic.
+1. The first argument of the function is `gol_config` (line 5) and is an argument of the subcommand by specifying it as a [`typer.Argument`](https://typer.tiangolo.com/tutorial/arguments/). As the type for this has been specified as a `Path` (i.e., path to the config file), additional [`Path` based validations](https://typer.tiangolo.com/tutorial/parameter-types/path/#path-validations) are performed. In this case, it checks that: the file exists; is a file and not a directory; and is readable.
+2. The second argument of the function is `speed` (line 6) and is an option to the subcommand by specifying it [`typer.Option`](https://typer.tiangolo.com/tutorial/options/). This means that it is optional, specified with a flag, and a default value will be used if it is not provided. As the type for this is a `float` and an additional check has been specified (i.e. `min=0` kwarg in `typer.Option`), it will enforce that it is a non-negative float. If the user types `--speed -5`, `typer` rejects it immediately with a clear error message.
+3. Similarly for `generations`, `typer` will enforce that it is larger than 1 and that it is an integer.
 
-This layered validation is powerful. Invalid input is caught close to where it entered, preventing cascading errors deep in the application. Users get clear, actionable error messages. Developers can trust that data inside functions is valid.
+If all these check pass, `pydantic` validates the *contents* of the YAML file when `GameOfLifeConfigFrom.from_yaml()` is called in line 10, catching malformed configurations before they reach game logic.
+
+This layered validation enables invalid input to be caught close to where it entered, preventing cascading errors deep in the application. Users get clear, actionable error messages. Developers can trust that data inside functions is valid.
 
 ### Type Annotations as Documentation
 
-Notice the `Annotated` type hints. These aren't just for type checkers—Typer reads them to generate CLI behavior:
+Notice the `Annotated` type hints. As mentioned earlier, these aren't just for type checkers, `typer` reads them to generate CLI behavior,
 
 ```python
 gol_config: Annotated[Path, typer.Argument(exists=True, file_okay=True, dir_okay=False, readable=True)]
 ```
 
-This single line tells Typer:
+This single line tells `typer`,
+
 - This is a positional argument (not an option)
 - It must be a valid file path
 - It must be readable
 - Generate appropriate help text
 
-The information is in one place, so it's easy to maintain and modify. Change the validation requirements? Update the annotation, and Typer automatically adjusts its behavior and help text.
+The information is in one place, so it's easy to maintain and modify. Change the validation requirements? Update the annotation, and `typer` automatically adjusts its behavior and help text.
 
-## Subcommands: Eliminating Branching Logic
+## Eliminating Branching Logic with Subcommands
 
 Now consider the architecture decision in `main.py`. There are three commands: `run`, `cli`, and `plot`. Why three? This is where subcommands become powerful as a design pattern.
 
