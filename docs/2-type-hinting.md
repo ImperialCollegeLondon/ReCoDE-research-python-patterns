@@ -291,6 +291,8 @@ def compute_next_generation(self) -> NDArrayU8:
 `NDArrayU8` is a type alias for a NumPy array of unsigned 8-bit integers. It's defined at the top of the file:
 
 ```python
+import numpy.typing as npt
+
 NDArrayU8 = npt.NDArray[np.uint8]
 ```
 
@@ -357,6 +359,8 @@ def process_names(names):
 If a type hint is long or repeated, create an alias. The Game of Life project does this,
 
 ```python
+import numpy.typing as npt
+
 # Type alias for a grid of unsigned 8-bit integers
 NDArrayU8 = npt.NDArray[np.uint8]
 
