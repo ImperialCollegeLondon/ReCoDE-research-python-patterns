@@ -98,7 +98,7 @@ class DisplayInterface(StrEnum):
     PLOT = "plot"
 ```
 
-When a `pydantic` model field uses an enum, `pydantic` automatically validates that the input matches one of the defined values. Typos in YAML configuration are caught and reported to the user. At the code level, you can [exhaustively match patterns](https://realpython.com/structural-pattern-matching/) on the enum (more on this below), and the type checker can verify you've handled all cases. We talk about this more in [The Factory Pattern for Grid Creation](<6-controller#Turning Configurations into Objects>).
+When a `pydantic` model field uses an enum, `pydantic` automatically validates that the input matches one of the defined values. Typos in YAML configuration are caught and reported to the user. At the code level, you can [exhaustively match patterns](https://realpython.com/structural-pattern-matching/) on the enum (more on this below), and the type checker can verify you've handled all cases. We talk about this more in [Turning Configurations into Objects](#turning-configurations-into-objects).
 
 ### Composition of Configuration Objects
 
