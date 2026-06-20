@@ -1,14 +1,14 @@
 # Type Hinting
 
-Python is a dynamically typed language, variables can hold any type of data, and their type can change at runtime. Python uses *duck typing*, it cares about what objects can *do* rather than what they *are*. This provides remarkable flexibility. However, this results in implicit assumptions scattered throughout the code. You might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break.
+Python is a [dynamically typed language](https://www.baeldung.com/cs/statically-vs-dynamically-typed-languages), variables can hold any type of data, and their type can change at runtime. Python uses [duck typing](https://en.wikipedia.org/wiki/Duck_typing), it cares about what objects can *do* rather than what they *are*. This provides remarkable flexibility. However, this results in implicit assumptions scattered throughout the code. You might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break. Or fails silently.
 
 [Type hints](https://docs.python.org/3/library/typing.html) are a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. They answer the question of "what type is this supposed to be, and what will go wrong if it is wrong?"
 
-Type hints are not enforced by Python itself. They are metadata. These annotation tell the interpreter (and more importantly, developers and tools) what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See [PEP 484](https://peps.python.org/pep-0484/) for the full specification.
+Type hints are not enforced by Python itself. They are [metadata](https://en.wikipedia.org/wiki/Metadata). These annotation tell the interpreter (and more importantly, developers and tools) what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See [PEP 484](https://peps.python.org/pep-0484/) for the full specification.
 
 ## What Are Type Hints?
 
-A type hint is an annotation that declares what type a variable, parameter, or return value should have. Here's the simplest example:
+A type hint is an annotation that declares what type a variable, parameter, or return value should have. Here's the simplest example,
 
 ```python
 def add(x: int, y: int) -> int:
@@ -17,21 +17,22 @@ def add(x: int, y: int) -> int:
 ```
 
 Breaking this down:
+
 - `x: int` says the parameter `x` should be an integer
 - `y: int` says the parameter `y` should be an integer
 - `-> int` says the function returns an integer
 
-If you call `add(2, 3)`, it works. If you call `add("hello", "world")`, Python will still execute it (by concatenating strings to return `"helloworld"`), because Python doesn't enforce type hints. But a type checker will complain and your IDE will warn you.
+If you call `#!py add(2, 3)`, it works. If you call `#!py add("hello", "world")`, Python will still execute it (by concatenating strings to return `#!py "helloworld"`), because Python doesn't enforce type hints. But a type checker will complain and your IDE will warn you.
 
 !!! abstract "TL;DR"
-Type hints are for tools and humans, _not_ for Python itself.
+    Type hints are for tools and humans, _not_ for Python itself.
 
 ### Variable Type Hints
 
-You can also annotate variables:
+Variables can be annotated using this syntax,
 
 ```python
-name: str = "Alice"
+name: str = "game of life"
 count: int = 42
 ratio: float = 0.5
 is_active: bool = True
@@ -43,22 +44,20 @@ The type annotation comes after the variable name, before the value. This tells 
 
 ### 1. IDE Support
 
-When your IDE knows the type of a variable, it can help you immensely. Consider this example without type hints:
+When your IDE knows the type of a variable, it can help you immensely. Consider this example without type hints,
 
 ```python
 game = create_game_of_life(config)
 game.
 ```
 
-When you type `game.` and pause, your IDE doesn't know what properties or methods `game` has. It can't autocomplete.
-
-Now with type hints:
+When you type `game.` and pause, your IDE doesn't know what properties or methods `game` has. It can't autocomplete. Now with type hints,
 
 ```python
 def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
     return GameOfLife(config.num_rows, config.num_cols, grid_creator=...)
 
-game = create_game_of_life(config)
+game: GameOfLife = create_game_of_life(config)
 game.
 ```
 
@@ -66,27 +65,25 @@ Your IDE knows `game` is a `GameOfLife` object. It can autocomplete and show you
 
 ### 2. Readability and Maintenance
 
-Type hints act as inline documentation. Consider a function without hints:
+Type hints act as inline documentation. Consider a function without hints,
 
 ```python
 def process_data(data, factor):
     return [x * factor for x in data]
 ```
 
-What type is `data`? Is it a list, tuple, or something else? What about `factor`? Is it a number? The function works, but the reader must trace through the code or guess.
-
-With type hints:
+What type is `data`? Is it a list, tuple, or something else? What about `factor`? Is it a number? The function works, but the reader must trace through the code or guess. With type hints,
 
 ```python
 def process_data(data: list[float], factor: float) -> list[float]:
     return [x * factor for x in data]
 ```
 
-Now it's immediately clear: the function takes a list of floats and a scale factor, and returns a list of floats. No ambiguity.
+Now it's immediately clear, the function takes a list of floats and a scale factor, and returns a list of floats.
 
 ### 3. Catching Bugs Early
 
-Type checkers—tools that analyze your code without running it—can catch many bugs before they cause problems:
+Type checkers are tools that analyze your code without running it. They can catch many bugs before they cause problems. For example,
 
 ```python
 def divide(numerator: float, denominator: float) -> float:
@@ -103,47 +100,50 @@ Type hints encourage better code design. When you must explicitly declare input 
 
 ## Duck Typing and the Limits of Type Hints
 
-Python is built on a principle called **duck typing**: "If it walks like a duck and quacks like a duck, then it's a duck." In other words, Python cares less about what something *is* and more about what it can *do*.
+Python is built on a principle called *duck typing*: "If it walks like a duck and quacks like a duck, then it's a duck." In other words, Python cares less about what something *is* and more about what it can *do*.
 
 ![duck typing comic](https://4loc.wordpress.com/wp-content/uploads/2009/02/ducktyping1.jpg){ width=320, align=right }
 
-Consider this function:
+Consider this function,
 
 ```python
 def process(obj):
-    """Process an object by calling its process_data method."""
     return obj.process_data()
 ```
 
-Python doesn't care what type `obj` is. It could be a custom class you defined, a third-party library class, or anything else—as long as it has a `process_data()` method, it works. This flexibility is powerful. You can write generic functions that work with many types without knowing their names in advance.
+Python doesn't care what type `obj` is. It could be a custom class you defined, a third-party library class, or anything else, as long as it has a `process_data()` method, it works. This flexibility allows you to write generic functions that work with many types without knowing their names in advance.
 
-However, this flexibility has a downside: **duck typing is implicit**. Developers must read the code to understand what methods are expected. An IDE can't autocomplete because it doesn't know what type `obj` is. If someone passes an object without a `process_data()` method, the code crashes at runtime with an error message rather than failing early.
+However, this flexibility has a downside - duck typing is implicit. Developers must read the code to understand what methods are expected. An IDE can't autocomplete because it doesn't know what type `obj` is. If someone passes an object without a `process_data()` method, the code crashes at runtime with an error message rather than failing early. As the code base and developed over a longer period of time, it becomes a pain to have to trace backward each time to know what is required of the function.
 
-Type hints make the implicit explicit:
+Type hints make the implicit explicit,
 
 ```python
 class DataProcessor:
-    """Something that can process data."""
     def process_data(self) -> dict:
         ...
 
 def process(obj: DataProcessor) -> dict:
-    """Process an object by calling its process_data method."""
     return obj.process_data()
 ```
 
-Now the contract is clear: `process` expects something of type `DataProcessor` (or a subclass). Your IDE can autocomplete. Type checkers can verify calls at development time.
+This makes the contract is clear. `process` expects something of type `DataProcessor` (or a subclass). Your IDE can autocomplete. Type checkers can verify calls at development time.
 
-**But here's the crucial limitation**: Type hints are not enforced by Python at runtime. You can still call `process("hello string")`, and Python will try to execute it. If `"hello string"` doesn't have a `process_data()` method, you'll get an `AttributeError` at runtime, type hints notwithstanding.
+!!! warning
+    The crucial limitation is that type hints are not enforced by Python at runtime. This means that `process("hello string")` can still be invoked and Python will try to execute it. If `"hello string"` doesn't have a `process_data()` method, you'll get an `AttributeError` at runtime, type hints notwithstanding.
 
-```python
-process("hello")  # No error from type hints, but AttributeError at runtime
-```
+    ```python
+    process("hello string")  # No error from type hints, but AttributeError at runtime
+    ```
+
+    If a static type checker is not run before running the code or enabled in your IDE to scream at you, then the code will fail regardless of whether type hints are present.
+
 
 This is why type hints are best paired with:
-- **Type checkers** (mypy, pyright) that catch mismatches before runtime
-- **Unit tests** that verify behavior
-- **Good documentation** that clarifies expectations
+
+- Type checkers (such as, [mypy](https://mypy-lang.org/), [pyright](https://github.com/microsoft/pyright), [ty](https://docs.astral.sh/ty/)) that catch mismatches before runtime
+    - [basedpyright](https://docs.basedpyright.com/latest/) is "a fork of pyright with various type checking improvements, pylance features and more." This is a much stricter type checker. I would only recommend this if you're more experienced with Python type hinting and know how to use their judgment to balance flexibility, safety and simplicity due to [its benefit](https://docs.basedpyright.com/latest/benefits-over-pyright/new-diagnostic-rules/).
+- Unit tests that verify behavior
+- Good documentation that clarifies expectations
 
 Type hints improve code quality and developer experience, but they're not a substitute for careful testing and design.
 
@@ -152,11 +152,10 @@ Type hints improve code quality and developer experience, but they're not a subs
 Python provides basic types you can use in hints:
 
 ```python
-name: str = "Alice"           # Text
-count: int = 42               # Whole numbers
-ratio: float = 0.5            # Decimal numbers
+name: str = "Alice"           # Text, i.e. strings
+count: int = 42               # Whole numbers, i.e. integers
+ratio: float = 0.5            # Floating point numbers
 is_active: bool = True        # True or False
-data: bytes = b"hello"        # Binary data
 ```
 
 For collections, you specify both the container and the element type:
