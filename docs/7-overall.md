@@ -1,8 +1,11 @@
 # Bringing It Together
 
-We've explored the Model, View, and Controller in isolation. Each layer has clear responsibilities and well-defined interfaces. But how do users actually run the simulation? How is all this wired together into a working application? The answer lies in the command-line interface (CLI), and it demonstrates an important lesson: good architecture makes the integration layer simple and elegant.
+We've explored the Model, View, and Controller in isolation. Each layer has clear responsibilities and well-defined interfaces. But how do users actually run the simulation? How is all this wired together into a working application? The answer lies in the command-line interface. Thanks to our architecture, this integration layer is simple and elegant.
 
-## From Architecture to User Interface
+This focuses on the use of [`typer`](https://typer.tiangolo.com/).
+Typer is a modern Python CLI framework that translates Python functions into command-line commands. In addition, Typer validates inputs, generates help text, and enables a pattern that eliminates large branching logic from your code. These enable it to fail fast should there be any issues with the information provided to the command line application and makes it easy for your user to use it.
+
+## The Power of Validation at the Boundary
 
 The entry point for users is not Python code or configuration objects—it's the command line. Users type commands like:
 
@@ -10,10 +13,6 @@ The entry point for users is not Python code or configuration objects—it's the
 game-of-life cli config.yaml --speed 0.2 --generations 100
 game-of-life plot config.yaml --generations 200 --output-file animation.gif
 ```
-
-This is where `Typer` comes in. Typer is a modern Python CLI framework that translates Python functions into command-line commands. The benefits go far beyond convenience: Typer validates inputs, generates help text, and enables a pattern that eliminates large branching logic from your code.
-
-## The Power of Validation at the Boundary
 
 One critical principle in software design is **fail fast at the boundary**. Before data enters your application logic, it should be validated. This is where Typer and Pydantic work together powerfully.
 
