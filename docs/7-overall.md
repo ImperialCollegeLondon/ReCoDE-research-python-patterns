@@ -217,42 +217,30 @@ This preference is due to my aversion to [code duplication](https://en.wikipedia
 
 The validation architecture spans multiple layers, each appropriate to its level:
 
-1. **CLI Layer (Typer)**: Path existence, type conversion, numeric ranges, required/optional status
-2. **Configuration Layer (Pydantic)**: YAML parsing, field type validation, constraint enforcement, cross-field validation
-3. **Application Logic**: Business rule validation (e.g., "Pattern must be specified if pattern initialiser is selected")
+1. *CLI Layer (`typer`)*: Path existence, type conversion, numeric ranges, required/optional status
+2. *Configuration Layer (`pydantic`)*: YAML parsing, field type validation, constraint enforcement, cross-field validation
+3. *Application Logic*: "Business" rule validation (e.g., pattern must be specified if pattern initializer is selected)
 
-Each layer knows about concerns at its level and delegates upward. Typer doesn't validate YAML syntax—that's Pydantic's job. Pydantic doesn't check file paths—that's Typer's job. This separation prevents duplication and keeps concerns localized.
+Each layer knows about concerns at its level and delegates accordingly. `typer` doesn't validate YAML data, that's `pydantic`'s job. `pydantic` doesn't check file paths at the user interface, that's `typer`'s job. This separation prevents duplication and keeps concerns localized.
 
-## User Experience Through Architecture
+## How Everything Fits Together
 
-Users benefit from this architecture without knowing it exists:
+The complete flow from user input to simulation for the `cli` subcommand is,
 
-- **Clear, hierarchical commands**: `game-of-life cli`, `game-of-life plot`, `game-of-life run` immediately signal different use cases
-- **Automatic help**: `game-of-life --help`, `game-of-life cli --help` generate comprehensive documentation from docstrings and type annotations
-- **Fast feedback**: Invalid inputs are caught instantly, with specific error messages
-- **Simple workflows**: Common use cases (CLI animation, plot generation) have simple command syntax without exposing complexity
+1. *User runs command*: `game-of-life cli config.yaml --speed 0.1`
+2. *Typer parses*: Validates arguments, converts types, calls the `cli` function
+3. *Pydantic validates configuration*: `GameOfLifeConfigFrom.from_yaml(config)`
+4. *Controller create model and view*: Instantiation with validated parameters
+5. *Controller orchestrates*: `execute_game_of_life` loops through generations, calling `view.render()` and `game.step()`
+6. *View displays*: `CliView` renders the grid to the terminal
+7. *Model computes*: `GameOfLife` computes next generation
+8. *Exit cleanly*: Context manager cleans up resources
 
-Behind the scenes, sophisticated architecture—configuration composition, factory patterns, abstract base classes—enables this simplicity.
+Each layer does one thing. The result is an application that is,
 
-
-## Bringing It All Together
-
-The complete flow from user input to simulation is:
-
-1. **User runs command**: `game-of-life cli config.yaml --speed 0.1`
-2. **Typer parses**: Validates arguments, converts types, calls the `cli` function
-3. **cli function loads config**: `GameOfLifeConfigFrom.from_yaml(config)` validates the YAML
-4. **Create model and view**: Straightforward instantiation with validated parameters
-5. **Controller orchestrates**: `execute_game_of_life` loops through generations, calling `view.render()` and `game.step()`
-6. **View displays**: CliView renders the grid to the terminal
-7. **Model computes**: GameOfLife computes next generation
-8. **Exit cleanly**: Context manager cleans up resources
-
-Each layer does one thing well. The result is an application that is simultaneously:
-
-- **Powerful**: Supports multiple interfaces, flexible configuration, extensible architecture
+- **Extendable**: Supports multiple interfaces, flexible configuration, extensible architecture
 - **Simple**: Users see only what they need; internal complexity is hidden
 - **Maintainable**: Changes to one layer don't cascade; new features can be added in isolation
 - **Robust**: Validation at multiple layers catches errors early
 
-This is the promise of good architecture made concrete: complexity in service of simplicity.
+The abstractions used allow the construction of an architecture where the complexity is placed at the most appropriate level and hidden from those who don't need it.
