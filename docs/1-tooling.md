@@ -1,6 +1,6 @@
 # Tooling
 
-This page explores three core tools that strengthen research software development: `uv` for dependency and environment management, `ruff` for automated linting and formatting, and `pre-commit` hooks for quality gates. Beyond `uv`, the latter two act as automated safeguards—they catch mistakes before you run your code, saving valuable debugging time.
+This page explores three core tools that strengthen research software development: `uv` for dependency and environment management, `ruff` for automated linting and formatting, and `pre-commit` hooks for quality gating. Beyond `uv`, the latter two act as automated safeguards—they catch mistakes before you run your code, saving valuable debugging time.
 
 ## Overview
 
@@ -94,7 +94,7 @@ When working on a coding project there are often dependencies that are useful fo
 ```
 
 The specifics on what each of these dependencies are and why they are useful will be covered through the course of this tutorial.
-For more information about dependency groups, [see this webpage on dependency group in uv](https://pydevtools.com/handbook/explanation/understanding-dependency-groups-in-uv/).
+See [this page](https://pydevtools.com/handbook/explanation/understanding-dependency-groups-in-uv/) for more information about dependency groups in `uv`.
 
 !!! info
     The main difference between optional dependencies and dependency groups lies at the packaging level. If you're not planning to distribute your code as a package, the distinction matters less, though it remains good practice to organise them appropriately.
@@ -143,7 +143,7 @@ In research software development, it's easy to focus solely on getting your code
 A formatter complements a linter by automatically rewriting your code to follow consistent style conventions, such as line length, spacing, and quote style. Together, linters and formatters serve as an automated code reviewer that enforces standards without requiring human effort. In a research context, this is helps to reduces cognitive load (you don't have to think about style), prevents sneaky bugs (unused imports or variables often indicate logic errors), and makes your code more readable to collaborators and your future self.
 
 !!! tip
-    Most editors and IDEs can run a linter in the background as you write. The shorter the feedback loop, the easier the fix. Catching a style or logic issue while you are still in that part of the code beats finding it later in testing or code review.
+    Most editors and IDEs can run a linter in the background as you write and highlight problems in the interface in real time. The shorter the feedback loop, the easier the fix. Catching a style or logic issue while you are still in that part of the code beats finding it later in testing or code review.
 
 Linters and formatters are also particularly valuable in collaborative settings,
 
@@ -159,7 +159,7 @@ This project uses [`ruff`](https://docs.astral.sh/ruff/), a fast, all-in-one lin
 Rather than embedding ruff configuration in the `pyproject.toml` file, this project maintains a separate `ruff.toml` file. This separation improves readability and makes it easier to reason about linting rules without scrolling through project metadata. However, this configuration could equivalently be placed under a `[tool.ruff]` section in `pyproject.toml`. Both are standard and valid approaches.
 
 The configuration starts by specifying the that the format for the project.
-Here, the `line-length = 120` setting allows lines up to 120 characters. This is more relaxed than the Python default (79 characters) which is very restrictive and not necessary for modern screens and terminal.
+Here, the `line-length = 120` setting allows lines up to 120 characters. This is more relaxed than the Python default (79 characters) which is very restrictive and not necessary for modern screens and terminals.
 
 ```toml title="ruff.toml"
 {%
@@ -222,7 +222,7 @@ $ ruff format .
 
 Git allows you to automatically run scripts at certain points in the version control workflow, these are called *hooks*. A pre-commit hook runs automatically just before you commit, giving you an opportunity to check your work and reject the commit if issues are found. Pre-commit hooks are invaluable for maintaining code quality because they prevent bad code from entering your repository in the first place. Rather than discovering problems after commit (during code review or CI/CD), hooks catch them in your local workflow.
 
-Without automation, pre-commit checks require discipline and manual execution. The tools like [`pre-commit`](https://pre-commit.com/) and [`prek`](https://prek.j178.dev/) makes managing these hooks easy: it reads a configuration file, installs the hooks into your repository, and runs them automatically when you commit.
+Without automation, pre-commit checks require discipline and manual execution. Tools like [`pre-commit`](https://pre-commit.com/) and [`prek`](https://prek.j178.dev/) make managing these hooks easy: they read a configuration file, install the hooks into your repository, and run them automatically when you commit.
 
 In this project, both `pre-commit` and [`prek`](https://prek.j178.dev/) can be used to run the hooks. The latter does not need any additional set up as it part of the development dependencies. Simply activate the Python environment with the development dependencies to use it.
 
