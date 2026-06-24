@@ -140,7 +140,7 @@ class GridCreator(ABC):
 The `GridCreator` class inherits from [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC), which marks it as an abstract base class. The [`@abstractmethod` decorator](https://docs.python.org/3/library/abc.html#abc.abstractmethod) on `initialise()` requires any concrete subclass to implement this method. This contract ensures that every strategy provides the same interface.
 
 !!! note
-    [Interface](https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)) is another term for abstract classes. The exact term used varies by programming language, e.g. Java uses `interface` and Rust uses `traits`.
+    Similar concepts exist in other languages for expressing that different data structures share a common [interface](https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)), though the exact terminology and semantics vary. Java uses `interface` and Rust uses `traits`, for example. While these are not directly equivalent, they address the same fundamental problem of defining a contract that a type must fulfill without prescribing how that contract is implemented.
 
 Since the abstract class itself cannot be instantiated, it forces us to provide concrete implementations for each strategy.
 
