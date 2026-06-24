@@ -67,6 +67,17 @@ flowchart TD
   linkStyle 1,2 stroke:#7455FF,stroke-width:4px
 ```
 
+!!! info "Info: Naming Convention"
+
+    In the snippets above, you might've noticed that the some of the fields on the class start with a `_`, e.g. `#!py self._grid` and `#!py self._generation`. This is [indicate that it is meant for internal use](https://peps.python.org/pep-0008/#descriptive-naming-styles).
+
+    In typed languages like C++ and Java, [access modifiers](https://en.wikipedia.org/wiki/Access_modifiers) are used to specify the "accessiblity of classes, methods, and other members".
+
+    ![Java class with access modifiers](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/UML_class_diagram_with_access_modifiers.svg/1280px-UML_class_diagram_with_access_modifiers.svg.png){width=600}
+    ///caption
+    Class diagram of the Example class with access modifiers. In [C++ these accesss specifiers](https://en.cppreference.com/cpp/language/access) they mean: `public` ⇒ visible to everyone; `protected` ⇒ visible to child and/or [friend](https://en.cppreference.com/cpp/language/friend) classes; and `private` ⇒ only visible to the class.
+    ///
+
 ### Grid as a Data Container
 
 The grid is represented as a 2D NumPy array in which each cell holds a value of either 0 (dead) or 1 (alive). The `GameOfLife` object owns and manages this array, external components do not have direct write access to it. This encapsulation is intentional. By restricting modification to the GameOfLife object itself, the state of the grid remains predictable and controlled throughout the program's execution.
