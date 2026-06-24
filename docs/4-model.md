@@ -80,7 +80,11 @@ flowchart TD
 
 ### Grid as a Data Container
 
-The grid is represented as a 2D NumPy array in which each cell holds a value of either 0 (dead) or 1 (alive). The `GameOfLife` object owns and manages this array, external components do not have direct write access to it. This encapsulation is intentional. By restricting modification to the GameOfLife object itself, the state of the grid remains predictable and controlled throughout the program's execution.
+The grid is represented as a 2D NumPy array in which each cell holds a value of either 0 (dead) or 1 (alive). The `GameOfLife` object owns and manages this array and `#!py self._grid` is not intended to be accessed by the outside. This is to [encapsulate the data](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)) for [information hiding](https://en.wikipedia.org/wiki/Information_hiding)
+By restricting modification to the `GameOfLife` object itself, the state of the grid remains predictable and controlled throughout the program's execution.
+
+!!! note
+    As Python does not support variable access restrictions, it is not possible to enforce this restriction. In fact, even in languages like Java which has these restrictions and enforces it, they can be circumvented using an advanced feature called [reflection](https://en.wikipedia.org/wiki/Reflective_programming).
 
 ![inheritance vs composition](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A1200%2F1*mcv2uIZnDYodmTBJGjtwXg.png&f=1&nofb=1&ipt=89cd9ae1631b28c9ddd09029c33d3816b82e24841be716ce7d432cd2d15594da){width="400" align=right}
 
