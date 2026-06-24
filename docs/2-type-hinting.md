@@ -1,8 +1,8 @@
 # Type Hinting
 
-Python is a [dynamically typed language](https://www.baeldung.com/cs/statically-vs-dynamically-typed-languages), variables can hold any type of data, and their type can change at runtime. Python uses [duck typing](https://en.wikipedia.org/wiki/Duck_typing), it cares about what objects can *do* rather than what they *are*. This provides remarkable flexibility. However, this results in implicit assumptions scattered throughout the code. You might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break. Or fails silently.
+Python is a [dynamically typed language](https://www.baeldung.com/cs/statically-vs-dynamically-typed-languages), so variables can hold any type of data and their type can change at runtime. Python uses [duck typing](https://en.wikipedia.org/wiki/Duck_typing), which means it cares about what objects can *do* rather than what they *are*. This provides remarkable flexibility, but results in implicit assumptions scattered throughout the code: you might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break &ndash; or fail silently.
 
-[Type hints](https://docs.python.org/3/library/typing.html) are a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. They answer the question of "what type is this supposed to be, and what will go wrong if it is wrong?"
+[Type hinting](https://docs.python.org/3/library/typing.html) is a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. It answers the question of "what type is this supposed to be?" Though it is worth noting that a type mismatch does not necessarily mean something will go wrong. Depending on the situation, things may still work fine (for example, passing a number-like object to a function expecting an `int`), fail in an obvious and immediate way, or fail silently in a way that is difficult to diagnose.
 
 Type hints are not enforced by Python itself. They are [metadata](https://en.wikipedia.org/wiki/Metadata). These annotation tell the interpreter (and more importantly, developers and tools) what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See [PEP 484](https://peps.python.org/pep-0484/) for the full specification.
 
@@ -25,11 +25,11 @@ Breaking this down:
 If you call `#!py add(2, 3)`, it works. If you call `#!py add("hello", "world")`, Python will still execute it (by concatenating strings to return `#!py "helloworld"`), because Python doesn't enforce type hints. But a type checker will complain and your IDE will warn you.
 
 !!! abstract "TL;DR"
-    Type hints are for tools and humans, _not_ for Python itself.
+    Type hints are for tools and humans, _not_ for the Python interpreter itself.
 
 ### Variable Type Hints
 
-Variables can be annotated using this syntax,
+Variables can be annotated when they are assigned to using this syntax:
 
 ```python
 name: str = "game of life"
@@ -44,7 +44,7 @@ The type annotation comes after the variable name, before the value. This tells 
 
 ### 1. IDE Support
 
-When your IDE knows the type of a variable, it can help you immensely. Consider this example without type hints,
+When your IDE knows the type of a variable, it can help you immensely. Consider the case where are writing code and have so far written the following:
 
 ```python
 game = create_game_of_life(config)
@@ -126,10 +126,10 @@ def process(obj: DataProcessor) -> dict:
     return obj.process_data()
 ```
 
-This makes the contract is clear. `process` expects something of type `DataProcessor` (or a subclass). Your IDE can autocomplete. Type checkers can verify calls at development time.
+This makes the contract clear. `process` expects something of type `DataProcessor` (or a subclass). Your IDE can autocomplete. Type checkers can verify calls at development time.
 
 !!! warning
-    The crucial limitation is that type hints are not enforced by Python at runtime. This means that `process("hello string")` can still be invoked and Python will try to execute it. If `"hello string"` doesn't have a `process_data()` method, you'll get an `AttributeError` at runtime, type hints notwithstanding.
+    The crucial limitation is that type hints are not enforced by Python at runtime. This means that `process("hello string")` can still be invoked and Python will try to execute it. As `"hello string"` doesn't have a `process_data()` method, though, you'll get an `AttributeError` at runtime, type hints notwithstanding.
 
     ```python
     process("hello string")  # No error from type hints, but AttributeError at runtime
@@ -149,7 +149,7 @@ Type hints improve code quality and developer experience, but they're not a subs
 
 ### Type Checkers
 
-As mentioned, type hints alone don't enforce anything. A type checker is a necessary tool that analyzes your code and reports type mismatches. The two main type checkers for Python are,
+As mentioned, type hints alone don't enforce anything. A type checker is a necessary tool that analyzes your code and reports type mismatches. The three main type checkers for Python are,
 
 - [`mypy`](https://www.mypy-lang.org/): The original type checker, widely used
 - [`pyright`](https://github.com/microsoft/pyright): Made by Microsoft, more modern and faster
@@ -193,9 +193,6 @@ numbers: list[int] = [1, 2, 3]
 names: tuple[str, str, str] = ("Alice", "Bob", "Carol")
 config: dict[str, int] = {"rows": 50, "cols": 100}
 ```
-
-!!! note
-    In Python 3.9+, you can use `list[int]` instead of `List[int]` from the `typing` module. The built-in generic syntax is more concise and preferred.
 
 Sometimes, it's advantageous to type hint using the [abstract base class of the built-in types](https://docs.python.org/3/library/collections.abc.html#collections-abstract-base-classes). For example, lists and tuples are [sequence types](https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range) and dictionaries are [mapping types](https://docs.python.org/3/library/stdtypes.html#mapping-types-dict) which maps a [hashable value](https://docs.python.org/3/glossary.html#term-hashable) to an arbitrary object.
 
@@ -296,7 +293,7 @@ import numpy.typing as npt
 NDArrayU8 = npt.NDArray[np.uint8]
 ```
 
-This communicates to readers that "this function returns a NumPy array of bytes (0-255 values)." Without the type hint, it's ambiguous.
+When used to annotate a value returned by a function, this communicates to readers that "this function returns a NumPy array of bytes (0-255 values)." Without the type hint, it would be ambiguous.
 
 Another example,
 
@@ -388,7 +385,7 @@ from pydantic import Field, NonNegativeFloat
 %}
 ```
 
-### 5. Use Type Checkers in CI/CD
+### 5. Use Type Checkers in CI
 
 Configure your type checker to run as part of your continuous integration. If code has type inconsistencies, the build fails. This is a safeguard to prevent bad code from being added to protected branches.
 
