@@ -71,11 +71,11 @@ The information is in one place, so it's easy to maintain and modify. Change the
 
 ## Eliminating Branching Logic with Subcommands
 
-Now consider the architecture decision in `main.py`. There are three commands: `run`, `cli`, and `plot`. The `run` subcommand is more generic than `cli` and `plot` as it allows the game of life to be rendered in either the `cli` or by plotting. This redundancy has been included to demonstrate how subcommands can be used to eliminate branching logic. In this example, it is fairly trivial. However, in real research code, this can avoid massive nested branching logic.
+Now consider the architecture decision in `main.py`. There are three commands: `run`, `cli`, and `plot`. The `run` subcommand is more generic than `cli` and `plot` as it allows the game of life to be rendered in either the terminal or a plot. This redundancy has been included to demonstrate how subcommands can be used to eliminate branching logic. In this example, it is fairly trivial, however, in real research code, this can avoid massive nested branching logic.
 
 ### The Complex `run` Command
 
-The `run` command accepts a full `RunConfig` that specifies both the game parameters and the view interface (CLI or plotting). It also has an option to specify the number of generation.
+The `run` command accepts a full `RunConfig` that specifies both the game parameters and the view interface (CLI or plotting). It also has an option to specify the number of generations.
 
 ```python title="main.py" linenums="1" hl_lines="8 9 11"
 @app.command()
@@ -150,7 +150,7 @@ If a user has a complex configuration file that specifies both game parameters a
 game-of-life run full-config.yaml
 ```
 
-This is more general but also more complex internally. A use case where this would be preferred is when we want to have a common interface. For example, if we want to run a large batch of simulations through a script (e.g. on a HPC system that schedules jobs using [pbs](https://en.wikipedia.org/wiki/Portable_Batch_System) or [slurm](https://slurm.schedmd.com/overview.html)), then it is useful to the script to use the common `run` subcommand and tailoring each of the configuration files accordingly.
+This is more general but also more complex internally. A use case where this would be preferred is when we want to have a common interface. For example, if we want to run a large batch of simulations through a script (e.g. on a HPC system that schedules jobs using [PBS](https://en.wikipedia.org/wiki/Portable_Batch_System) or [Slurm](https://slurm.schedmd.com/overview.html)), then it is useful to the script to use the common `run` subcommand and tailoring each of the configuration files accordingly.
 
 !!! tip
     The core idea behind this is deciding what level of abstraction is needed and where to handle the complexity of handling the different views. In the more general `run` subcommand, that complexity is handled *within Python*. In the specialized subcommands, that complexity is handled *by the user*.
@@ -210,7 +210,7 @@ For this specific problem, my personal preference would be to abandon the specia
 This preference is due to my aversion to [code duplication](https://en.wikipedia.org/wiki/Duplicate_code) as it can bring more [technical debt](https://en.wikipedia.org/wiki/Technical_debt). This means that repeating code twice feels acceptable to me, but not three times. In particular, if I expect to add more views.
 
 !!! note
-    Code duplication is a [code smell](https://en.wikipedia.org/wiki/Code_smell#Application-level_smells) that hints at a deeper issue in the source code. However, it is subjective and varies based on the context. This contrary to an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern) which is a counterproductive solution to a class of problem.
+    Code duplication is a [code smell](https://en.wikipedia.org/wiki/Code_smell#Application-level_smells) that hints at a deeper issue in the source code. However, it is subjective and varies based on the context. This is contrary to an [anti-pattern](https://en.wikipedia.org/wiki/Anti-pattern) which is a counterproductive solution to a class of problem.
 
 
 ## Validation Strategy Across Layers
@@ -230,15 +230,15 @@ The complete flow from user input to simulation for the `cli` subcommand is,
 1. *User runs command*: `game-of-life cli config.yaml --speed 0.1`
 2. *Typer parses*: Validates arguments, converts types, calls the `cli` function
 3. *Pydantic validates configuration*: `GameOfLifeConfigFrom.from_yaml(config)`
-4. *Controller create model and view*: Instantiation with validated parameters
+4. *Controller creates model and view*: Instantiation with validated parameters
 5. *Controller orchestrates*: `execute_game_of_life` loops through generations, calling `view.render()` and `game.step()`
 6. *View displays*: `CliView` renders the grid to the terminal
 7. *Model computes*: `GameOfLife` computes next generation
-8. *Exit cleanly*: Context manager cleans up resources
+8. *Context manager cleans up*: Resources are freed on program exit
 
 Each layer does one thing. The result is an application that is,
 
-- **Extendable**: Supports multiple interfaces, flexible configuration, extensible architecture
+- **Extendable**: The code supports multiple interfaces, flexible configuration, extensible architecture
 - **Simple**: Users see only what they need; internal complexity is hidden
 - **Maintainable**: Changes to one layer don't cascade; new features can be added in isolation
 - **Robust**: Validation at multiple layers catches errors early
