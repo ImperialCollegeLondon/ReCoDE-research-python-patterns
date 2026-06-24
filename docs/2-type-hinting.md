@@ -93,13 +93,27 @@ Now it's immediately clear, the function takes a list of floats and a scale fact
 Type checkers are tools that analyze your code without running it. They can catch many bugs before they cause problems. For example,
 
 ```python
-def divide(numerator: float, denominator: float) -> float:
-    return numerator / denominator
+def double(value: float) -> float:
+    return value * 2
 
-result: int = divide(10, 2)  # Type checker warns: expected int, got float
+result: float = double("hello")  # Type checker warns: expected float, got str
 ```
 
-The type checker warns you that the return type of `divide` is `float`, not `int`. This catches the mismatch before the code runs.
+The type checker warns you that the return type of `double` is `float`, not `str`. This catches the mismatch before the code runs.
+
+When the Python interpreter runs this, it does not fail and it returns a valid string. If this is used in a divide operation further down in the code, it will fail there instead
+
+```python
+>>> result: float = double("hello")
+>>> result
+'hellohello'
+>>> result/2
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unsupported operand type(s) for /: 'str' and 'int'
+```
+
+This can make debugging particularly tricky, as the source of the bug is far removed from where it manifests.
 
 ### 4. Better Code Organization
 
@@ -126,10 +140,10 @@ Type hints make the implicit explicit,
 
 ```python
 class DataProcessor:
-    def process_data(self) -> dict:
+    def process_data(self) -> dict[str, int]:
         ...
 
-def process(obj: DataProcessor) -> dict:
+def process(obj: DataProcessor) -> dict[str, int]:
     return obj.process_data()
 ```
 
@@ -211,9 +225,40 @@ names: Sequence[str, str, str] = ("Alice", "Bob", "Carol")
 config: Mapping[Hashable, int] = {"rows": 50, "cols": 100}
 ```
 
+`Mapping` is mainly useful when working with third party libraries.
+In most Python code that only uses the standard library, mapping types are usually a child class of `dict`, e.g. [`defaultdict`](https://docs.python.org/3/library/collections.html#collections.defaultdict).
+
+??? info "A short detour into `defaultdict` as it's fantastic"
+    [`defaultdict`](https://docs.python.org/3/library/collections.html#collections.defaultdict) is a sub-class of the built in `dict` class. It very useful collection which initializes a key the first time it is accessed, rather than raising a `KeyError`. The default value is determined by a callable passed at instantiation. An example use case of this would be to group items by a key,
+
+    ```python
+    >>> from collections import defaultdict
+    >>>
+    >>> students = [("Alice", "A"), ("Bob", "B"), ("Carol", "A"), ("Diana", "B"), ("Eve", "A")]
+    >>>
+    >>> grade_groups = defaultdict(list)
+    >>> for name, grade in students:
+    ...     grade_groups[grade].append(name)
+    ...
+    >>> dict(grade_groups)
+    {'A': ['Alice', 'Carol', 'Eve'], 'B': ['Bob', 'Diana']}
+    ```
+
+    It can also be used for counting occurrences, for example,
+
+    ```python
+    >>> words = ["potato", "tomato", "avocado", "tomato", "potato"]
+    >>> word_counts = defaultdict(int)
+    >>> for word in words:
+    ...     word_counts[word] += 1
+    ...
+    >>> dict(word_counts)
+    {'potato': 2, 'tomato': 2, 'avocado': 1}
+    ```
+
 ### Optional and Union Types
 
-What if a variable can be `None` (absent or unset)? Use [`Optional`](https://docs.python.org/3/library/typing.html#typing.Optional),
+What if a variable can be `None` (absent or unset)? This is where the [`Optional`](https://docs.python.org/3/library/typing.html#typing.Optional) type hint comes in,
 
 ```python
 def get_config_value(key: str) -> Optional[str]:
@@ -224,14 +269,12 @@ def get_config_value(key: str) -> Optional[str]:
 
 `Optional[str]` means the return value is either a `str` or `None`. If the user forgets to handle the `None` case, a type checker will warn them.
 
-Alternatively and more explicitly in Python 3.10+,
+The `|` operator is [syntactic sugar for union types](https://docs.python.org/3/library/stdtypes.html#types.UnionType). It reads more naturally as "string or None".
 
 ```python
 def get_config_value(key: str) -> str | None:
     ...
 ```
-
-The `|` operator is [syntactic sugar for union types](https://docs.python.org/3/library/stdtypes.html#types.UnionType). It reads more naturally as "string or None".
 
 This is also useful when a function can accept multiple types,
 
@@ -242,7 +285,7 @@ def log(message: str | int | bool) -> None:
 
 This says `message` can be a string, integer, or boolean.
 
-### Generic Types and Type Variables
+### Advanced: Generic Types and Type Variables
 
 Sometimes a function works with any type. For example, a function that doubles whatever it receives,
 
@@ -256,6 +299,24 @@ def double(x: T) -> T:
 ```
 
 Here, `T` is a [*type variable*](https://docs.python.org/3/library/typing.html#typing.TypeVar). It's a placeholder for any type. The function says: "whatever type you pass in, I'll return the same type." If you pass an `int`, you get an `int` back. If you pass a `float`, you get a `float` back.
+
+???+ info "Info: Advanced `TypeVar` usage"
+    If we want to ensure that this only applies to numbers to avoid our [earlier bug where a string was passed into the `double()` function](#3-catching-bugs-early), we can [constrain `TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar). One way to achieve it is by [placing a bound](https://typing.python.org/en/latest/spec/generics.html#type-variables-with-an-upper-bound) so that it must be a subtype of the bound.
+
+    ```python
+    from numbers import Number # (1)
+    T = TypeVar("T", bound=Number)
+    ```
+
+    1. [`number.Number`](https://docs.python.org/3.10/library/numbers.html#numbers.Number) is the parent class of all numbers in Python
+
+    In this example, it places a bound such that `T` must be a subtype of [`number.Number`](https://docs.python.org/3.10/library/numbers.html#numbers.Number) which is at the root of the numeric hierarchy in Python. Thus, an `int`, `float` or `complex` would work.
+
+    Alternatively, we could explicitly restrict `T` to be exactly those types with,
+
+    ```python
+    T = TypeVar("T", int, float, complex)
+    ```
 
 This is useful for [generic containers](https://docs.python.org/3/library/typing.html#generics) like lists,
 
@@ -275,11 +336,13 @@ from typing import Annotated
 from pydantic import Field, NonNegativeFloat
 
 # Type alias for a proportion (0 to 1)
-Proportion = Annotated[NonNegativeFloat, Field(le=1)]
+Proportion = Annotated[NonNegativeFloat, Field(le=1)] # (1)
 
 def set_density(density: Proportion) -> None:
     ...
 ```
+
+1. This reads as `Proportion` is an alias for a non-negative float that is less than or equal to 1
 
 This is especially useful in projects, where a type such as `Proportion` appears throughout the codebase. By defining it once, it can then be easily used everywhere. If requirements change, update the definition in one place.
 
@@ -360,7 +423,7 @@ def process_names(names):
 
 ### 3. Use Type Aliases for Complex Types
 
-If a type hint is long or repeated, create an alias. The Game of Life project does this,
+If a type hint is long and repeated, create an alias. The Game of Life project does this,
 
 ```python
 import numpy.typing as npt
@@ -376,9 +439,37 @@ def _history(self) -> list[NDArrayU8]:
     ...
 ```
 
-Define it once, use it everywhere. If you need to change the type, update the alias in one place.
+Similar to variables, we can define it once, use it everywhere. If you need to change the type, update the alias in one place.
 
-### 4. Document Complex Types
+### 4. Use Type Alias to Improve Readability
+
+Type aliases can be used to improve readability by conveying the intent of it rather than just the type. For example,
+
+```python
+from typing import TypeAlias
+
+Name: TypeAlias = str
+
+def greet(name: Name) -> None:
+    print(f"Hello, {name}!")
+```
+
+When the complexity increases, the effect is more pronounced. Consider the case where we have a set of students and each student takes multiple subjects. To store all of their examination results, we would need a nested dictionary, i.e. `dict[str, dict[str, int]]`. The outer dictionary would have a key that corresponds to their name, while the key is a dictionary of the name of the subject and score.
+
+If `dict[str, dict[str, int]]` is scattered throughout the code base, it isn't particularly useful as it doesn't tell you any additional information. If we introduce type aliases as such,
+
+```python
+Subject: TypeAlias = str
+Score: TypeAlias = int
+StudentName: TypeAlias = str
+
+SubjectScores: TypeAlias = dict[Subject, Score]
+StudentResults: TypeAlias = dict[StudentName, SubjectScores]
+```
+
+It will be much easier to conceptualize what is in `StudentResults` or `dict[StudentName, SubjectScores]`. This helps to reduce the [cognitive load](https://en.wikipedia.org/wiki/Cognitive_load) of understanding the code base making debugging or navigating it easier.
+
+### 5. Document Complex Types
 
 If a type is not immediately clear, add a docstring,
 
@@ -392,7 +483,7 @@ from pydantic import Field, NonNegativeFloat
 %}
 ```
 
-### 5. Use Type Checkers in CI
+### 6. Use Type Checkers in CI
 
 Configure your type checker to run as part of your continuous integration. If code has type inconsistencies, the build fails. This is a safeguard to prevent bad code from being added to protected branches.
 
@@ -404,7 +495,7 @@ Configure your type checker to run as part of your continuous integration. If co
 %}
 ```
 
-### 6. Learn from Experience
+### 7. Learn from Experience
 
 Basic use of type hints with Python is quite easy to pick up. However, acquiring the finesse to use type hints in a way that balances flexibility, control, safety and simplicity takes time. It is with experience that you learn how best to use type hints and more importantly, how *not* to use type hints.
 
