@@ -38,7 +38,7 @@ The entry point `game_of_life.main:app` can be broken down as follows:
 - `.main` $\Rightarrow$ the module defined in [`src/game_of_life/main.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py)
 - `:app` $\Rightarrow$ the callable function stored in the [variable `app`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35)
 
-A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://pypi.org/).
+A common misconception about the `pyproject.toml` file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through [`PyPI` (the python package index)](https://pypi.org/). In fact, the `pyproject.toml` is useful for configuring tools such as uv, providing entry points to your package, and your linter and formatter.
 
 #### Adding dependencies to `pyproject.toml` with `uv`
 
@@ -52,7 +52,7 @@ When using `conda`, dependencies are usually specified using an `environment.yml
 %}
 ```
 
-`uv` integrates with `pyproject.toml` through the [`uv add` command](https://docs.astral.sh/uv/reference/cli/#uv-add). For example, to add `matplotlib` as a dependency:
+`uv` integrates with `pyproject.toml` through the [`uv add` command](https://docs.astral.sh/uv/reference/cli/#uv-add). This will also automatically update the `uv.lock` file too. For example, to add `matplotlib` as a dependency:
 
 ```console
 $ uv add matplotlib
@@ -80,6 +80,8 @@ Optional dependencies are features that some users may want, but not all require
 %}
 ```
 
+Note that in this case, the documentation related dependencies in `docs` in `[optional-dependencies]` could also be placed under `[dependency-groups]` so that it is not installed by default. In fact, this would be ideal set up for this case as it is not strictly necessary for the user and has been organised as such to show the difference between `[optional-dependencies]` and `[dependency-groups]`.
+
 When working on a coding project there are often dependencies that are useful for development but are not required to use and run the code in the project. For example, `pytest` is used for running and writing test but isn't required to run the core code of the project. Such dependencies are called development dependencies. These have been specified in the `pyproject.toml` as follows,
 
 ```toml title="pyproject.toml"
@@ -101,16 +103,28 @@ For more information about dependency groups, [see this webpage on dependency gr
 
 ### Universal lock file for dependencies
 
-![it works on my machine meme](https://raw.githubusercontent.com/DXHeroes/knowledge-base-content/master/files/it_works.jpg){ width="320" align=right }
-
 One of the most common frustrations in software development is when code works perfectly on your machine but fails on someone else's. This is often down to differences in the versions of dependencies being used, a problem that gets worse the longer dependencies go without being updated and can quickly spiral into what is known as [dependency hell](https://en.wikipedia.org/wiki/Dependency_hell).
 
-In research software, this is particularly prevalent as keeping dependencies up to date is rarely prioritised. Beyond convenience for users, [reproducibility](https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/)reproducibility depends on others being able to run the exact code that produced your results. [The Turing Way](https://book.the-turing-way.org/) offers [excellent guidance](https://book.the-turing-way.org/reproducible-research/reproducible-research/) on research reproducibility best practices.
+![it works on my machine meme](https://raw.githubusercontent.com/DXHeroes/knowledge-base-content/master/files/it_works.jpg){ width="350" align=right }
+
+!!! info "Info: Flavours of Dependency Hell"
+    Three ways dependency issues could manifest,
+
+      - It won't install. The build fails outright, typically due to a missing or incompatible native dependency.
+      - It installs but won't run. A missing or incompatible dependency is only discovered at runtime.
+      - It runs but produces incorrect results. The most insidious failure mode, as it may go unnoticed entirely.
+
+
+In research software, this is particularly prevalent as keeping dependencies up to date is rarely prioritised. Beyond convenience for users, [reproducibility](https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/) depends on others being able to run the exact code that produced your results. [The Turing Way](https://book.the-turing-way.org/) offers [excellent guidance](https://book.the-turing-way.org/reproducible-research/reproducible-research/) on research reproducibility best practices.
+
+!!! note
+    One way to keep dependencies up to date is by using [dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide). This checks for updates in your dependencies and submits a pull request when an update is discovered.
+
+`uv` solves this through the [`uv.lock` file](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile), which records the specific versions of all installed packages. This includes both the direct dependencies (i.e. the ones explicitly mentioned in `pyproject.toml`) and the transitive ones (i.e. your dependencies' dependencies). Explicitly pinning the transitive dependencies prevents unpinned transitive dependencies from breaking the installation of the direct dependencies, which can be one of the most frustrating aspects of dependency resolution to track down.
+For more information, see `uv`'s documentation on [locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing) for more details.
 
 !!! quote "What does a lock file do?"
-    A [lockfile](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) ensures that developers working on the project are using a consistent set of package versions. Additionally, it ensures when deploying the project as an application that the exact set of used package versions is known
-
-`uv` solves this through the [`uv.lock` file](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile), which records the specific versions of all installed packages. See `uv`'s documentation on [locking and syncing](https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing) for more details.
+    A [lockfile](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) ensures that developers working on the project are using a consistent set of package versions. Additionally, it ensures when deploying the project as an application that the exact set of used package versions is known.
 
 To update all dependencies, use:
 
@@ -131,6 +145,10 @@ A formatter complements a linter by automatically rewriting your code to follow 
 !!! tip
     Most editors and IDEs can run a linter in the background as you write. The shorter the feedback loop, the easier the fix. Catching a style or logic issue while you are still in that part of the code beats finding it later in testing or code review.
 
+Linters and formatters are also particularly valuable in collaborative settings,
+
+- A linter enforces project-specific coding style rules in a way that can be automatically checked and, where possible, automatically fixed
+- Formatters reduce noise in pull requests and minimize merge conflicts by ensuring consistent formatting across contributors, regardless of individual editor settings
 
 ### Ruff for Linting and Formatting
 
@@ -173,7 +191,7 @@ Some of the key categories active in this project are,
 
 The `ignore` list carves out specific rules that would otherwise conflict or be too strict for this project.
 
-The `ruff` documentation provides more information on [rule selection](https://docs.astral.sh/ruff/linter/#rule-selection) and [details on what each of these rules contain](https://docs.astral.sh/ruff/rules/).
+The `ruff` documentation provides more information on [rule selection](https://docs.astral.sh/ruff/linter/#rule-selection) and [details on what each of these rules contain](https://docs.astral.sh/ruff/rules/). Note that individual rules that are too strict or not suitable for the project can also be omitted or suppressed through the rule selection.
 
 !!! tip
     Part of gaining mastery in a programming language is learning when some of these rules should be broken.
@@ -212,6 +230,8 @@ In this project, both `pre-commit` and [`prek`](https://prek.j178.dev/) can be u
 
 This project uses the `prek` to manage git hooks. As it is specified as a development dependency, it will be installed in the Python environment which has been synced using the `uv sync --all-extras` command. The [quick start guide](https://prek.j178.dev/quickstart/#new-to-pre-commit-style-workflows) in the documentation contains more information generic set up.
 
+Once `prek` has been added to your Python environment, invoking `prek install` in the command line will [run the hooks every time you commit](https://prek.j178.dev/quickstart/#4-go-further).
+
 The configuration is for this project is specified in `.pre-commit-config.yaml`:
 
 ```yaml title=".pre-commit-config.yaml"
@@ -244,6 +264,26 @@ These hooks apply the same rules defined in `ruff.toml`, ensuring that all code 
 **Type checking (pyright)**: The `pyright` hook runs static type analysis to catch type mismatches. Type checking is detailed in a separate tutorial. It's mentioned here only to show how it's integrated into the commit workflow.
 
 #### Workflow in Practice
+
+##### Making a commit
+
+When you attempt to commit:
+
+```console
+$ git commit -m "feat: Add feature"
+```
+
+Pre-commit automatically runs all configured hooks on the staged files. If any hook fails, your commit is blocked:
+
+```
+ruff check failed
+...
+# Fix the issues, then:
+$ git add .
+$ git commit -m "Add feature"  # Try again
+```
+
+Once all hooks pass, the commit succeeds.
 
 ##### Before committing
 
@@ -283,26 +323,6 @@ ruff format..............................................................Passed
 uv-lock..................................................................Passed
 pyright..................................................................Passed
 ```
-
-##### Making a commit
-
-When you attempt to commit:
-
-```console
-$ git commit -m "feat: Add feature"
-```
-
-Pre-commit automatically runs all configured hooks on the staged files. If any hook fails, your commit is blocked:
-
-```
-ruff check failed
-...
-# Fix the issues, then:
-$ git add .
-$ git commit -m "Add feature"  # Try again
-```
-
-Once all hooks pass, the commit succeeds.
 
 ### Shift Left on Quality
 
