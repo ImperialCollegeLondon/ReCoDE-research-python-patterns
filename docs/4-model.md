@@ -14,6 +14,11 @@ Conway's Game of Life is a cellular automaton where cells on a grid live or die 
 
 That's it. From these three rules, complex and often unpredictable patterns emerge. Some configurations oscillate endlessly. Others move across the grid like spaceships. Still others produce intricate structures that change in fascinating ways.
 
+![image of the eight neighbours of a given cell](https://conwaylife.com/w/images/3/30/Moore_neighbourhood_%28range_1%29.png){align=left}
+///caption
+The neighbours of a cell comprises all orthogonal and diagonal adjacent cells, giving eight neighbours in total.
+///
+
 ### From Rules to Code: The Single Responsibility Principle
 
 When we translate these rules into code, we face an interesting design decision. We could write one large method that computes the next generation and updates the grid. But notice that Conway's rules describe two distinct concerns,
