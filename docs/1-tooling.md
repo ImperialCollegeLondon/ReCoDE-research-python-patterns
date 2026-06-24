@@ -13,7 +13,7 @@ This page explores three core tools that strengthen research software developmen
 
 ## Python Environment Management
 
-[`uv`](https://docs.astral.sh/uv/) is a Python package manager and environment manager, similar to `pip` and [`conda`](https://www.anaconda.com/docs/main). It offers a few advantages over those tools, namely: substantial performance improvements over `conda`, automatic Python version installation and management, integration with `pyproject.toml`, and a universal lock file (`uv.lock`) for reproducible environments.
+[`uv`](https://docs.astral.sh/uv/) is a Python package manager and environment manager, similar to `pip` and [`conda`](https://www.anaconda.com/docs/main). It offers a few advantages over those tools, namely: substantial performance improvements over `conda`, automatic Python version installation and management, integration with `pyproject.toml`, and a [universal lock file (`uv.lock`)](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile) for reproducible environments.
 
 ### What is the `pyproject.toml` file? And how does it integrate with `uv`
 
