@@ -57,10 +57,10 @@ flowchart TD
 
 ### Deserialization: From Input File Format to Python Object
 
-The journey begins with a YAML configuration file. But these configuration files are just text. They need to (magically) be validated and transformed into typed Python objects. This is where `pydantic` comes in,
+The journey begins with a [YAML](https://yaml.org/) configuration file. But these configuration files are just text. They need to (magically) be validated and transformed into typed Python objects. This is where `pydantic` comes in,
 
 ```python title="config.py" linenums="1"
-class FromYaml(BaseModel):
+class FromYaml(BaseModel): # (1)
     """Base class providing YAML loading functionality for configuration classes."""
 
     @classmethod
@@ -75,6 +75,8 @@ class FromYaml(BaseModel):
         # raises ValidationError if it fails
         return cls.model_validate(data)
 ```
+
+1. All configurations files which will be loaded from YAML files will inherit from this class. By default, `pydantic` can load from [JSON](https://en.wikipedia.org/wiki/JSON) files. But they get unwieldily for complex data. To give the child classes the `pydantic` validation capabilities, it inherits from `pydantic.BaseModel`.
 
 This class inherits from the [`pydantic.BaseModel`](https://pydantic.dev/docs/validation/latest/concepts/models/#basic-model-usage) to provide it with all the validation functionalities of `pydantic`. The method shown here is a [class method](https://docs.python.org/3.14/library/functions.html#classmethod) as the class defines what validation is performed on the data.
 When `cls.model_validate(data)` is called on line 14, `pydantic` performs validation by checking types, enforcing constraints, and raising clear errors if something is wrong. This *fails fast*, any invalid configurations are caught immediately, before the simulation begins.
@@ -109,12 +111,23 @@ Proportion = Annotated[NonNegativeFloat, Field(le=1)]
 
 class GameOfLifeConfigFrom(FromYaml):
     """Configuration for Game of Life simulation parameters."""
-    num_rows: Annotated[PositiveInt, Field(description="Number of rows in game of life grid")] = 50
-    num_cols: Annotated[PositiveInt, Field(description="Number of cols in game of life grid")] = 50
+    num_rows: Annotated[
+        PositiveInt, Field(description="Number of rows in game of life grid")
+    ] = 50  # (1)
+    num_cols: Annotated[
+        PositiveInt, Field(description="Number of cols in game of life grid")
+    ] = 50
     grid_initialiser: GridInitialiser = GridInitialiser.ZEROS
-    density: Annotated[Proportion | None, Field(description="Density of cells in game of life grid")] = None
-    pattern: Annotated[Pattern | None, Field(description="Pattern to initialise grid with")] = None
+    density: Annotated[
+        Proportion | None, Field(description="Density of cells in game of life grid")
+    ] = None  # (2)
+    pattern: Annotated[
+        Pattern | None, Field(description="Pattern to initialise grid with")
+    ] = None
 ```
+
+1. The syntax here follows the form of `name_of_field: complex_type_information = default_value`. Thus, the `= 50` here is the default value for the `num_rows` field
+2. Similarly, the default value for this is `None`.
 
 The syntax of the type annotation for the fields here is a little complicated. It follows [`pydantic`'s annotated pattern](https://pydantic.dev/docs/validation/latest/concepts/fields/#the-annotated-pattern) which allows us to specify a constrain and attach the [`Field()` function](https://pydantic.dev/docs/validation/latest/api/pydantic/fields/#pydantic.fields.Field) to provide additional information about a field. In this case, it provides a description of the field which would be useful for the user or a new developer.
 
@@ -181,7 +194,7 @@ class GridCreatorFactory:
 ```
 
 Which child class is instantiated depends on the enum specified in the `GameOfLifeConfigFrom.grid_initialiser` field. As the initializer for each child class requires a unique logic, this branching has been achieved using [Python's `match` statement](https://docs.python.org/3/reference/compound_stmts.html#the-match-statement).
-This is a Python 3.10+ feature which enables exhaustive pattern matching. Each `case` corresponds to an enum member. The type checker verifies that all cases are covered. The [`assert_never()`](https://typing.python.org/en/latest/guides/unreachable.html#assert-never-and-exhaustiveness-checking) acts as a safety net, if an unexpected value somehow reaches this code at runtime, it raises an error. It also allows for some code to be [marked as being unreachable to the static type checker](https://typing.python.org/en/latest/guides/unreachable.html#marking-code-as-unreachable).
+This feature enables exhaustive pattern matching. Each `case` corresponds to an enum member. The type checker verifies that all cases are covered. The [`assert_never()`](https://typing.python.org/en/latest/guides/unreachable.html#assert-never-and-exhaustiveness-checking) acts as a safety net, if an unexpected value somehow reaches this code at runtime, it raises an error. It also allows for some code to be [marked as being unreachable to the static type checker](https://typing.python.org/en/latest/guides/unreachable.html#marking-code-as-unreachable).
 
 By using `match` on an enum, it makes the code self-documenting and maintainable. A reader would immediately see all possible initialization strategies. If you add a new `GridInitialiser` member, the type checker will alert you that the `match` statement is incomplete.
 
@@ -191,10 +204,9 @@ Why not just instantiate grid creators directly? As configurations grow more com
 
 ## Orchestrating the Model and the View
 
-The controller is responsible for updating the model such that the view updates accordingly. Thus, it specifies how the two should interact with each other.
-
 ### The Iterator Pattern for Control
 
+The controller is responsible for updating the model such that the view updates accordingly. Thus, it specifies how the two should interact with each other.
 Once the Model is created, how does the Controller advance the simulation? It could be a simple loop, but a better approach is to abstract the iteration logic,
 
 ```python title="controller.py"
