@@ -25,7 +25,7 @@ flowchart TD
   linkStyle 2,3 stroke:#7455FF,stroke-width:4px
 ```
 
-The Model emits no output itself. It simply holds state. The View asks the Model for its current state, specifically, the grid and the generation number and transforms that data into a human-readable format. This separation ensures that adding a new visualization method requires only a new View implementation, not changes to the Model.
+The Model emits no output itself. It simply holds state. The View asks the Model for its current state &ndash; specifically, the grid and the generation number &ndash; and transforms that data into a human-readable format. This separation ensures that adding a new visualization method requires only a new View implementation, not changes to the Model.
 
 ## Polymorphism Through Abstraction
 
@@ -50,7 +50,7 @@ class BaseView(AbstractContextManager):
 
 !!! quote "Definition - context manager"
 
-    In Python, a [context manager](https://docs.python.org/3/reference/datamodel.html#with-statement-context-managers) "is an object that defines the runtime context to be established when executing a with statement. The context manager handles the entry into, and the exit from, the desired runtime context for the execution of the block of code"
+    In Python, a [context manager](https://docs.python.org/3/reference/datamodel.html#with-statement-context-managers) "is an object that defines the runtime context to be established when executing a `with` statement. The context manager handles the entry into, and the exit from, the desired runtime context for the execution of the block of code."
 
 By inheriting from [`AbstractContextManager`](https://docs.python.org/3/library/contextlib.html#contextlib.AbstractContextManager), it makes the resource management explicit. Views often need to allocate resources, for example, a CLI view sets up a live display, a plotting view opens a figure window. By inheriting from `AbstractContextManager`, we enforce that concrete views implement [`__enter__()`](https://docs.python.org/3/reference/datamodel.html#object.__enter__) and [`__exit__()`](https://docs.python.org/3/reference/datamodel.html#object.__exit__) methods.  This ensures these resources are properly initialized when we enter a [`with`](https://docs.python.org/3/reference/compound_stmts.html#with) block and cleanly released when we exit, even if an error occurs.
 
@@ -85,7 +85,7 @@ class CliView(BaseView):
 
 ```
 
-1. Calls that parent `__init__()` method. As the parent's (`BaseView`) has an empty initializer, this is not strictly necessary. However, it is good coding practice and will catch issues if the parent's `__init__()` method changes.
+1. Calls the parent's `__init__()` method. As the parent (`BaseView`) has an empty initializer, this is not strictly necessary, however, it is good coding practice and will catch issues if the parent's `__init__()` method changes.
 
 In line 2 and 3 in the code block above are the class variables `ALIVE_CELL` and `DEAD_CELL`. The naming convention of [`UPPER_CASE_WITH_UNDERSCORES`](https://peps.python.org/pep-0008/#descriptive-naming-styles) has been used to signal to readers that this is a [constant](https://peps.python.org/pep-0008/#constants). In addition, the `ClassVar` type annotation, further signals to readers that this is class variable.
 These class variables store the visual symbols for live cells and a space for dead cells. Here, a full Unicode block character has been used to allow for the display to look professional and handle different terminal widths gracefully.
@@ -145,7 +145,7 @@ class CliView(BaseView):
 ```
 
 1. Maps the model state to a format that can be "understood" by the view
-2. `time.sleep()` is to prevent everything from being displayed at once. This forces some time between the generations such that the progression between the generations is can be seen by the human.
+2. `time.sleep()` is to prevent everything from being displayed at once. This forces some time between the generations such that the progression between the generations can be seen by the human.
 
 When you call `render`, it asks the game for its grid and generation, converts the grid to a visual string, and updates the live display. The sleep ensures the animation plays at the intended speed.
 
