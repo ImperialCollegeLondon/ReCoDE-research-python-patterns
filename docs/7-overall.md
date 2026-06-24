@@ -23,7 +23,7 @@ In the example above,
 - `cli` is a [subcommand](https://typer.tiangolo.com/tutorial/commands/#command-or-subcommand) which specifies the view to be the command line interface
 - `basic-config.yaml` is an argument to the subcommand
 
-!!! note
+??? note "Note: For those familiar with `git` in the terminal"
     This is analogous to `git`. When making a commit using `git commit -m "my commit message"`, `git` is the command being invoked, `commit` is the subcommand and `-m "my commit message"` is the argument being passed to it.
 
 This `cli` subcommand is implemented in the `cli()` method,
@@ -132,7 +132,6 @@ def plot(
 This has *no branching logic* when instantiating the view.
 The `plot` command knows it's creating a plot view. It takes an output file path and passes it directly to `PlotView`.
 There's no match statement, no factory, no type guards.
-<!--Similarly, with the `cli` subcommand, the function knows, by definition, that it's creating a CLI view. The `speed` parameter directly controls how fast the animation plays. -->
 
 ### When to Use Each Approach
 
