@@ -224,7 +224,7 @@ Git allows you to automatically run scripts at certain points in the version con
 
 Without automation, pre-commit checks require discipline and manual execution. Tools like [`pre-commit`](https://pre-commit.com/) and [`prek`](https://prek.j178.dev/) make managing these hooks easy: they read a configuration file, install the hooks into your repository, and run them automatically when you commit.
 
-In this project, both `pre-commit` and [`prek`](https://prek.j178.dev/) can be used to run the hooks. The latter does not need any additional set up as it part of the development dependencies. Simply activate the Python environment with the development dependencies to use it.
+In this project, both `pre-commit` and [`prek`](https://prek.j178.dev/) can be used to run the hooks. The latter does not need any additional set up as it part of the development dependencies.
 
 ### Managing Hooks with `prek`
 
