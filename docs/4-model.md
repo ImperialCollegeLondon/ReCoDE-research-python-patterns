@@ -47,7 +47,7 @@ This method computes the next generation by first determining how many neighbour
         self._history.append(self._grid)
 ```
 
-This method is responsible for coordinating all the different components involved in moving from one time step to the next. It is also the means for controller to manipulate the model such that it updates for the view. This corresponds to the parts in purple in the MVC diagram below
+This method is responsible for coordinating all the different components involved in moving from one time step to the next. It is also the means for Controller to manipulate the Model such that it updates for the View. This corresponds to the parts in purple in the MVC diagram below
 
 ```mermaid
 ---
@@ -73,7 +73,7 @@ The grid is represented as a 2D NumPy array in which each cell holds a value of 
 
 ![inheritance vs composition](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A1200%2F1*mcv2uIZnDYodmTBJGjtwXg.png&f=1&nofb=1&ipt=89cd9ae1631b28c9ddd09029c33d3816b82e24841be716ce7d432cd2d15594da){width="400" align=right}
 
-This is an example of [composition in object-oriented design](https://realpython.com/inheritance-composition-python/#whats-composition). This a relationship in which one object owns another as an attribute. Here, the grid is a constituent part of the `GameOfLife` object, not an external dependency. This can be understood through a simple distinction: a grid _is not_ a `GameOfLife` (which rules out inheritance), but a GameOfLife _has a_ grid (which confirms composition). This _has-a_ relationship is what determines how the two are structured and how ownership is assigned in the code.
+This is an example of [composition in object-oriented design](https://realpython.com/inheritance-composition-python/#whats-composition). This a relationship in which one object owns another as an attribute. Here, the grid is a constituent part of the `GameOfLife` object, not an external dependency. This can be understood through a simple distinction: a grid _is not_ a `GameOfLife` (which rules out inheritance), but a `GameOfLife` _has a_ grid (which confirms composition). This _has-a_ relationship is what determines how the two are structured and how ownership is assigned in the code.
 
 !!! tip
     There are two major concepts in object oriented programming (OOP): inheritance and composition. A heuristic to determine what the most appropriate relationship between the two is to use the _is-a_ and _has-a_ test. For example, a cat _is a_ animal. So, a `Cat` class should inherit from a parent `Animal` class. And a cat _has a_ tail. So, a `Cat` should contain an object of `Tail`. It would be incorrect for the `Tail` to inherit from the `Cat` class as a `Tail` is not a `Cat`.
@@ -91,7 +91,7 @@ How the Game of Life progresses is directly linked to how the grid is initialize
 
 We could write three separate constructors for `GameOfLife`, but that quickly becomes messy. Each constructor would duplicate code. More importantly, adding a fourth strategy would require modifying `GameOfLife` again.
 
-In our MVC diagram, this is where input from the user can flow from the controller to manipulate the model.
+In our MVC diagram, this is where input from the user can flow from the Controller to manipulate the Model.
 
 ```mermaid
 ---
@@ -146,7 +146,7 @@ class GameOfLife:
 ```
 
 By depending on an abstraction rather than a concrete implementation, GameOfLife requires no knowledge of which strategies exist. It contains no conditional logic for selecting between them.
-Instead, it delegates the work to whatever strategy object it receives. The decision about which strategy to use happens elsewhere, typically in the controller or a factory class.
+Instead, it delegates the work to whatever strategy object it receives. The decision about which strategy to use happens elsewhere, typically in the Controller or a factory class.
 
 This design directly supports the Open-Closed Principle — the system is open for extension but closed for modification. Consider a scenario common in research: a new initialization strategy is required that loads a predefined pattern from an experimental dataset. This is achieved by implementing a new class, for example, `ExperimentalDataGridCreator`, that inherits from `GridCreator` and provides a concrete implementation of `initialise()`. Crucially, the `GameOfLife` class requires no modification. The system has been extended without altering existing, validated code. Without this abstraction, each new strategy would require changes to `GameOfLife` itself, introducing complexity and the risk of regressions with every addition.
 
@@ -266,9 +266,9 @@ The Model comprises three well-defined components, each with a distinct responsi
 2. `GridCreator` manages grid initialization through the [Strategy Pattern](#the-strategy-pattern). Each concrete implementation — `ZerosGridCreator`, `RandomGridCreator`, and `PatternGridCreator` — encapsulates its own initialization logic, as detailed in [Concrete Classes](#concrete-classes). `GameOfLife` accepts any `GridCreator` without requiring knowledge of the specific implementation, and this flexibility introduces no additional complexity into `GameOfLife` itself.
 3. `Pattern` enforces the validity of user-provided input through the layered validation described in [Validating Patterns with Pydantic](#validating-patterns-with-pydantic). Once a `Pattern` instance has been successfully constructed, its internal consistency is guaranteed. Both `GameOfLife` and `GridCreator` can consume it with confidence, without needing to perform additional checks on the data.
 
-These three components operate together as a cohesive system. When a specific pattern is required, the controller constructs a `Pattern` object from user input, which `pydantic` validates at instantiation. The controller then constructs a `PatternGridCreator` with the validated `Pattern` and passes it to `GameOfLife` via its constructor. The Model receives its dependencies through constructor injection and has no knowledge of where the pattern originated or how it was validated. This is a direct application of the Dependency Inversion Principle, as introduced in [Validating Patterns with Pydantic](#validating-patterns-with-pydantic).
+These three components operate together as a cohesive system. When a specific pattern is required, the Controller constructs a `Pattern` object from user input, which `pydantic` validates at instantiation. The Controller then constructs a `PatternGridCreator` with the validated `Pattern` and passes it to `GameOfLife` via its constructor. The Model receives its dependencies through constructor injection and has no knowledge of where the pattern originated or how it was validated. This is a direct application of the Dependency Inversion Principle, as introduced in [Validating Patterns with Pydantic](#validating-patterns-with-pydantic).
 
-A key property of this design is that the Model is entirely isolated from user interface concerns. `GameOfLife` has no dependencies on any view library and no knowledge of how results are displayed or how the user interacts with the system. Its scope is strictly limited to cells, grids, and the rules of Conway's Game of Life. This isolation is what makes the Model thoroughly testable in the absence of any view or controller code. This is consistent with the defensive programming principles established in [Validating Patterns with `pydantic`](#validating-patterns-with-pydantic) and the testing principles outlined in the [MVC overview](#).
+A key property of this design is that the Model is entirely isolated from user interface concerns. `GameOfLife` has no dependencies on any View library and no knowledge of how results are displayed or how the user interacts with the system. Its scope is strictly limited to cells, grids, and the rules of Conway's Game of Life. This isolation is what makes the Model thoroughly testable in the absence of any View or Controller code. This is consistent with the defensive programming principles established in [Validating Patterns with `pydantic`](#validating-patterns-with-pydantic) and the testing principles outlined in the [MVC overview](#).
 
 This is the Open/Closed Principle in practice, the Model is open for extension, (e.g. introducing new visualizations, interaction patterns, and initialization strategies) without requiring modification to the Model itself. The Model evolves only in response to changes in the problem domain, not in response to interface or presentation requirements.
 
