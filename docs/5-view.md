@@ -29,7 +29,7 @@ The Model emits no output itself. It simply holds state. The View asks the Model
 
 ## Polymorphism Through Abstraction
 
-In the `src/game_of_life/view` directory, there are three files: `base.py`, `cli.py`, and `plot.py`. Let's start with the abstract foundation.
+In the [`src/game_of_life/view` directory](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/tree/main/src/game_of_life/view), there are three files: [`base.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/base.py), [`cli.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/cli.py), and [`plot.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/plot.py). Let's start with the abstract foundation.
 
 ### The `BaseView` Abstract Class
 
@@ -55,15 +55,13 @@ class BaseView(AbstractContextManager):
 By inheriting from [`AbstractContextManager`](https://docs.python.org/3/library/contextlib.html#contextlib.AbstractContextManager), it makes the resource management explicit. Views often need to allocate resources, for example, a CLI view sets up a live display, a plotting view opens a figure window. By inheriting from `AbstractContextManager`, we enforce that concrete views implement [`__enter__()`](https://docs.python.org/3/reference/datamodel.html#object.__enter__) and [`__exit__()`](https://docs.python.org/3/reference/datamodel.html#object.__exit__) methods.  This ensures these resources are properly initialized when we enter a [`with`](https://docs.python.org/3/reference/compound_stmts.html#with) block and cleanly released when we exit, even if an error occurs.
 
 ??? note "Note on Python `__magic__()` methods"
-    These methods which start and end with a double underline, e.g. `__name-of-method__()`, are called [magic or special methods](https://realpython.com/python-magic-methods/#getting-to-know-pythons-magic-or-special-methods) in Python.
+    These methods which start and end with a double underline, e.g. `__name-of-method__()`, are called [magic or special or dunder methods](https://realpython.com/python-magic-methods/#getting-to-know-pythons-magic-or-special-methods) in Python.
 
 This pattern is an application of the *context manager protocol*, which is a Python idiom for reliable resource management. Combined with the [`@abstractmethod`](https://docs.python.org/3/library/abc.html#abc.abstractmethod) [decorator](https://realpython.com/primer-on-python-decorators/) on `render()`, it means any concrete view *must* implement three methods to satisfy the interface: `__enter__()`, `__exit__()`, and `render()`.
 
 The design choice ensure that the constraints are made explicit in code. By using [abstract base classes](https://docs.python.org/3/library/abc.html), we communicate to other programmers (or our future selves) exactly what a view must do, before they write a single line of a new view class.
 
 ### Concrete Views
-
-[Polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(programming_language_theory)) means "many forms." Here, we have one interface (`BaseView`) but multiple implementations which all conform to the interface.
 
 #### CLI View: Terminal Output with `rich`
 
@@ -87,7 +85,7 @@ class CliView(BaseView):
 
 1. Calls the parent's `__init__()` method. As the parent (`BaseView`) has an empty initializer, this is not strictly necessary, however, it is good coding practice and will catch issues if the parent's `__init__()` method changes.
 
-In line 2 and 3 in the code block above are the class variables `ALIVE_CELL` and `DEAD_CELL`. The naming convention of [`UPPER_CASE_WITH_UNDERSCORES`](https://peps.python.org/pep-0008/#descriptive-naming-styles) has been used to signal to readers that this is a [constant](https://peps.python.org/pep-0008/#constants). In addition, the `ClassVar` type annotation, further signals to readers that this is class variable.
+In line 2 and 3 in the code block above are the class variables `ALIVE_CELL` and `DEAD_CELL`. The naming convention of [`UPPER_CASE_WITH_UNDERSCORES`](https://peps.python.org/pep-0008/#descriptive-naming-styles) has been used to signal to readers that this is a [constant](https://peps.python.org/pep-0008/#constants). In addition, the [`ClassVar` type annotation](https://docs.python.org/3/library/typing.html#typing.ClassVar), further signals to readers that this is class variable.
 These class variables store the visual symbols for live cells and a space for dead cells. Here, a full Unicode block character has been used to allow for the display to look professional and handle different terminal widths gracefully.
 
 The [`Console` object from `rich`](https://rich.readthedocs.io/en/stable/reference/console.html#module-rich.console) is their abstraction of the console and manages the terminal output. The [`Live` object](https://rich.readthedocs.io/en/stable/reference/live.html#rich.live.Live) provides live-updating capabilities. By initializing the `Live` instance with the `Console` instance in line 83, it allows for the console output to be updated with a specified refresh rate. In line 82, the refresh rate is calculated to always be faster than the generation interval, ensuring smooth animation.
@@ -126,7 +124,7 @@ class CliView(BaseView):
 
 1. Defensively perform check to ensure that the array only has two dimensions
 
-This is a [pure function](https://en.wikipedia.org/wiki/Pure_function), it takes in a grid and produces a string, with no side effects. Here, it use [NumPy's `where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where) to swap 1s and 0s for visual characters, then join them into a multi-line string.
+This function takes in a grid and produces a string, with no [side effects](https://en.wikipedia.org/wiki/Side_effect_(computer_science)). Here, it use [NumPy's `where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where) to swap 1s and 0s for visual characters, then join them into a multi-line string.
 
 The `render()` method then wraps this string in a [`Panel`](https://rich.readthedocs.io/en/stable/panel.html) for visual formatting which is used to update the `#!py self.live_display`,
 
@@ -163,7 +161,7 @@ class PlotView(BaseView):
 ```
 
 - The `#!py self._cmap` is a custom colourmap, white for dead cells, black for live cells.
-- The `matplotlib` [`Figure`](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure) and [`Axes`](https://matplotlib.org/stable/api/axes_api.html#the-axes-class) (stored in `#!py self.fig` and `#!py self.ax` respectively) have been instantiated using the `#!py plt.subplots()`. When instantiated, the [`constrained_layout=True`](https://matplotlib.org/stable/users/explain/axes/constrainedlayout_guide.html) flag is passed to used to plots cleaner with less white space. For users familiar with `tight_layout()`, this is preferred over `tight_layout()` (see [tight layout guide tip](https://matplotlib.org/stable/users/explain/axes/tight_layout_guide.html)) as constrained layout uses a more modern algorithm.
+- The `matplotlib` [`Figure`](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure) and [`Axes`](https://matplotlib.org/stable/api/axes_api.html#the-axes-class) (stored in `#!py self.fig` and `#!py self.ax` respectively) have been instantiated using the `#!py plt.subplots()`. When instantiated, the [`constrained_layout=True`](https://matplotlib.org/stable/users/explain/axes/constrainedlayout_guide.html) keyword argument is used to create cleaner plots with less white space. For users familiar with `tight_layout()`, this is preferred over `tight_layout()` (see [tight layout guide tip](https://matplotlib.org/stable/users/explain/axes/tight_layout_guide.html)) as constrained layout uses a more modern algorithm.
 - The `#!py self._frame_artists` list accumulates frames for later animation.
 
 The setup of the plotting view is fairly straightforward whereby the title is set and axis ticks are disabled.
