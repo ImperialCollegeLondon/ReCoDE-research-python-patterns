@@ -31,7 +31,7 @@ flowchart BT
   linkStyle 0,1 stroke:#7455FF,stroke-width:4px
 ```
 
-The MVC architecture enables the Controller logic remains simple and stable as long as the Model and View interfaces are well-defined.
+The MVC architecture enables the Controller logic to remain simple and stable as long as the Model and View interfaces are well-defined.
 
 ## Configuration to Facilitate Dependency Injection
 
@@ -76,7 +76,7 @@ class FromYaml(BaseModel):
         return cls.model_validate(data)
 ```
 
-This class inherits from the [`pydantic.BaseModel`](https://pydantic.dev/docs/validation/latest/concepts/models/#basic-model-usage) to provide it with all the validation functionalities of `pydantic`. The method shown here is a [class method](https://docs.python.org/3.14/library/functions.html#classmethod) as the class defines what validation the data is performed on.
+This class inherits from the [`pydantic.BaseModel`](https://pydantic.dev/docs/validation/latest/concepts/models/#basic-model-usage) to provide it with all the validation functionalities of `pydantic`. The method shown here is a [class method](https://docs.python.org/3.14/library/functions.html#classmethod) as the class defines what validation is performed on the data.
 When `cls.model_validate(data)` is called on line 14, `pydantic` performs validation by checking types, enforcing constraints, and raising clear errors if something is wrong. This *fails fast*, any invalid configurations are caught immediately, before the simulation begins.
 
 !!! note
@@ -183,11 +183,11 @@ class GridCreatorFactory:
 Which child class is instantiated depends on the enum specified in the `GameOfLifeConfigFrom.grid_initialiser` field. As the initializer for each child class requires a unique logic, this branching has been achieved using [Python's `match` statement](https://docs.python.org/3/reference/compound_stmts.html#the-match-statement).
 This is a Python 3.10+ feature which enables exhaustive pattern matching. Each `case` corresponds to an enum member. The type checker verifies that all cases are covered. The [`assert_never()`](https://typing.python.org/en/latest/guides/unreachable.html#assert-never-and-exhaustiveness-checking) acts as a safety net, if an unexpected value somehow reaches this code at runtime, it raises an error. It also allows for some code to be [marked as being unreachable to the static type checker](https://typing.python.org/en/latest/guides/unreachable.html#marking-code-as-unreachable).
 
-By using `match` on an enum, it makes the code self-documenting. A reader would immediately see all possible initialization strategies and makes it maintainable. If you add a new `GridInitialiser` member, the type checker will alert you that the `match` statement is incomplete.
+By using `match` on an enum, it makes the code self-documenting and maintainable. A reader would immediately see all possible initialization strategies. If you add a new `GridInitialiser` member, the type checker will alert you that the `match` statement is incomplete.
 
 ### Why a Factory?
 
-Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the application of the single responsibility principle, `GridCreatorFactory` has one job, decide which grid creator to instantiate based on configuration. This allows the [`create_game_of_life()` method](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/controller.py#L167-L194) which is responsible for instantiating the `GameOfLife` to be extremely simple and only be responsible for that.
+Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the application of the single responsibility principle, `GridCreatorFactory` has one job: decide which grid creator to instantiate based on configuration. This allows the [`create_game_of_life()` method](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/controller.py#L167-L194) which is responsible for instantiating the `GameOfLife` to be extremely simple and only be responsible for that.
 
 ## Orchestrating the Model and the View
 
@@ -245,7 +245,7 @@ The logic is straightforward,
    - Tell the Model to step forward one generation
 3. Exit the View's context manager (resources are cleaned up)
 
-Notice what's *not* here, there is no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.
+Notice what's *not* here: there is no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.
 
 ## Bringing it All Together
 
@@ -264,7 +264,7 @@ Several patterns work together in the Controller,
 
 The Controller layer demonstrates why good architecture matters. The orchestration loop is just five lines of code. It's simple because the Model and View have clean interfaces, and because configuration is explicit and validated before it reaches the orchestration logic.
 
-Compare this to what might happen without this architecture. The mixture of concerns, hard-coded configuration, tight coupling between components. Adding a new visualization mode would require modifying multiple files. Bugs would be hard to isolate because no clear boundary exists between simulation and display.
+Compare this to what might happen without this architecture: for example, mixing concerns, hard-coded configuration and tight coupling between components. Adding a new visualization mode would require modifying multiple files. Bugs would be hard to isolate because no clear boundary exists between simulation and display.
 
 Instead, our architecture makes adding features straightforward. To add a new `GridCreator`? Update the factory. Add a new View? Implement `BaseView` and update the view factory. Add new configuration options? Extend the `pydantic` model. Each change is localized and minimal.
 
