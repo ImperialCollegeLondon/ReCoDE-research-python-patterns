@@ -4,7 +4,7 @@ Python is a [dynamically typed language](https://www.baeldung.com/cs/statically-
 
 [Type hinting](https://docs.python.org/3/library/typing.html) is a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. It answers the question of "what type is this supposed to be?" Though it is worth noting that a type mismatch does not necessarily mean something will go wrong. Depending on the situation, things may still work fine (for example, passing a number-like object to a function expecting an `int`), fail in an obvious and immediate way, or fail silently in a way that is difficult to diagnose.
 
-Type hints are not enforced by Python itself. They are [metadata](https://en.wikipedia.org/wiki/Metadata). These annotation tell the interpreter (and more importantly, developers and tools) what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See [PEP 484](https://peps.python.org/pep-0484/) for the full specification.
+Type hints are not enforced by Python itself. They are [metadata](https://en.wikipedia.org/wiki/Metadata). These annotation tell developers and tools what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See [PEP 484](https://peps.python.org/pep-0484/) for the full specification.
 
 ## What Are Type Hints?
 
@@ -38,6 +38,11 @@ ratio: float = 0.5
 is_active: bool = True
 ```
 
+!!! note
+    [A type checker](#type-checkers) is a tool which analyses the code to verify that the types match. These tools are also able to infer what these types are without making it explicit like in the code snippet above. For instance, the type checker will know from `#!py is_active = True` that `is_active` is a boolean.
+
+    In this project, I have opted to make all of the types explicit.
+
 The type annotation comes after the variable name, before the value. This tells anyone reading the code (or your IDE) what type the variable should hold.
 
 ## Why Type Hints Matter
@@ -54,14 +59,16 @@ game.
 When you type `game.` and pause, your IDE doesn't know what properties or methods `game` has. It can't autocomplete. Now with type hints,
 
 ```python
-def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife:
+def create_game_of_life(config: GameOfLifeConfigFrom) -> GameOfLife: # (1)
     return GameOfLife(config.num_rows, config.num_cols, grid_creator=...)
 
 game: GameOfLife = create_game_of_life(config)
 game.
 ```
 
-Your IDE knows `game` is a `GameOfLife` object. It can autocomplete and show you all available methods and properties: `game.step()`, `game.grid`, `game.generation`, `game.compute_next_generation()`, etc. This saves time and prevents typos.
+1. The `-> GameOfLife` syntax is a type hint that specifies the return type rather than being part of the function.
+
+Your IDE knows `game` is a `GameOfLife` object. It is able to determine this implicitly through the `-> GameOfLife` return type hint and the explicitly with the `game: GameOfLife`. Thus, your IDE can autocomplete and show you all available methods and properties: `game.step()`, `game.grid`, `game.generation`, `game.compute_next_generation()`, etc. This saves time and prevents typos.
 
 ### 2. Readability and Maintenance
 
