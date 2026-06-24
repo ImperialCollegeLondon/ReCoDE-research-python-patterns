@@ -1,6 +1,6 @@
 # Model-View-Controller Architecture
 
-The Model-View-Controller (MVC) architecture is a widely used ways to organize code. You'll find it in web applications, desktop software and mobile apps. It's a well-established pattern because it has proven its effectiveness,  it separates concerns so different parts of your code can be understood, modified, and extended independently.
+The Model-View-Controller (MVC) architecture is a widely used way to organize code. You'll find it in web applications, desktop software and mobile apps. It's a well-established pattern because it has proven its effectiveness and it separates concerns so different parts of your code can be understood, modified, and extended independently.
 
 This principle is just as valuable in research software. When you write code to solve a real problem, whether simulating Conway's Game of Life or analyzing experimental data, you quickly run into a challenge: different parts of your code are responsible for fundamentally different things. Your simulation logic shouldn't know or care whether results are being printed to a terminal, saved to a file, or displayed as an interactive plot. Equally, your user interface shouldn't need to understand the underlying mathematical rules. Yet, these pieces must still communicate and work together.
 
@@ -26,17 +26,13 @@ flowchart TD
 
 ### Model
 
-The Model is where the core logic lives. In any MVC application, it holds the data and the rules for how that data changes. In a web app, it might be your database and business logic. In research software, it's where your science lives, the algorithms, equations, simulations, or analyses that are the substance of your work. In this project, class `GameOfLife` in [`model.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py) is the model which implements the rules for Conway's Game of Life.
+The Model is where the core logic lives. In any MVC application, it holds the data and the rules for how that data changes. In a web app, it might be your database and business logic. In research software, it's where your science lives, the algorithms, equations, simulations, or analyses that are the substance of your work. In this project, the class `GameOfLife` in [`model.py`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py) is the model which implements the rules for Conway's Game of Life.
 
-!!! tip
-    What makes the model crucial for research is that it must be *independent*.
+What makes the model crucial for research is that it must be *independent*. Independence here means that doesn't depend on how a user asked it to run or how results will be displayed. This means that someone should be able to run your model in their own pipeline, test it against your published results, modify it to ask different questions, or integrate it into a larger analysis, all without struggling with display code or interface details tangled into the science. That's the difference between research code that can be reused and code that's locked into one specific context.
 
-Independence here means that doesn't depend on how a user asked it to run or how results will be displayed. This means that someone should be able to run your model in their own pipeline, test it against your published results, modify it to ask different questions, or integrate it into a larger analysis, all without struggling with display code or interface details tangled into the science. That's the difference between research code that can be reused and code that's locked into one specific context.
+The beauty of this is that your research code can now serve multiple purposes. The first as a tool which runs the pipeline that you need to perform your analysis. This would have all three components of the MVC architecture. In this project, when a researcher runs in their terminal `game-of-life cli basic-config.yaml`, it runs the simulation with specific parameters and down the code paths you have defined. This is convenient for end users who want to explore with different inputs and reproduce experiments.
 
-The beauty of this is that your research code can now serve multiple purposes. The first as a tool which runs the pipeline that you need to perform your analysis. This would have all three components of the MVC architecture. In this project, a researcher which runs in their terminal `game-of-life cli basic-config.yaml` it runs the simulation with specific parameters and down the code paths you have defined.
-This is convenient for end users who want to explore with different inputs and reproduce experiments.
-
-The second purpose is as a library which other people could use. In this project, everything in the `model.py` file could be a separate library that your users can use to for their own analysis and aren't restricted to the flow of the program specified in your pipeline. In this project, a researcher who wants to build on your work imports the model directly:
+The second purpose is as a library which other people could use. In this project, everything in the `model.py` file could be a separate library for others to use for their own analysis, without being restricted to the rest of the program flow. A researcher who wants to build on this work would import the model directly:
 
 ```python
 from game_of_life.model import GameOfLife
@@ -47,7 +43,7 @@ for generation in range(100):
     # Analyze the state, integrate with other code, etc.
 ```
 
-As your model doesn't assume how it will be used, it exposes a clean interface. Whether that interface is called from a CLI, a Jupyter notebook, another group's analysis pipeline, or a test suite, the model works the same way. That flexibility is what enables your work to be built upon.
+The Model shouldn't make assumptions about how it will be used and should present a clean interface. Whether that interface is called from a CLI, a Jupyter notebook, another group's analysis pipeline, or a test suite, the model should work in the same way. That flexibility is what enables your work to be built upon.
 
 ### View
 
@@ -65,12 +61,12 @@ The Controller is the middleman. It receives input from outside (a person typing
 When someone runs the application via the command line, here's the high-level sequence:
 
 1. **Input**: User provides commands and arguments from the terminal.
-2. **Controller Interprets**: The controller parses what the user wants and creates the necessary model and view instances.
-3. **Model Works**: The controller tells the model to evolve, step by step.
+2. **Controller Interprets**: The controller parses the user input and creates the necessary model and view instances.
+3. **Model Works**: The controller tells the model how to evolve, step by step.
 4. **View Updates**: After each step, the view reads the model's current state and displays it.
 5. **Output**: The user sees the result.
 
-The salient feature in this is that each part stays independent. The model doesn't know about the view, the view doesn't direct the model. The controller connects them but doesn't do the actual work.
+The salient feature in this is that each part stays independent. The Model doesn't know about the View, the View doesn't direct the Model. The Controller connects them but doesn't do the actual work.
 
 ## Why Separate Them? And what makes it possible?
 
@@ -89,13 +85,13 @@ The interplay between low coupling and high cohesion is a cornerstone of good so
 
 These principles also matter the moment you start writing tests. A well-structured unit test checks one thing in isolation. However, that's only possible if the code itself has a single, clear responsibility. If your simulation logic is tangled with your display code, there's no clean way to test the science without also invoking the interface. The test becomes complicated, fragile, and hard to interpret. This is a strong signal that something needs to be separated.
 
-One approach that makes this concrete is [Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development). This is the practice of writing your test before you write the code. This might sound counterintuitive at first, but it's a powerful tool. If you find it difficult to write a simple, focused test for a piece of code, that difficulty is telling you something: the code is probably doing too much. TDD naturally steers you towards the Single Responsibility Principle, because code that is hard to test in isolation is code that needs to be broken up. For researchers, this is particularly valuable, if your model is cleanly separated and well-tested, you can be confident that your results reflect your science, not an accidental interaction between unrelated parts of your code.
+One approach that complements this approach is [Test-Driven Development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development). This is the practice of writing your test before you write the code. This might sound counterintuitive at first, but it's a powerful tool. If you find it difficult to write a simple, focused test for a piece of code, that difficulty is telling you something: the code is probably doing too much. TDD naturally steers you towards the Single Responsibility Principle, because code that is hard to test in isolation is code that needs to be broken up. For researchers, this is particularly valuable, if your model is cleanly separated and well-tested, you can be confident that your results reflect your science, not an accidental interaction between unrelated parts of your code.
 
-Finally, [polymorphism](https://www.baeldung.com/cs/polymorphism) is what enables the MVC architecture to work. The controller doesn't need to know which view it's talking to. There's an abstract interface which captures "what methods must a view have?". Thus, as long as something implements that interface, the controller works without changes. This is useful in any application. If a colleague wants a new visualization, they implement a new view interface, leaving the model stays untouched. If someone wants to run your model in their own analysis pipeline, they can import the model directly and they never use the CLI or views. With your model living independently of how it's used, extensions don't risk breaking the core science.
+Finally, [polymorphism](https://www.baeldung.com/cs/polymorphism) is what enables the MVC architecture to work. The controller doesn't need to know which view it's talking to. There's an abstract interface which captures "what methods must a view have?". Thus, as long as something implements that interface, the controller works without changes. This is useful in any application. If a colleague wants a new visualization, they can implement a new view interface, leaving the model untouched. If someone wants to run your model in their own analysis pipeline, they can import the model directly without using the CLI or views. With your model living independently of how it's used, extensions don't risk breaking the core science.
 
 ## MVC Is the Architecture, Not the Whole Story
 
-MVC describes how the big pieces fit together. It's a generic pattern used in countless applications. But within each piece, you use other techniques and patterns to handle specific challenges unique to your domain or problem.
+MVC describes how the big pieces fit together. It's a generic pattern used in countless applications. But within each piece, you can use other techniques and patterns to handle specific challenges unique to your domain or problem.
 
 For example, in a research model, you might use strategies for initializing data differently (zeros, random, specific patterns). In the controller, you might use [factories](https://en.wikipedia.org/wiki/Factory_method_pattern) to decide which strategy to create based on configuration. In the view, you might use [abstract base classes](https://docs.python.org/3/glossary.html#term-abstract-base-class) to define what any view must implement.
 
