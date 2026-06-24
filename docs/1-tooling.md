@@ -42,7 +42,7 @@ A common misconception about the `pyproject.toml` file is that it is not useful 
 
 #### Adding dependencies to `pyproject.toml` with `uv`
 
-When using `conda`, dependencies are usually specified using an `environment.yml` file. When using `pip`, dependencies are specified using a `requirements.txt` file. The equivalent of this in the `pyproject.toml` is to specify `dependencies` under the `[project]` table. For this project, it has been specified as,
+When using `conda`, dependencies are usually specified using an `environment.yml` file. When using `pip` or `uv`, the dependencies are specified in the the `[dependencies]` section of the `pyproject.toml`. For this project, it has been specified as,
 
 ```toml title="pyproject.toml"
 {%
