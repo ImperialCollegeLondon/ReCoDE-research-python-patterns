@@ -49,7 +49,7 @@ The type annotation comes after the variable name, before the value. This tells 
 
 ### 1. IDE Support
 
-When your IDE knows the type of a variable, it can help you immensely. Consider the case where are writing code and have so far written the following:
+When your IDE knows the type of a variable, it can help you immensely. Consider the case where you are writing code and have so far written the following:
 
 ```python
 game = create_game_of_life(config)
