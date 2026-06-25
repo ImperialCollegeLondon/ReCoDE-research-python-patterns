@@ -17,7 +17,7 @@ throughout the development and plan accordingly.
 
 
 <!-- Your exemplar title. Make it sound catchy! -->
-# Research Python Patterns: Solving common pain points in research software development
+# Research Python Patterns: Solving Common Pain Points in Research Software Development
 
 <!-- A brief description of your exemplar, which may include an image -->
 This exemplar explores software design patterns, tools, and Python packages that make code development easier and more maintainable. Since not all design patterns translate well to a research context, the focus here is on patterns that are practical and beneficial for research workflows, including concepts such as coupling and cohesion, dependency injection, linting, and Model-View-Controller (MVC) architecture. To demonstrate these concepts in action, we use [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) as our working example, a well-defined yet rich problem.
