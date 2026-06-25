@@ -17,16 +17,19 @@ throughout the development and plan accordingly.
 
 
 <!-- Your exemplar title. Make it sound catchy! -->
-# This is my exemplar title
+# Research Python Patterns: Solving common pain points in research software development
 
 <!-- A brief description of your exemplar, which may include an image -->
-This is a brief abstract of my exemplar, which includes a representative image.
-![Scikit Camera Image](docs/assets/readme-img.png)
+This exemplar explores software design patterns, tools, and Python packages that make code development easier and more maintainable. Since not all design patterns translate well to a research context, the focus here is on patterns that are practical and beneficial for research workflows, including concepts such as coupling and cohesion, dependency injection, linting, and Model-View-Controller (MVC) architecture. To demonstrate these concepts in action, we use [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway's_Game_of_Life) as our working example, a well-defined yet rich problem.
+
+The Game of Life is a simulation of an array of pixels which can be "alive" or "dead". Each generation, the state of the pixel is determined by the state of pixels around it in the previous generation. This leads to a complex and interesting system from a simple set of rules.
+This is a gif of the [Gosper glider gun](https://conwaylife.com/wiki/Gosper_glider_gun) pattern which creates cells that glide across the screen.
+![game of life - space rake](docs/assets/gosper-glider-gun.gif)
 
 <!-- Author information -->
-This exemplar was developed at Imperial College London by (YOUR NAME) in
-collaboration with (RSE MENTOR) from Research Software Engineering and
-(RCDS MENTOR) from Research Computing & Data Science at the Early Career
+This exemplar was developed at Imperial College London by [Hui Ling Wong](https://profiles.imperial.ac.uk/hui.wong16) in
+collaboration with [Alex Dewar](https://profiles.imperial.ac.uk/a.dewar) from Research Software Engineering and
+[Chris Cooling](https://profiles.imperial.ac.uk/c.cooling10) from Research Computing & Data Science at the Early Career
 Researcher Institute.
 
 
@@ -35,17 +38,20 @@ Aim for 3 - 4 points that illustrate what knowledge and
 skills will be gained by studying your ReCoDE exemplar. -->
 ## Learning Outcomes 🎓
 
-After completing this exemplar, students will:
+Software development comes with common pain points. After completing this exemplar, students will:
 
-- Learning Outcome 1
-- Learning Outcome 2
-- Learning Outcome 3
+- Understand how linters can catch and prevent common code quality issues.
+- Understand the pain points that design patterns solve and how to apply them in a research context.
+- Understand why unvalidated user input can cause problems and how packages such as [`pydantic`](https://pydantic.dev/docs/validation/latest/get-started/) and [`typer`](https://typer.tiangolo.com/) can help, with an introduction to dependency injection and type checking.
+- Understand how type hinting in Python reduces ambiguity and makes code easier to maintain.
+- Understand how tooling such as [`pre-commit`](https://pre-commit.com/) and type checkers can catch errors before they become problems.
+- Understand how to build a Python command line tool to make your code more accessible and reusable.
 
 
 <!-- Audience. Think broadly as to who will benefit. -->
 ## Target Audience 🎯
 
-Who will benefit from studying this exemplar.
+Anyone working with Python.
 
 
 <!-- Requirements.
@@ -61,146 +67,121 @@ you must include a relevant section that helps with learning this library.
 
 ### Academic 📚
 
-- Required skills/knowledge (e.g. programming languages, libraries, theory, courses)
+- Foundational understanding of the Python programming language
+- Familiarity with installing software and packages.
 
 ### System 💻
 
-- System requirements (e.g. Python 3.11+, Anaconda, 50 GB disk space, etc.)
-- Hardware or HPC requirements (if any)
+- Ability to install new software on the machine
 
 
 <!-- Quick Start Guide. Tell learners how to engage with the exemplar. -->
 ## Getting Started 🚀
 
-e.g. Step-by-step guide:
-
-1. Start by (instruction).
-2. Visit the sections of this notebook in some particular order.
-3. Attempt exercises `1a`, `1b`, etc.
-4. Progress to advanced materials in the Github repository linked here.
-5. Compare with solutions available in the `solutions` folder.
+1. Install `uv` [by following the instructions here](https://docs.astral.sh/uv/getting-started/installation/).
+2. Create a clone of the repository using,
+   ```console
+   $ git clone https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns.git
+   ```
+3. Move into the root directory of the project. On linux, this would be,
+   ```console
+   $ cd ReCoDE-research-python-patterns
+   ```
+4. In the root directory of the project, create a virtual environment with `uv` using
+   ```console
+   $ uv venv
+   ```
+5. Activate the Python environment based on the instructions that appeared from running `uv venv`
+6. Install the Game of Life Python package in the virtual environment using,
+   ```console
+   $ uv sync
+   ```
+7. Run the game of life in the command line using,
+   ```console
+   $ game-of-life cli basic-config.yaml
+   ```
+   This runs the game of life in the terminal rather than creating an output file. This runs indefinitely to stop it press `ctrl+c`. Note: the [basic-config.yaml](basic-config.yaml) file is the root of the repository.
 
 
 <!-- Background. Tell learners about why this exemplar is useful. -->
 ## Disciplinary Background 🔬
 
-Briefly describe how this project fits in your discipline, why you chose
-to work on it, and what other disciplines may find it useful.
+One of the most common challenges in research software development is knowing how to structure code in a way that is maintainable, readable, and reusable. After all, the most frequent user of your own code is yourself, and past you and future you need to be able to communicate clearly through it. Alongside this, there is a wealth of tooling available that can make developing research software significantly easier, yet much of it remains unknown to most researchers. This exemplar was born out of the pain points encountered first-hand when writing research software, and aims to address those challenges in a practical and accessible way. As these are fundamentally generic software development issues, this exemplar is relevant and useful across all research disciplines.
 
 
 <!-- Software. What languages, libraries, software you use. -->
 ## Software Tools 🛠️
 
-Programming language(s), libraries, and scientific software used.
+Programming language: Python
 
+Tools:
+1. [`uv`](https://docs.astral.sh/uv/#highlights) - for package and environment management
+2. [`ruff`](https://docs.astral.sh/ruff/) - for linting and formatting
+3. [`prek`](https://prek.j178.dev/) or [`pre-commit`](https://pre-commit.com/) - for git hook script to check code quality before committing to git
+4. [`ty`](https://docs.astral.sh/ty/) or [`pyright`](https://github.com/microsoft/pyright) - for Python static type checking
+
+<!--This renders magically as a code snippet on GitHub-->
+Libraries:
+1. `numpy` for working with arrays
+2. [`pytest`](https://docs.pytest.org/en/stable/) for testing code
+3. `matplotlib` for creating plots
+4. `pydantic` for handling input from users
+5. `pyyaml` for loading configuration files from [yaml file format](https://yaml.org/)
+6. `typer` for building a command line tool
+
+All dependencies for this project can be found in the [`pyproject.toml`](https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/pyproject.toml) file
 
 <!-- Repository structure. Explain how your code is structured. -->
 ## Project Structure 🗂️
 
-Overview of code organisation and structure.
+<!--Initially generated using `tree --gitignore` and shortened for brevity-->
 
 ```
 .
-├── notebooks
-│ ├── ex1.ipynb
-├── src
-│ ├── file1.py
-│ ├── file2.cpp
-│ ├── ...
-│ └── data
+├── LICENSE.md
+├── README.md
 ├── docs
-└── test
+│   ├── assets
+│   │   ├── favicon.ico
+│   │   ├── ...
+│   │   └── gosper-glider-gun.gif
+│   ├── content.md
+│   └── index.md
+├── mkdocs.yml
+├── pyproject.toml
+├── ruff.toml
+├── src/game_of_life
+│   ├── __init__.py
+│   ├── main.py
+│   ├── ...
+│   └── view
+├── tests
+│   ├── __init__.py
+│   ├── ...
+│   └── test_view.py
+└── uv.lock
 ```
 
 Code is organised into logical components:
 
-- `notebooks` for tutorials and exercises
-- `src` for core code, potentially divided into further modules
-- `data` within `src` for datasets
 - `docs` for documentation
+  - `assets` for static files like images that are used in the documentation
+- `src` for core code, potentially divided into further modules
 - `test` for testing scripts
-
-
-<!-- Roadmap.
-Identify the project core (a minimal working example). This
-is what you should develop first, ideally by week 6. Defining
-a core helps ensure that, despite a tight timeline, we will end
-up with a complete project.
-
-Identify project extensions. These are additional features that
-you will implement after the core of the project is finished; you
-could also propose extensions as open-ended exercises for the ReCoDE
-audience.
-
-Outline the process of creating the exemplar as a project roadmap
-with individual steps. This will help you with defining the scope of
-the project. When you think about this, imagine that you are explaining
-it to a new PhD student. Assume that this student is from a related (but
-not necessarily same) discipline. They can code but have never undertaken
-a larger project. The steps should follow logical development of the
-project and good practice. Each will be relatively independent and contain
-its own learning annotation and links to other learning materials if
-appropriate. The learning annotation is going to form a significant portion
-of your efforts.
-
-Learning annotations will evolve as we go along but planning now will be useful
-in defining your exemplar steps. Remember that active learning is generally more
-valuable than just reading information, so small exercises that build on previous
-steps can really help your students to understand the software development process.
-You can include videos, text, charts, images, flowcharts, storyboards, or anything
-creative that you may think of.
-
-Completed tasks are marked with an x between the square brackets.
--->
-## Roadmap 🗺️
-
-### Core 🧩
-
-- [x] Data ingestion pipeline
-    * [x] Tutorial with small data exercise
-- [x] Core analysis algorithms
-    * [x] Documentation with worked example
-- [ ] Basic visualisation tools
-    * [ ] Mini-project: "Create your first plot"
-- [ ] Results export functionality
-    * [ ] Usage tutorial with export task
-    * [ ] Short video walkthrough *(planned)*
-- [ ] Automated testing suite
-    * [ ] Debugging challenge
-- [ ] Documentation for core methods
-
-### Extensions 🔌
-
-- [ ] Advanced statistical models
-    * [ ] Example notebook with exercises
-- [ ] Interactive dashboard
-    * [ ] Exercise: Build a simple component
-- [ ] Multi-format data import/export
-    * [ ] Guide with hands-on tasks
-- [ ] Collaboration tools integration
-    * [ ] Exercise: Set up collaborative workflow
-    * [ ] Include diagram of workflow *(optional)*
-- [ ] Extended visualisation options
-    * [ ] Creative task: Design a custom plot
-
-<!-- Data availability (remove this section if no data used) -->
-## Data 📊
-
-List datasets used with:
-
-- Licensing info
-- Where they are included (in the repo or external links)
 
 
 <!-- Best practice notes. -->
 ## Best Practice Notes 📝
 
-- Code testing and/or test examples
-- Use of continuous integration (if any)
-- Any other software development best practices
+- Code testing and/or test examples with [`pytest`](https://docs.pytest.org/en/stable/) and docstring tests
+- Use of continuous integration
+- Use of [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages
+- Use of design patterns, dependency injection, static type checking, linting and pre-commit
 
 <!-- Estimate the time it will take for a learner to progress through the exemplar. -->
 ## Estimated Time ⏳
+
+TO BE UPDATED ONCE THIS IS FINISHED!!!
 
 | Task       | Time    |
 | ---------- | ------- |
@@ -211,7 +192,8 @@ List datasets used with:
 <!-- Any references, or other resources. -->
 ## Additional Resources 🔗
 
-- Relevant sources, websites, images, AOB.
+- Book: [Conway's Game of Life - Mathematics and Construction](https://conwaylife.com/book/) by Nathaniel Johnston and Dave Greene. DOI: [10.5281/zenodo.6097284](https://doi.org/10.5281/zenodo.6097284)
+- Webpage: [Game of Life Patterns](https://conwaylife.com/book/#rle_files)
 
 <!-- LICENCE.
 Imperial prefers BSD-3. Please update the LICENSE.md file with the current year.
