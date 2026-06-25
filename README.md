@@ -115,6 +115,7 @@ One of the most common challenges in research software development is knowing ho
 Programming language: Python
 
 Tools:
+
 1. [`uv`](https://docs.astral.sh/uv/#highlights) - for package and environment management
 2. [`ruff`](https://docs.astral.sh/ruff/) - for linting and formatting
 3. [`prek`](https://prek.j178.dev/) or [`pre-commit`](https://pre-commit.com/) - for git hook script to check code quality before committing to git
@@ -122,6 +123,7 @@ Tools:
 
 <!--This renders magically as a code snippet on GitHub-->
 Libraries:
+
 1. `numpy` for working with arrays
 2. [`pytest`](https://docs.pytest.org/en/stable/) for testing code
 3. `matplotlib` for creating plots
