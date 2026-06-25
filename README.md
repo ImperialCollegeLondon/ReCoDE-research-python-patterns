@@ -51,7 +51,7 @@ Software development comes with common pain points. After completing this exempl
 <!-- Audience. Think broadly as to who will benefit. -->
 ## Target Audience 🎯
 
-Anyone working with Python.
+Anyone working with Python or interested in learning about software architecture/design patterns that apply to any language.
 
 
 <!-- Requirements.
