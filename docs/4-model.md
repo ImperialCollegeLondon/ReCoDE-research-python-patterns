@@ -2,7 +2,7 @@
 
 <!-- TODO: ADD IN link to MVC article overview  -->
 The Model is the centerpiece of the Game of Life simulation.
-It's responsible for maintaining the game state and computing how that state evolves over time. In the Model-View-Controller (MVC) architecture, the Model knows nothing about how it's being displayed or which buttons the user is clicking. It only understands one thing - the rules of Conway's Game of Life and how to apply them.
+It's responsible for maintaining the game state and computing how that state evolves over time. In the [Model-View-Controller (MVC) architecture](../3-mvc), the Model knows nothing about how it's being displayed or which buttons the user is clicking. It only understands one thing - the rules of Conway's Game of Life and how to apply them.
 
 ## Understanding Conway's Game of Life
 
