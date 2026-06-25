@@ -1,4 +1,4 @@
-# Model-View-Controller Architecture
+# Model View Controller Architecture
 
 **Estimated read time:** 10 minutes
 
