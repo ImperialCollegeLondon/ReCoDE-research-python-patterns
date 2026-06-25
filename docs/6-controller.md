@@ -1,5 +1,7 @@
 # The Controller
 
+**Estimated read time:** 12 minutes
+
 The Controller is the orchestrator of the MVC architecture. While the Model knows nothing about the user or the display, and the View knows nothing about the game rules, the Controller coordinates between them. It interprets user input, transforms it into commands for the Model, and ensures the View receives updated state at the right time.
 
 In our Game of Life application, the Controller's responsibilities include:
@@ -265,12 +267,12 @@ Notice what's *not* here: there is no game logic, no display code, no configurat
 
 Several patterns work together in the Controller,
 
-- **Factory Pattern**: `GridCreatorFactory` encapsulate object creation, hiding complexity from callers.
-- **Iterator Pattern**: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
-- **Dependency Injection**: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
-- **Enum Pattern**: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
-- **Composition Pattern**: Configuration objects are composed together, reflecting the structure of the system.
-- **Strategy Pattern**: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
+- *Factory Pattern*: `GridCreatorFactory` encapsulate object creation, hiding complexity from callers.
+- *Iterator Pattern*: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
+- *Dependency Injection*: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
+- *Enum Pattern*: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
+- *Composition Pattern*: Configuration objects are composed together, reflecting the structure of the system.
+- *Strategy Pattern*: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
 
 ### The Power of Good Architecture
 

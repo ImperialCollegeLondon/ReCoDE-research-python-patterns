@@ -1,5 +1,7 @@
 # The View
 
+**Estimated read time:** 10 minutes
+
 The View is the presentation layer of the MVC architecture. While the Model holds the game state and knows nothing about how it's displayed, and the Controller orchestrates the flow, the View is responsible for making the game visible to the user. In Conway's Game of Life, multiple visualization strategies might be equally valid: a terminal display, a plotting window, or even a web interface. The View layer enables this flexibility.
 
 

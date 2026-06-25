@@ -1,5 +1,7 @@
 # Type Hinting
 
+**Estimated read time:** 16 minutes
+
 Python is a [dynamically typed language](https://www.baeldung.com/cs/statically-vs-dynamically-typed-languages), so variables can hold any type of data and their type can change at runtime. Python uses [duck typing](https://en.wikipedia.org/wiki/Duck_typing), which means it cares about what objects can *do* rather than what they *are*. This provides remarkable flexibility, but results in implicit assumptions scattered throughout the code: you might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break &ndash; or fail silently.
 
 [Type hinting](https://docs.python.org/3/library/typing.html) is a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. It answers the question of "what type is this supposed to be?" Though it is worth noting that a type mismatch does not necessarily mean something will go wrong. Depending on the situation, things may still work fine (for example, passing a number-like object to a function expecting an `int`), fail in an obvious and immediate way, or fail silently in a way that is difficult to diagnose.

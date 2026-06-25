@@ -1,5 +1,7 @@
 # Bringing It Together
 
+**Estimated read time:** 10 minutes
+
 We've explored the Model, View, and Controller in isolation. Each layer has clear responsibilities and well-defined interfaces. But how do users actually run the simulation? How is all this wired together into a working application? The answer lies in the command-line interface. Thanks to our architecture, this integration layer is simple and elegant.
 
 This focuses on the use of [`typer`](https://typer.tiangolo.com/).
