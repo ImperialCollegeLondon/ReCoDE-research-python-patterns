@@ -265,12 +265,12 @@ Notice what's *not* here: there is no game logic, no display code, no configurat
 
 Several patterns work together in the Controller,
 
-- **Factory Pattern**: `GridCreatorFactory` encapsulate object creation, hiding complexity from callers.
-- **Iterator Pattern**: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
-- **Dependency Injection**: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
-- **Enum Pattern**: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
-- **Composition Pattern**: Configuration objects are composed together, reflecting the structure of the system.
-- **Strategy Pattern**: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
+- *Factory Pattern*: `GridCreatorFactory` encapsulate object creation, hiding complexity from callers.
+- *Iterator Pattern*: `GoLIterator` abstracts iteration over generations, making it easy to modify or extend iteration behavior.
+- *Dependency Injection*: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.
+- *Enum Pattern*: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.
+- *Composition Pattern*: Configuration objects are composed together, reflecting the structure of the system.
+- *Strategy Pattern*: By accepting a `BaseView` interface, the orchestration loop works with any view implementation without modification.
 
 ### The Power of Good Architecture
 

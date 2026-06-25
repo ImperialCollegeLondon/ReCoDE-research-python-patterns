@@ -60,11 +60,11 @@ The Controller is the middleman. It receives input from outside (a person typing
 
 When someone runs the application via the command line, here's the high-level sequence:
 
-1. **Input**: User provides commands and arguments from the terminal.
-2. **Controller Interprets**: The Controller parses the user input and creates the necessary Model and View instances.
-3. **Model Works**: The Controller tells the Model how to evolve, step by step.
-4. **View Updates**: After each step, the View reads the Model's current state and displays it.
-5. **Output**: The user sees the result.
+1. *Input*: User provides commands and arguments from the terminal.
+2. *Controller Interprets*: The Controller parses the user input and creates the necessary Model and View instances.
+3. *Model Works*: The Controller tells the Model how to evolve, step by step.
+4. *View Updates*: After each step, the View reads the Model's current state and displays it.
+5. *Output*: The user sees the result.
 
 The salient feature in this is that each part stays independent. The Model doesn't know about the View, the View doesn't direct the Model. The Controller connects them but doesn't do the actual work.
 
@@ -80,8 +80,8 @@ At the same time, each piece needs high cohesion - everything inside it should s
 
 The interplay between low coupling and high cohesion is a cornerstone of good software design, and it connects directly to a broader set of principles known as [SOLID](https://en.wikipedia.org/wiki/SOLID). These five principles, originally formulated for object-oriented design, provide a framework for writing code that is easy to understand, extend, and maintain. Two are particularly relevant here:
 
-1. Single Responsibility Principle: each component should have only one responsibility. This maps directly onto cohesion
-2. Open/Closed Principle: code should be open for extension but closed for modification. This captures exactly what MVC enables. You can add new Views or interfaces without touching the core Model.
+1. *Single Responsibility Principle*: each component should have only one responsibility. This maps directly onto cohesion
+2. *Open/Closed Principle*: code should be open for extension but closed for modification. This captures exactly what MVC enables. You can add new Views or interfaces without touching the core Model.
 
 These principles also matter the moment you start writing tests. A well-structured unit test checks one thing in isolation. However, that's only possible if the code itself has a single, clear responsibility. If your simulation logic is tangled with your display code, there's no clean way to test the science without also invoking the interface. The test becomes complicated, fragile, and hard to interpret. This is a strong signal that something needs to be separated.
 
