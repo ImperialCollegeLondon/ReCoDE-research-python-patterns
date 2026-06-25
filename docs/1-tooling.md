@@ -1,5 +1,7 @@
 # Tooling
 
+**Estimated read time:** 14 minutes
+
 This page explores three core tools that strengthen research software development: `uv` for dependency and environment management, `ruff` for automated linting and formatting, and `pre-commit` hooks for quality gating. Beyond `uv`, the latter two act as automated safeguards—they catch mistakes before you run your code, saving valuable debugging time.
 
 ## Overview

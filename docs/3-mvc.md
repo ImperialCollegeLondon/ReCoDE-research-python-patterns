@@ -1,5 +1,7 @@
 # Model-View-Controller Architecture
 
+**Estimated read time:** 10 minutes
+
 The Model-View-Controller (MVC) architecture is a widely used way to organize code. You'll find it in web applications, desktop software and mobile apps. It's a well-established pattern because it has proven its effectiveness and it separates concerns so different parts of your code can be understood, modified, and extended independently.
 
 This principle is just as valuable in research software. When you write code to solve a real problem, whether simulating Conway's Game of Life or analyzing experimental data, you quickly run into a challenge: different parts of your code are responsible for fundamentally different things. Your simulation logic shouldn't know or care whether results are being printed to a terminal, saved to a file, or displayed as an interactive plot. Equally, your user interface shouldn't need to understand the underlying mathematical rules. Yet, these pieces must still communicate and work together.

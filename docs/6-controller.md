@@ -1,5 +1,7 @@
 # The Controller
 
+**Estimated read time:** 12 minutes
+
 The Controller is the orchestrator of the MVC architecture. While the Model knows nothing about the user or the display, and the View knows nothing about the game rules, the Controller coordinates between them. It interprets user input, transforms it into commands for the Model, and ensures the View receives updated state at the right time.
 
 In our Game of Life application, the Controller's responsibilities include:
