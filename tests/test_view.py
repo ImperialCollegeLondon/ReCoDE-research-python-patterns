@@ -45,7 +45,7 @@ class TestCLIView:
         The method expects 2D arrays (rows and columns). A 1D array should
         raise an AssertionError.
         """
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="Array must have two dimensions"):
             _ = view_instance.map_to_string(np.arange(10))
 
     def test_map_to_str_must_have_two_dims_3d(self, view_instance: CliView) -> None:
@@ -54,7 +54,7 @@ class TestCLIView:
         The method expects exactly 2D arrays. A 3D array should raise an
         AssertionError.
         """
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match="Array must have two dimensions"):
             _ = view_instance.map_to_string(np.zeros((3, 4, 4)))
 
     @pytest.mark.parametrize("is_alive", [True, False])
