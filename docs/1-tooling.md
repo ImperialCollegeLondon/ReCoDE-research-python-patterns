@@ -132,7 +132,7 @@ To update all dependencies, use:
 $ uv lock --upgrade
 ```
 
-Recently, Python introduced the [`pylock.toml` specification](https://packaging.python.org/en/latest/specifications/pylock-toml/) which is a tooling independent file "for specifying dependencies to enable reproducible installation in a Python environment".
+Recently, Python introduced the [`pylock.toml` specification](https://packaging.python.org/en/latest/specifications/pylock-toml/) which is a tooling independent file "for specifying dependencies to enable reproducible installation in a Python environment". Note: this is not compatible with `uv`.
 
 ## Linting and Formatting
 
