@@ -181,12 +181,17 @@ Code is organised into logical components:
 <!-- Estimate the time it will take for a learner to progress through the exemplar. -->
 ## Estimated Time ⏳
 
-TO BE UPDATED ONCE THIS IS FINISHED!!!
+The exemplar has three main parts to it. For the first two, you're welcome to read them as standalone topics. For the final one, you'll need to work through all parts if you're not already familiar with the first two topics.
 
-| Task       | Time    |
+1. [Python tooling](https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/1-tooling/) to aid software development
+2. [Python type hinting](https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/2-type-hinting/)
+3. Software design patterns which makes code more maintainable. This starts with an [introduction to the Model-View-Controller architecture](https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/3-mvc)
+
+| Section    | Time (minutes) |
 | ---------- | ------- |
-| Reading    | 3 hours |
-| Practising | 3 hours |
+| Tooling    | 14 |
+| Type Hinting | 17 |
+| Software Design Patterns | 58 |
 
 
 <!-- Any references, or other resources. -->
