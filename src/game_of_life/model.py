@@ -43,7 +43,7 @@ class Pattern(BaseModel):
 
     Example pattern string: "3b$bob$2b!" represents:
         b b b
-        o b o
+        b o b
         b b
 
     Attributes
