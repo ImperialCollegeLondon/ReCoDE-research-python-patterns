@@ -10,7 +10,7 @@ In our Game of Life application, the Controller's responsibilities include:
 - Managing the simulation loop
 - Coordinating between Model and View
 
-In the diagram below, the user provides input through the configuration to the controller. This allows it to manipulated the model and configure it to have the right initialization strategy. It then orchestrates the the interactions between the view and the model by managing the simulation loop.
+In the diagram below, the user provides input through the [configuration to the controller](#turning-configurations-into-objects). This allows it to manipulated the model and configure it to have the right initialization strategy. It then [orchestrates the the interactions between the view and the model](#orchestrating-the-model-and-the-view) by managing the simulation loop.
 
 ```mermaid
 ---
