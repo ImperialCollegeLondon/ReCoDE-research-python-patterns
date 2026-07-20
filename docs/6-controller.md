@@ -253,6 +253,7 @@ This is elegant in its simplicity. The function receives already-constructed obj
 By using dependency injection - where dependencies are provided rather than created internally - it makes the function easy to test and flexible to use.
 
 The logic is straightforward,
+
 1. Enter the View's context manager (resources are initialized)
 2. For each generation:
    - Ask the View to render the current state
