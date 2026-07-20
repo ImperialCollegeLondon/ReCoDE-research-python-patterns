@@ -15,7 +15,7 @@ Conway's Game of Life is a cellular automaton where cells on a grid live or die 
 
 That's it. From these three rules, complex and often unpredictable patterns emerge. Some configurations oscillate endlessly. Others move across the grid like spaceships. Still others produce intricate structures that change in fascinating ways.
 
-![image of the eight neighbours of a given cell](https://conwaylife.com/w/images/3/30/Moore_neighbourhood_%28range_1%29.png){align=left}
+![image of the eight neighbours of a given cell](assets/game-of-life-neighbourhood.png){align=left}
 ///caption
 The neighbours of a cell comprises all orthogonal and diagonal adjacent cells, giving eight neighbours in total.
 ///
