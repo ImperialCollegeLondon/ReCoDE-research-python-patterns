@@ -1,0 +1,1134 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../3-mvc/">
+      
+      
+        <link rel="next" href="../5-view/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>The Model - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-conways-game-of-life" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Conway's Game of Life
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Conway&#39;s Game of Life">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-rules-to-code-the-single-responsibility-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Rules to Code: The Single Responsibility Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grid-as-a-data-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid as a Data Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grid-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid Initialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Grid Initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoding-patterns-with-run-length-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Patterns with Run Length Encoding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encoding Patterns with Run Length Encoding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the Encoding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validating-patterns-with-pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validating Patterns with Pydantic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-components-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the Components Work Together
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-conways-game-of-life" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Conway's Game of Life
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Conway&#39;s Game of Life">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-rules-to-code-the-single-responsibility-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Rules to Code: The Single Responsibility Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grid-as-a-data-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid as a Data Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grid-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid Initialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Grid Initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoding-patterns-with-run-length-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Patterns with Run Length Encoding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encoding Patterns with Run Length Encoding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the Encoding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validating-patterns-with-pydantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validating Patterns with Pydantic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-components-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the Components Work Together
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-model">The Model</h1>
+<p><strong>Estimated read time:</strong> 16 minutes</p>
+<p>The Model is the centerpiece of the Game of Life simulation.
+It's responsible for maintaining the game state and computing how that state evolves over time. In the <a href="../3-mvc">Model-View-Controller (MVC) architecture</a>, the Model knows nothing about how it's being displayed or which buttons the user is clicking. It only understands one thing - the rules of Conway's Game of Life and how to apply them.</p>
+<h2 id="understanding-conways-game-of-life">Understanding Conway's Game of Life</h2>
+<p>Conway's Game of Life is a cellular automaton where cells on a grid live or die based on simple rules. These rules are beautifully elegant:</p>
+<ol>
+<li>A live cell with 2 or 3 live neighbors survives to the next generation</li>
+<li>A dead cell with exactly 3 live neighbors becomes alive</li>
+<li>All other cells die or stay dead</li>
+</ol>
+<p>That's it. From these three rules, complex and often unpredictable patterns emerge. Some configurations oscillate endlessly. Others move across the grid like spaceships. Still others produce intricate structures that change in fascinating ways.</p>
+<figure>
+<p><img align="left" alt="image of the eight neighbours of a given cell" src="../assets/game-of-life-neighbourhood.png" /></p>
+<figcaption>
+<p>The neighbours of a cell comprises all orthogonal and diagonal adjacent cells, giving eight neighbours in total.</p>
+</figcaption>
+</figure>
+<h3 id="from-rules-to-code-the-single-responsibility-principle">From Rules to Code: The Single Responsibility Principle</h3>
+<p>When we translate these rules into code, we face an interesting design decision. We could write one large method that computes the next generation and updates the grid. But notice that Conway's rules describe two distinct concerns,</p>
+<ol>
+<li>Computing what the next generation should be</li>
+<li>Advancing the simulation</li>
+</ol>
+<p>As such, our implementation splits these concerns into two methods. The <code>GameOfLife</code> class provides <code>compute_next_generation()</code> and <code>step()</code>.
+This split follows the Single Responsibility Principle. The former applies Conway's rules. The latter coordinates the simulation's progression and maintain the history. Separating these makes the code easier to test. For example, the computation of the next generation can be tested independently of the stepping.</p>
+<div class="highlight"><span class="filename">model.py in GameOfLife class</span><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_next_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArrayU8</span><span class="p">:</span>
+
+        <span class="n">neighbours</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># If the number of alive neighbours is N_BIRTH, then the cell will always be alive. This is as there must be</span>
+        <span class="c1">#   N_BIRTH neighbouring cells for a dead cell to come to life or for it to survive</span>
+        <span class="c1"># If the number of alive neighbours is N_SURVIVAL, then a cell only survives if it s currently alive.</span>
+        <span class="c1"># Hence, if</span>
+        <span class="c1">#   N_BIRTH neighbours =&gt; always alive</span>
+        <span class="c1">#   N_SURVIVAL neighbours =&gt; must be alive FIRST to remain alive =&gt; additional check</span>
+        <span class="n">next_generation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">neighbours</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_BIRTH</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">neighbours</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_SURVIVAL</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wrap</span><span class="p">:</span>
+            <span class="n">next_generation</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">next_generation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">next_generation</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">next_generation</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">next_generation</span>
+</code></pre></div>
+<p>This method computes the next generation by first determining how many neighbours are alive. Using the <code>np.roll</code> function we can shift the grid to get a neighboring value at the current index. By adding up all neighbours, we can determine how many neighbours are alive. The next steps involve applying the rules of the game and handling the boundary. These two steps result in an array of what the grid will look like at the next step. Thus, this method has only one responsibility.</p>
+<div class="highlight"><span class="filename">model.py in GameOfLife class</span><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generation</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_next_generation</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">)</span>
+</code></pre></div>
+<p>This method is responsible for coordinating all the different components involved in moving from one time step to the next. It is also the means for Controller to manipulate the Model such that it updates for the View. This corresponds to the parts in purple in the MVC diagram below</p>
+<pre class="mermaid"><code>---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user --&gt;|provides input| controller
+  controller --&gt;|manipulates| model
+  model --&gt;|updates| view
+  view --&gt;|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style model fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 1,2 stroke:#7455FF,stroke-width:4px</code></pre>
+<div class="admonition info">
+<p class="admonition-title">Info: Naming Convention</p>
+<p>In the snippets above, you might've noticed that the some of the fields on the class start with a <code>_</code>, e.g. <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span></code> and <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">_generation</span></code>. This is <a href="https://peps.python.org/pep-0008/#descriptive-naming-styles">indicate that it is meant for internal use</a>.</p>
+<p>In typed languages like C++ and Java, <a href="https://en.wikipedia.org/wiki/Access_modifiers">access modifiers</a> are used to specify the "accessiblity of classes, methods, and other members".</p>
+<figure>
+<p><img alt="Java class with access modifiers" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/UML_class_diagram_with_access_modifiers.svg/1280px-UML_class_diagram_with_access_modifiers.svg.png" width="600" /></p>
+<figcaption>
+<p>Class diagram of the Example class with access modifiers. In <a href="https://en.cppreference.com/cpp/language/access">C++ these accesss specifiers</a> they mean: <code>public</code> ⇒ visible to everyone; <code>protected</code> ⇒ visible to child and/or <a href="https://en.cppreference.com/cpp/language/friend">friend</a> classes; and <code>private</code> ⇒ only visible to the class.</p>
+</figcaption>
+</figure>
+</div>
+<h3 id="grid-as-a-data-container">Grid as a Data Container</h3>
+<p>The grid is represented as a 2D NumPy array in which each cell holds a value of either 0 (dead) or 1 (alive). The <code>GameOfLife</code> object owns and manages this array and <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">_grid</span></code> is not intended to be accessed by the outside. This is to <a href="https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)">encapsulate the data</a> for <a href="https://en.wikipedia.org/wiki/Information_hiding">information hiding</a>
+By restricting modification to the <code>GameOfLife</code> object itself, the state of the grid remains predictable and controlled throughout the program's execution.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As Python does not support variable access restrictions, it is not possible to enforce this restriction. In fact, even in languages like Java which has these restrictions and enforces it, they can be circumvented using an advanced feature called <a href="https://en.wikipedia.org/wiki/Reflective_programming">reflection</a>.</p>
+</div>
+<p><img align="right" alt="inheritance vs composition" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A1200%2F1*mcv2uIZnDYodmTBJGjtwXg.png&amp;f=1&amp;nofb=1&amp;ipt=89cd9ae1631b28c9ddd09029c33d3816b82e24841be716ce7d432cd2d15594da" width="400" /></p>
+<p>This is an example of <a href="https://realpython.com/inheritance-composition-python/#whats-composition">composition in object-oriented design</a>. This a relationship in which one object owns another as an attribute. Here, the grid is a constituent part of the <code>GameOfLife</code> object, not an external dependency. This can be understood through a simple distinction: a grid <em>is not</em> a <code>GameOfLife</code> (which rules out inheritance), but a <code>GameOfLife</code> <em>has a</em> grid (which confirms composition). This <em>has-a</em> relationship is what determines how the two are structured and how ownership is assigned in the code.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>There are two major concepts in object oriented programming (OOP): inheritance and composition. A heuristic to determine what the most appropriate relationship between the two is to use the <em>is-a</em> and <em>has-a</em> test. For example, a cat <em>is a</em> animal. So, a <code>Cat</code> class should inherit from a parent <code>Animal</code> class. And a cat <em>has a</em> tail. So, a <code>Cat</code> should contain an object of <code>Tail</code>. It would be incorrect for the <code>Tail</code> to inherit from the <code>Cat</code> class as a <code>Tail</code> is not a <code>Cat</code>.</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Further Reading</p>
+<p>Another design pattern related to inheritance and composition is to <a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">favour composition over inheritance</a> to give a design more flexibility.</p>
+</div>
+<h2 id="grid-initialization">Grid Initialization</h2>
+<p>How the Game of Life progresses is directly linked to how the grid is initialized. We want to give the user the ability to choose from multiple initialization strategies:</p>
+<ul>
+<li>Start with all dead cells</li>
+<li>Start with a random configuration</li>
+<li>Start with a specific pattern</li>
+</ul>
+<p>We could write three separate constructors for <code>GameOfLife</code>, but that quickly becomes messy. Each constructor would duplicate code. More importantly, adding a fourth strategy would require modifying <code>GameOfLife</code> again.</p>
+<p>In our MVC diagram, this is where input from the user can flow from the Controller to manipulate the Model.</p>
+<pre class="mermaid"><code>---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user --&gt;|provides input| controller
+  controller --&gt;|manipulates| model
+  model --&gt;|updates| view
+  view --&gt;|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style model fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0,1 stroke:#7455FF,stroke-width:4px</code></pre>
+<h3 id="the-strategy-pattern">The Strategy Pattern</h3>
+<p>The solution is to use the <a href="https://en.wikipedia.org/wiki/Strategy_pattern">Strategy Pattern</a>. This pattern encapsulates different algorithms into separate classes that all follow the same interface. In this case, each initialization strategy becomes its own class. The <code>GameOfLife</code> object doesn't care which strategy is used. It just knows that whatever it receives implements the <code>GridCreator</code> interface. We define this interface as an abstract base class,</p>
+<div class="highlight"><span class="filename">model.py (excerpt)</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GridCreator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArrayU8</span><span class="p">:</span>
+        <span class="o">...</span>
+</code></pre></div>
+<p>The <code>GridCreator</code> class inherits from <a href="https://docs.python.org/3/library/abc.html#abc.ABC"><code>ABC</code></a>, which marks it as an abstract base class. The <a href="https://docs.python.org/3/library/abc.html#abc.abstractmethod"><code>@abstractmethod</code> decorator</a> on <code>initialise()</code> requires any concrete subclass to implement this method. This contract ensures that every strategy provides the same interface.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Similar concepts exist in other languages for expressing that different data structures share a common <a href="https://en.wikipedia.org/wiki/Interface_(object-oriented_programming)">interface</a>, though the exact terminology and semantics vary. Java uses <code>interface</code> and Rust uses <code>traits</code>, for example. While these are not directly equivalent, they address the same fundamental problem of defining a contract that a type must fulfill without prescribing how that contract is implemented.</p>
+</div>
+<p>Since the abstract class itself cannot be instantiated, it forces us to provide concrete implementations for each strategy.</p>
+<p>To initialize the grid, the <code>GameOfLife</code> constructor receives an object which implements the <code>GridCreator</code> interface and uses it to initialize the grid:</p>
+<div class="highlight"><span class="filename">model.py (excerpt)</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GameOfLife</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">n_cols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">wrap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">grid_creator</span><span class="p">:</span> <span class="n">GridCreator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">grid_creator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">grid_creator</span> <span class="o">=</span> <span class="n">ZerosGridCreator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span><span class="p">:</span> <span class="n">NDArrayU8</span> <span class="o">=</span> <span class="n">grid_creator</span><span class="o">.</span><span class="n">initialise</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">)</span>
+</code></pre></div>
+<p>By depending on an abstraction rather than a concrete implementation, GameOfLife requires no knowledge of which strategies exist. It contains no conditional logic for selecting between them.
+Instead, it delegates the work to whatever strategy object it receives. The decision about which strategy to use happens elsewhere, typically in the Controller or a factory class.</p>
+<p>This design directly supports the Open-Closed Principle — the system is open for extension but closed for modification. Consider a scenario common in research: a new initialization strategy is required that loads a predefined pattern from an experimental dataset. This is achieved by implementing a new class, for example, <code>ExperimentalDataGridCreator</code>, that inherits from <code>GridCreator</code> and provides a concrete implementation of <code>initialise()</code>. Crucially, the <code>GameOfLife</code> class requires no modification. The system has been extended without altering existing, validated code. Without this abstraction, each new strategy would require changes to <code>GameOfLife</code> itself, introducing complexity and the risk of regressions with every addition.</p>
+<h3 id="concrete-classes">Concrete Classes</h3>
+<p>To achieve our goal, we have defined three concrete classes for creating our grid,</p>
+<ul>
+<li><code>ZerosGridCreator</code>: Returns a grid of all zeros</li>
+<li><code>RandomGridCreator</code>: Fills the grid with random live and dead cells of a specified density of live cells</li>
+<li><code>PatternGridCreator</code>: Places a specific pattern in the grid</li>
+</ul>
+<p>Each of the grid creators need different information in order to achieve it's goal. For example, the <code>RandomGridCreator</code> requires information about the density of the live cells while <code>PatternGridCreator</code> does not need this information but needs the pattern to be passed in. However, the <code>initialise()</code> method is fixed <a href="https://en.wikipedia.org/wiki/Type_signature#Signature">method signature</a> and doesn't allow us to provide more information. So, how do we solve this problem?</p>
+<p>As each concrete implementation is a class, we can store this information as an <a href="https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables">instance variable</a>. For example,</p>
+<div class="highlight"><span class="filename">model.py (excerpt)</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RandomGridCreator</span><span class="p">(</span><span class="n">GridCreator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">rng_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">density</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rng_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">rng_seed</span>
+</code></pre></div>
+<p>When instantiating the <code>RandomGridCreator</code> class, we're able to pass in additional variables that are stored. These stored variables are then used in the concrete implementation of the <code>initialise()</code> method.</p>
+<div class="highlight"><span class="filename">model.py (excerpt)</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RandomGridCreator</span><span class="p">(</span><span class="n">GridCreator</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArrayU8</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rng_seed</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_density</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_density</span><span class="p">])</span>
+        <span class="p">)</span>
+</code></pre></div>
+<h2 id="encoding-patterns-with-run-length-encoding">Encoding Patterns with Run Length Encoding</h2>
+<p>Testing and initializing the Game of Life with known patterns requires a compact and reliable way to represent grid states. Storing a full 2D array for each pattern is inefficient — the majority of cells in a typical pattern are dead, making dense representation unnecessarily costly. Instead, grid patterns are encoded using <a href="https://en.wikipedia.org/wiki/Run-length_encoding">Run Length Encoding (RLE)</a>, a compression format well-suited to sparse data of this kind.</p>
+<h3 id="what-is-the-encoding">What is the Encoding?</h3>
+<p>The encoding selected here is to be compatible with other Game of Life software like <a href="https://golly.sourceforge.io/">Golly</a>. Moreover, <a href="https://conwaylife.com/book/patterns/">this website</a> provides example patterns in this encoding. The RLE format works as follows:</p>
+<ul>
+<li><code>'b'</code> represents a dead cell</li>
+<li><code>'o'</code> represents a live cell</li>
+<li><code>'$'</code> represents end of line (row separator)</li>
+<li>Numbers before a character indicate repetition (e.g., <code>'3b'</code> = <code>'bbb'</code>)</li>
+<li><code>'!'</code> marks the end of the pattern</li>
+</ul>
+<p>The example <script type="math/tex">3 \times 3</script> pattern string: <code>"3b$bob$2b!"</code> represents,
+<div class="highlight"><pre><span></span><code>    b b b
+    b o b
+    b b (b)
+</code></pre></div></p>
+<p>The final cell is <code>(b)</code> has been placed in brackets as it is not explicitly set as being a dead cell by the pattern. This encoding assumes that if a cell is not explicitly set as being alive it is dead. As such, the final line of the pattern would be equivalent to <code>3b!</code> (i.e. explicitly setting all cells as dead) or <code>!</code> (i.e. implicitly setting all cells as dead).</p>
+<p>This encoding offers two practical advantages: compactness and human-readability. A pattern can be inspected and understood directly from its RLE representation, without the need to load image files or deserialize large arrays.</p>
+<h3 id="validating-patterns-with-pydantic">Validating Patterns with Pydantic</h3>
+<p>The <code>Pattern</code> class is responsible for storing the RLE encoding of a given pattern and decoding it into a populated 2D array for use by the simulation. It is implemented using <a href="https://pydantic.dev/docs/validation/latest/get-started/">Pydantic</a>, a data validation library for Python. <code>Pydantic</code> models extend the functionality of standard data classes by performing automatic validation at instantiation. This ensures that any malformed or unexpected data is caught at the point of entry, before it can propagate through the rest of the system.</p>
+<p>In this way, <code>Pattern</code> acts as the receptacle for user input and serves as a natural point of dependency injection whereby a validated <code>Pattern</code> instance is constructed from user-provided data and injected into the relevant <code>GridCreator</code>, which uses it to initialize the grid without needing to know where the data originated or how it was validated. This reflects two of the SOLID principles established earlier. Firstly, the Single Responsibility Principle, in that <code>Pattern</code> is solely concerned with the storage and decoding of pattern data and nothing else, and the Dependency Inversion Principle, in that higher-level components such as <code>GridCreator</code> depend on the abstraction of a validated <code>Pattern</code> object rather than on the specifics of how that data was sourced or constructed. Together, these properties ensure that the input handling, validation, and initialization concerns remain cleanly separated and independently testable.</p>
+<div class="highlight"><span class="filename">model.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">PositiveInt</span><span class="p">,</span> <span class="n">StringConstraints</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Pattern</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">width</span><span class="p">:</span> <span class="n">PositiveInt</span>
+    <span class="n">height</span><span class="p">:</span> <span class="n">PositiveInt</span>
+    <span class="n">encoded_pattern</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span> <span class="n">StringConstraints</span><span class="p">(</span><span class="n">strip_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">to_lower</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^(\d*[bo$])*!$&quot;</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">]</span>
+</code></pre></div>
+<p>This class uses two <code>pydantic</code> constructs to perform the validation,</p>
+<ol>
+<li><code>PositiveInt</code> type automatically rejects negative or zero values.</li>
+<li><code>StringConstraints</code> validates the RLE string against two conditions. The first ensures the string is not empty by enforcing a minimum length of 1. The second checks that the string matches the regular expression <code>^(\d*[bo$])*!$</code>, which ensures there are no invalid characters and that the string conforms to the expected RLE structure, i.e. there are zero or more occurrences of an optional digit count followed by a cell character (<code>b</code>, <code>o</code>, or <code>$</code>), terminated by <code>!</code>.</li>
+</ol>
+<p>If the user passes invalid input, a <code>ValidationError</code> is raised immediately.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These validations are performed during the instantiation of the <code>Pattern</code> class, i.e. within the <code>__init__()</code> method. Thus, instances of <code>Pattern</code> must have passed the validation.</p>
+</div>
+<p>As these checks are not sufficient to ensure that pattern is valid, there are two additional levels of check. The first occurs at the <a href="https://pydantic.dev/docs/validation/latest/concepts/validators/#field-validators">field level</a> using the <code>pydantic</code> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/functional_validators/#pydantic.functional_validators.field_validator"><code>@field_validator</code> decorator</a> on the <code>encoded_pattern</code> instance variable after the initial checks (mentioned above) are performed.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pattern</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;encoded_pattern&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_pattern_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pattern_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">without_end</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pattern_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Check that all numbers are &gt; 0</span>
+        <span class="c1">#   Pattern contains two groups: 1) any digits (\d+), 2) token characters b, o or $ ([bo$])</span>
+        <span class="c1">#   Thus, group 1 will contain the count for a given token</span>
+        <span class="n">pattern_for_counts</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d+)([bo$])&quot;</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">pattern_for_counts</span><span class="p">,</span> <span class="n">without_end</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run count cannot be 0 at </span><span class="si">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">without_end</span>
+</code></pre></div>
+<p>This validation is required as the regex pattern can only check for digits. However, our RLE is only valid for non-zero digits. The <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L92-L129"><code>validate_pattern_string()</code> method</a> checks for counts which are <code>0</code> and raises an error if one is found. Since this additional step is required, we take this opportunity to remove the terminating <code>!</code> to make decoding the pattern easier.</p>
+<p>As the user specifies the width and height of the pattern, we are able to check that this aligns with the pattern provided. Since multiple fields are required to perform this validation, it must be performed at the <a href="https://pydantic.dev/docs/validation/latest/concepts/validators/#model-validators">model level</a> using the <code>pydantic</code> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/functional_validators/#pydantic.functional_validators.model_validator"><code>@model_validator()</code>decorator</a> after all of the aforementioned checks have been completed. The <code>Pattern</code> methods <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L161-L192"><code>check_height_matches_pattern()</code></a> and <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/model.py#L194-L224"><code>check_width_matches_pattern()</code></a> define these validations.</p>
+<p>These validators enforce correctness at the point of instantiation, in keeping with the principle of <a href="https://en.wikipedia.org/wiki/Defensive_programming">defensive programming</a>. This is the practice of writing code that anticipates and guards against invalid or unexpected inputs rather than assuming they will never occur.
+This extends beyond external user input to coding errors within the codebase itself. For instance, explicitly verifying that an input to a function satisfies a condition such as being greater than zero, even when all current call sites appear to guarantee this, ensures that any violation is caught immediately if the code is later refactored or extended in an unexpected way.
+This is particularly important in research software, where silent failures can be difficult to detect and may propagate through an analysis unnoticed, producing results that appear plausible but are subtly incorrect. If a <code>Pattern</code> is constructed with inconsistent data (for example, <code>width=3</code>, <code>height=3</code> paired with an RLE string encoding a <script type="math/tex">4 \times 4</script> pattern), Pydantic will reject the object immediately, raising a validation error before the inconsistency can propagate through the system and produce a silent or difficult-to-diagnose failure downstream.</p>
+<h2 id="how-the-components-work-together">How the Components Work Together</h2>
+<p>The Model comprises three well-defined components, each with a distinct responsibility:</p>
+<ol>
+<li><code>GameOfLife</code> implements the core simulation logic. It maintains the grid state, applies Conway's rules, and tracks the history of generations. The separation between <code>compute_next_generation()</code> and <code>step()</code>, introduced in <a href="#from-rules-to-code-the-single-responsibility-principle">From Rules to Code</a>, ensures that the simulation logic remains independently testable in accordance with the unit testing principles outlined in the <a href="#">MVC overview</a>.</li>
+<li><code>GridCreator</code> manages grid initialization through the <a href="#the-strategy-pattern">Strategy Pattern</a>. Each concrete implementation — <code>ZerosGridCreator</code>, <code>RandomGridCreator</code>, and <code>PatternGridCreator</code> — encapsulates its own initialization logic, as detailed in <a href="#concrete-classes">Concrete Classes</a>. <code>GameOfLife</code> accepts any <code>GridCreator</code> without requiring knowledge of the specific implementation, and this flexibility introduces no additional complexity into <code>GameOfLife</code> itself.</li>
+<li><code>Pattern</code> enforces the validity of user-provided input through the layered validation described in <a href="#validating-patterns-with-pydantic">Validating Patterns with Pydantic</a>. Once a <code>Pattern</code> instance has been successfully constructed, its internal consistency is guaranteed. Both <code>GameOfLife</code> and <code>GridCreator</code> can consume it with confidence, without needing to perform additional checks on the data.</li>
+</ol>
+<p>These three components operate together as a cohesive system. When a specific pattern is required, the Controller constructs a <code>Pattern</code> object from user input, which <code>pydantic</code> validates at instantiation. The Controller then constructs a <code>PatternGridCreator</code> with the validated <code>Pattern</code> and passes it to <code>GameOfLife</code> via its constructor. The Model receives its dependencies through constructor injection and has no knowledge of where the pattern originated or how it was validated. This is a direct application of the Dependency Inversion Principle, as introduced in <a href="#validating-patterns-with-pydantic">Validating Patterns with Pydantic</a>.</p>
+<p>A key property of this design is that the Model is entirely isolated from user interface concerns. <code>GameOfLife</code> has no dependencies on any View library and no knowledge of how results are displayed or how the user interacts with the system. Its scope is strictly limited to cells, grids, and the rules of Conway's Game of Life. This isolation is what makes the Model thoroughly testable in the absence of any View or Controller code. This is consistent with the defensive programming principles established in <a href="#validating-patterns-with-pydantic">Validating Patterns with <code>pydantic</code></a> and the testing principles outlined in the <a href="#">MVC overview</a>.</p>
+<p>This is the Open/Closed Principle in practice, the Model is open for extension, (e.g. introducing new visualizations, interaction patterns, and initialization strategies) without requiring modification to the Model itself. The Model evolves only in response to changes in the problem domain, not in response to interface or presentation requirements.</p>
+<p>For researchers, these design decisions have tangible benefits. The abstractions established through the Strategy Pattern, the validation provided by <code>Pattern</code>, and the encapsulation in <code>GameOfLife</code> make the system easier to extend, test, and maintain. New experiments, visualizations, or analysis methods can be introduced without disrupting the core simulation. This is the separation of concerns that motivates MVC, as discussed in the overview.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

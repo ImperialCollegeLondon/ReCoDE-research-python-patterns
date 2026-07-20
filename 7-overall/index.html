@@ -1,0 +1,1092 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../6-controller/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Bringing It Together - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bringing-it-together" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bringing It Together
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation-at-the-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation at the Boundary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation at the Boundary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-typer-and-pydantic-to-perform-validations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using typer and pydantic to Perform Validations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-annotations-as-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Annotations as Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eliminating-branching-logic-with-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eliminating Branching Logic with Subcommands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Eliminating Branching Logic with Subcommands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-complex-run-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complex run Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-specialized-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Specialized Subcommands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-each-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Each Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-mapping-and-clarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Mapping and Clarity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility-and-drawbacks-of-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility and Drawbacks of Subcommands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-strategy-across-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Strategy Across Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-everything-fits-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Everything Fits Together
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation-at-the-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation at the Boundary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation at the Boundary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-typer-and-pydantic-to-perform-validations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using typer and pydantic to Perform Validations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-annotations-as-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Annotations as Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eliminating-branching-logic-with-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eliminating Branching Logic with Subcommands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Eliminating Branching Logic with Subcommands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-complex-run-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complex run Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-specialized-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Specialized Subcommands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-each-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Each Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-mapping-and-clarity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Mapping and Clarity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility-and-drawbacks-of-subcommands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility and Drawbacks of Subcommands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-strategy-across-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Strategy Across Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-everything-fits-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Everything Fits Together
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="bringing-it-together">Bringing It Together</h1>
+<p><strong>Estimated read time:</strong> 10 minutes</p>
+<p>We've explored the Model, View, and Controller in isolation. Each layer has clear responsibilities and well-defined interfaces. But how do users actually run the simulation? How is all this wired together into a working application? The answer lies in the command-line interface. Thanks to our architecture, this integration layer is simple and elegant.</p>
+<p>This focuses on the use of <a href="https://typer.tiangolo.com/"><code>typer</code></a>.
+Typer is a modern Python CLI framework that translates Python functions into command-line commands. In addition, Typer validates inputs, generates help text, and enables a pattern that eliminates large branching logic from your code. These enable it to fail fast should there be any issues with the information provided to the command line application and makes it easy for your user to use it.</p>
+<h2 id="validation-at-the-boundary">Validation at the Boundary</h2>
+<p>For users, the entry point is not the Python code or the configuration objects. Instead, it is the command line where users would type commands like,</p>
+<div class="highlight"><pre><span></span><code>game-of-life<span class="w"> </span>cli<span class="w"> </span>basic-config.yaml
+</code></pre></div>
+<p>One critical principle in software design is fail fast at the boundary. Before data enters your application logic, it should be validated. This is where <code>typer</code> and <code>pydantic</code> work together.</p>
+<h3 id="using-typer-and-pydantic-to-perform-validations">Using <code>typer</code> and <code>pydantic</code> to Perform Validations</h3>
+<p>In the example above,</p>
+<ul>
+<li><code>game-of-life</code> is the <a href="https://en.wikipedia.org/wiki/Command_(computing)">command</a> that is being run</li>
+<li><code>cli</code> is a <a href="https://typer.tiangolo.com/tutorial/commands/#command-or-subcommand">subcommand</a> which specifies the view to be the command line interface</li>
+<li><code>basic-config.yaml</code> is an argument to the subcommand</li>
+</ul>
+<details class="note">
+<summary>Note: For those familiar with <code>git</code> in the terminal</summary>
+<p>This is analogous to <code>git</code>. When making a commit using <code>git commit -m "my commit message"</code>, <code>git</code> is the command being invoked, <code>commit</code> is the subcommand and <code>-m "my commit message"</code> is the argument being passed to it.</p>
+</details>
+<p>This <code>cli</code> subcommand is implemented in the <code>cli()</code> method,</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">()</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cli</span><span class="p">(</span>
+<span class="hll">    <span class="n">gol_config</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">readable</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
+</span><span class="hll">    <span class="n">speed</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Seconds between generations&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+</span><span class="hll">    <span class="n">generations</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of generations&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">cli_view</span><span class="p">:</span> <span class="n">BaseView</span> <span class="o">=</span> <span class="n">CliView</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+<span class="hll">    <span class="n">game</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">GameOfLifeConfigFrom</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">gol_config</span><span class="p">))</span>
+</span>    <span class="n">execute_game_of_life</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">cli_view</span><span class="p">,</span> <span class="n">generations</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p>The <a href="https://typer.tiangolo.com/tutorial/commands/#a-cli-application-with-multiple-commands"><code class="highlight"><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span></code> decorator</a> in line 3 tells <code>typer</code> that for my command line application stored in the variable <code>app</code> (defined in line 1), I want to add a new subcommand using the name of my function (i.e., <code>cli</code>).</p>
+<ol>
+<li>The first argument of the function is <code>gol_config</code> (line 5) and is an argument of the subcommand by specifying it as a <a href="https://typer.tiangolo.com/tutorial/arguments/"><code>typer.Argument</code></a>. As the type for this has been specified as a <code>Path</code> (i.e., path to the config file), additional <a href="https://typer.tiangolo.com/tutorial/parameter-types/path/#path-validations"><code>Path</code> based validations</a> are performed. In this case, it checks that: the file exists; is a file and not a directory; and is readable.</li>
+<li>The second argument of the function is <code>speed</code> (line 6) and is an option to the subcommand by specifying it <a href="https://typer.tiangolo.com/tutorial/options/"><code>typer.Option</code></a>. This means that it is optional, specified with a flag, and a default value will be used if it is not provided. As the type for this is a <code>float</code> and an additional check has been specified (i.e. <code>min=0</code> kwarg in <code>typer.Option</code>), it will enforce that it is a non-negative float. If the user types <code>--speed -5</code>, <code>typer</code> rejects it immediately with a clear error message.</li>
+<li>Similarly for <code>generations</code>, <code>typer</code> will enforce that it is larger than 1 and that it is an integer.</li>
+</ol>
+<p>If all these check pass, <code>pydantic</code> validates the <em>contents</em> of the YAML file when <code>GameOfLifeConfigFrom.from_yaml()</code> is called in line 10, catching malformed configurations before they reach game logic.</p>
+<p>This layered validation enables invalid input to be caught close to where it entered, preventing cascading errors deep in the application. Users get clear, actionable error messages. Developers can trust that data inside functions is valid.</p>
+<h3 id="type-annotations-as-documentation">Type Annotations as Documentation</h3>
+<p>Notice the <code>Annotated</code> type hints. As mentioned earlier, these aren't just for type checkers, <code>typer</code> reads them to generate CLI behavior,</p>
+<div class="highlight"><pre><span></span><code><span class="n">gol_config</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">readable</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+</code></pre></div>
+<p>This single line tells <code>typer</code>,</p>
+<ul>
+<li>This is a positional argument (not an option)</li>
+<li>It must be a valid file path</li>
+<li>It must be readable</li>
+<li>Generate appropriate help text</li>
+</ul>
+<p>The information is in one place, so it's easy to maintain and modify. Change the validation requirements? Update the annotation, and <code>typer</code> automatically adjusts its behavior and help text.</p>
+<h2 id="eliminating-branching-logic-with-subcommands">Eliminating Branching Logic with Subcommands</h2>
+<p>Now consider the architecture decision in <code>main.py</code>. There are three commands: <code>run</code>, <code>cli</code>, and <code>plot</code>. The <code>run</code> subcommand is more generic than <code>cli</code> and <code>plot</code> as it allows the game of life to be rendered in either the terminal or a plot. This redundancy has been included to demonstrate how subcommands can be used to eliminate branching logic. In this example, it is fairly trivial, however, in real research code, this can avoid massive nested branching logic.</p>
+<h3 id="the-complex-run-command">The Complex <code>run</code> Command</h3>
+<p>The <code>run</code> command accepts a full <code>RunConfig</code> that specifies both the game parameters and the view interface (CLI or plotting). It also has an option to specify the number of generations.</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">main.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">readable</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
+    <span class="n">generations</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of generations&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<span class="hll">    <span class="k">if</span> <span class="n">run_config</span><span class="o">.</span><span class="n">interface</span> <span class="o">==</span> <span class="n">DisplayInterface</span><span class="o">.</span><span class="n">PLOT</span> <span class="ow">and</span> <span class="n">generations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span class="hll">        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Generations must be provided for plot interface&quot;</span><span class="p">)</span>
+</span>
+<span class="hll">    <span class="n">view</span> <span class="o">=</span> <span class="n">_create_view</span><span class="p">(</span><span class="n">run_config</span><span class="p">)</span>
+</span>    <span class="n">game</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">run_config</span><span class="o">.</span><span class="n">gol_config</span><span class="p">)</span>
+    <span class="n">execute_game_of_life</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">generations</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p>For the plotting view to work properly, the number of generations must be specified. Thus, additional logic in lines 8 and 9, are needed to ensure that the plotting view can be instantiated. As the view is specified by the config, it delegates this branching logic to instantiate the appropriate child of <code>BaseView</code> to the <code>_create_view()</code> function,</p>
+<div class="highlight"><span class="filename">main.py</span><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_create_view</span><span class="p">(</span><span class="n">run_config</span><span class="p">:</span> <span class="n">RunConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseView</span><span class="p">:</span>
+    <span class="k">match</span> <span class="n">run_config</span><span class="o">.</span><span class="n">interface</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">DisplayInterface</span><span class="o">.</span><span class="n">CLI</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="p">,</span> <span class="n">CLIViewConfig</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;View config must be of type CLIViewConfig for CLI interface&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">CliView</span><span class="p">(</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">DisplayInterface</span><span class="o">.</span><span class="n">PLOT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="p">,</span> <span class="n">PlotViewConfig</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;View config must be of type PlotViewConfig for PLOT interface&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PlotView</span><span class="p">(</span><span class="n">output_path</span><span class="o">=</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">/</span> <span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="o">.</span><span class="n">output_filename</span><span class="p">)</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span> <span class="k">as</span> <span class="n">unreachable</span><span class="p">:</span>
+            <span class="n">assert_never</span><span class="p">(</span><span class="n">unreachable</span><span class="p">)</span>
+</code></pre></div>
+<p>This factory method checks that the instance on the <code>view_config</code> field of the <code>RunConfig</code> class aligns with the <code>RunConfig.interface</code> field and instantiates the appropriate child view class.
+The <code>run</code> command is general-purpose but complex. It trades complexity for generality to enable it to support multiple paths through its logic.</p>
+<h3 id="the-specialized-subcommands">The Specialized Subcommands</h3>
+<p>Contrast this with the specialized <code>plot</code> subcommand below and the <code>cli</code> command in the <a href="#using-typer-and-pydantic-to-perform-validations">earlier section on using <code>typer</code> and <code>pydantic</code> to perform validations</a>,</p>
+<div class="highlight"><span class="filename">main.py</span><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
+    <span class="n">gol_config</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">readable</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
+    <span class="n">generations</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of generations&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">output_file</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">file_okay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dir_okay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="hll">    <span class="n">plot_view</span><span class="p">:</span> <span class="n">BaseView</span> <span class="o">=</span> <span class="n">PlotView</span><span class="p">(</span><span class="n">output_path</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
+</span>    <span class="n">game</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">GameOfLifeConfigFrom</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">gol_config</span><span class="p">))</span>
+    <span class="n">execute_game_of_life</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">plot_view</span><span class="p">,</span> <span class="n">generations</span><span class="p">)</span>
+</code></pre></div>
+<p>This has <em>no branching logic</em> when instantiating the view.
+The <code>plot</code> command knows it's creating a plot view. It takes an output file path and passes it directly to <code>PlotView</code>.
+There's no match statement, no factory, no type guards.</p>
+<h3 id="when-to-use-each-approach">When to Use Each Approach</h3>
+<p>If a user knows they want a CLI animation with specific parameters, they use,</p>
+<div class="highlight"><pre><span></span><code>game-of-life<span class="w"> </span>cli<span class="w"> </span>config.yaml<span class="w"> </span>--speed<span class="w"> </span><span class="m">0</span>.05
+</code></pre></div>
+<p>This is simple and direct. The command's logic is obvious.</p>
+<p>If a user has a complex configuration file that specifies both game parameters and interface settings, they use:</p>
+<div class="highlight"><pre><span></span><code>game-of-life<span class="w"> </span>run<span class="w"> </span>full-config.yaml
+</code></pre></div>
+<p>This is more general but also more complex internally. A use case where this would be preferred is when we want to have a common interface. For example, if we want to run a large batch of simulations through a script (e.g. on a HPC system that schedules jobs using <a href="https://en.wikipedia.org/wiki/Portable_Batch_System">PBS</a> or <a href="https://slurm.schedmd.com/overview.html">Slurm</a>), then it is useful to the script to use the common <code>run</code> subcommand and tailoring each of the configuration files accordingly.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The core idea behind this is deciding what level of abstraction is needed and where to handle the complexity of handling the different views. In the more general <code>run</code> subcommand, that complexity is handled <em>within Python</em>. In the specialized subcommands, that complexity is handled <em>by the user</em>.</p>
+</div>
+<p>The architecture provides both paths without forcing complexity onto users who don't need it.</p>
+<h3 id="parameter-mapping-and-clarity">Parameter Mapping and Clarity</h3>
+<p>Subcommands also improve clarity by mapping parameters to their semantic meaning. Compare using the <code>run</code> command with a YAML config,</p>
+<div class="highlight"><pre><span></span><code><span class="nt">interface</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli</span>
+<span class="nt">view_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">speed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="nt">gol_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">num_rows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">num_cols</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</code></pre></div>
+<p>To using the <code>cli</code> command through direct CLI parameters,</p>
+<div class="highlight"><pre><span></span><code>game-of-life<span class="w"> </span>cli<span class="w"> </span>config.yaml<span class="w"> </span>--speed<span class="w"> </span><span class="m">0</span>.1
+</code></pre></div>
+<p>The <code>cli</code> command exposes only the parameters relevant to CLI visualization. Users don't see <code>interface</code> or <code>view_config</code>, those are implicit in choosing the <code>cli</code> subcommand. This reduces cognitive load.</p>
+<h3 id="extensibility-and-drawbacks-of-subcommands">Extensibility and Drawbacks of Subcommands</h3>
+<p>Our MVC architecture allows us to easily add new visualization mode (say, web-based). With the subcommands, adding a new view would require adding another function, for example,</p>
+<div class="highlight"><span class="filename">example new subcommand for web view</span><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">web</span><span class="p">(</span>
+    <span class="n">gol_config</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">)],</span>
+    <span class="n">port</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Port to serve on&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
+    <span class="n">generations</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">web_view</span><span class="p">:</span> <span class="n">BaseView</span> <span class="o">=</span> <span class="n">WebView</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+<span class="hll">    <span class="n">game</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">GameOfLifeConfigFrom</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">gol_config</span><span class="p">))</span>
+</span><span class="hll">    <span class="n">execute_game_of_life</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">web_view</span><span class="p">,</span> <span class="n">generations</span><span class="p">)</span>
+</span></code></pre></div>
+<p>This follows the same structure of instantiating the view, then creating and executing the game. It is trivial to add another view and doesn't require modifying existing commands or functions. However, this pattern has a drawback - code repetition. The last two lines are identical to the <code>cli()</code> and <code>plot()</code> functions.</p>
+<p>This is where we have to make a design decision - do we want to have code repetition or additional complexity in our code? The "correct" answer depends on specifics of the problem, experience and personal coding style.</p>
+<p>For this specific problem, my personal preference would be to abandon the specialized subcommand. This would require adding complexity to the <code>run()</code> function and updating the factory,</p>
+<div class="highlight"><span class="filename">example case to add to the factory</span><pre><span></span><code>    <span class="k">case</span> <span class="n">DisplayInterface</span><span class="o">.</span><span class="n">WEB</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="p">,</span> <span class="n">WebViewConfig</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">WebView</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">run_config</span><span class="o">.</span><span class="n">view_config</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+</code></pre></div>
+<p>This preference is due to my aversion to <a href="https://en.wikipedia.org/wiki/Duplicate_code">code duplication</a> as it can bring more <a href="https://en.wikipedia.org/wiki/Technical_debt">technical debt</a>. This means that repeating code twice feels acceptable to me, but not three times. In particular, if I expect to add more views.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Code duplication is a <a href="https://en.wikipedia.org/wiki/Code_smell#Application-level_smells">code smell</a> that hints at a deeper issue in the source code. However, it is subjective and varies based on the context. This is contrary to an <a href="https://en.wikipedia.org/wiki/Anti-pattern">anti-pattern</a> which is a counterproductive solution to a class of problem.</p>
+</div>
+<h2 id="validation-strategy-across-layers">Validation Strategy Across Layers</h2>
+<p>The validation architecture spans multiple layers, each appropriate to its level:</p>
+<ol>
+<li><em>CLI Layer (<code>typer</code>)</em>: Path existence, type conversion, numeric ranges, required/optional status</li>
+<li><em>Configuration Layer (<code>pydantic</code>)</em>: YAML parsing, field type validation, constraint enforcement, cross-field validation</li>
+<li><em>Application Logic</em>: "Business" rule validation (e.g., pattern must be specified if pattern initializer is selected)</li>
+</ol>
+<p>Each layer knows about concerns at its level and delegates accordingly. <code>typer</code> doesn't validate YAML data, that's <code>pydantic</code>'s job. <code>pydantic</code> doesn't check file paths at the user interface, that's <code>typer</code>'s job. This separation prevents duplication and keeps concerns localized.</p>
+<h2 id="how-everything-fits-together">How Everything Fits Together</h2>
+<p>The complete flow from user input to simulation for the <code>cli</code> subcommand is,</p>
+<ol>
+<li><em>User runs command</em>: <code>game-of-life cli config.yaml --speed 0.1</code></li>
+<li><em>Typer parses</em>: Validates arguments, converts types, calls the <code>cli</code> function</li>
+<li><em>Pydantic validates configuration</em>: <code>GameOfLifeConfigFrom.from_yaml(config)</code></li>
+<li><em>Controller creates model and view</em>: Instantiation with validated parameters</li>
+<li><em>Controller orchestrates</em>: <code>execute_game_of_life</code> loops through generations, calling <code>view.render()</code> and <code>game.step()</code></li>
+<li><em>View displays</em>: <code>CliView</code> renders the grid to the terminal</li>
+<li><em>Model computes</em>: <code>GameOfLife</code> computes next generation</li>
+<li><em>Context manager cleans up</em>: Resources are freed on program exit</li>
+</ol>
+<p>Each layer does one thing. The result is an application that is,</p>
+<ul>
+<li><strong>Extendable</strong>: The code supports multiple interfaces, flexible configuration, extensible architecture</li>
+<li><strong>Simple</strong>: Users see only what they need; internal complexity is hidden</li>
+<li><strong>Maintainable</strong>: Changes to one layer don't cascade; new features can be added in isolation</li>
+<li><strong>Robust</strong>: Validation at multiple layers catches errors early</li>
+</ul>
+<p>The abstractions used allow the construction of an architecture where the complexity is placed at the most appropriate level and hidden from those who don't need it.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

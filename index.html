@@ -1,0 +1,1122 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="1-tooling/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#research-python-patterns-solving-common-pain-points-in-research-software-development" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-outcomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Outcomes 🎓
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#target-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Audience 🎯
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic 📚
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System 💻
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started 🚀
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disciplinary-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disciplinary Background 🔬
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Tools 🛠️
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure 🗂️
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice Notes 📝
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estimated-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estimated Time ⏳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources 🔗
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licence 📄
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#learning-outcomes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Outcomes 🎓
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#target-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Target Audience 🎯
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites ✅
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites ✅">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Academic 📚
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System 💻
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started 🚀
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disciplinary-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disciplinary Background 🔬
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Tools 🛠️
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure 🗂️
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practice-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practice Notes 📝
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estimated-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estimated Time ⏳
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources 🔗
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licence 📄
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+This includes your top-level README as you index page i.e. homepage.
+
+This will not be the best approach for all exemplars, so feel free to customise
+your index page as you see fit.
+-->
+
+<!--
+This README template is designed with dual purpose.
+
+It should help you think about and plan various aspects of your
+exemplar. In this regard, the document need not be completed in
+a single pass. Some sections will be relatively straightforward
+to complete, others may evolve over time.
+
+Once complete, this README will serve as the landing page for
+your exemplar, providing learners with an outline of what they
+can expect should they engage with the work.
+
+Recall that you are developing a software project and learning
+resource at the same time. It is important to keep this in mind
+throughout the development and plan accordingly.
+-->
+
+<!-- Your exemplar title. Make it sound catchy! -->
+<h1 id="research-python-patterns-solving-common-pain-points-in-research-software-development">Research Python Patterns: Solving Common Pain Points in Research Software Development</h1>
+<!-- A brief description of your exemplar, which may include an image -->
+<p>This exemplar explores software design patterns, tools, and Python packages that make code development easier and more maintainable. Since not all design patterns translate well to a research context, the focus here is on patterns that are practical and beneficial for research workflows, including concepts such as coupling and cohesion, dependency injection, linting, and Model-View-Controller (MVC) architecture. To demonstrate these concepts in action, we use <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway's Game of Life</a> as our working example, a well-defined yet rich problem.</p>
+<p>The Game of Life is a simulation of an array of pixels which can be "alive" or "dead". Each generation, the state of the pixel is determined by the state of pixels around it in the previous generation. This leads to a complex and interesting system from a simple set of rules.
+This is a gif of the <a href="https://conwaylife.com/wiki/Gosper_glider_gun">Gosper glider gun</a> pattern which creates cells that glide across the screen.
+<img alt="game of life - space rake" src="assets/gosper-glider-gun.gif" /></p>
+<!-- Author information -->
+<p>This exemplar was developed at Imperial College London by <a href="https://profiles.imperial.ac.uk/hui.wong16">Hui Ling Wong</a> in
+collaboration with <a href="https://profiles.imperial.ac.uk/a.dewar">Alex Dewar</a> from Research Software Engineering and
+<a href="https://profiles.imperial.ac.uk/c.cooling10">Chris Cooling</a> from Research Computing &amp; Data Science at the Early Career
+Researcher Institute.</p>
+<!-- Learning Outcomes.
+Aim for 3 - 4 points that illustrate what knowledge and
+skills will be gained by studying your ReCoDE exemplar. -->
+<h2 id="learning-outcomes">Learning Outcomes 🎓</h2>
+<p>Software development comes with common pain points. After completing this exemplar, students will:</p>
+<ul>
+<li>Understand how linters can catch and prevent common code quality issues.</li>
+<li>Understand the pain points that design patterns solve and how to apply them in a research context.</li>
+<li>Understand why unvalidated user input can cause problems and how packages such as <a href="https://pydantic.dev/docs/validation/latest/get-started/"><code>pydantic</code></a> and <a href="https://typer.tiangolo.com/"><code>typer</code></a> can help, with an introduction to dependency injection and type checking.</li>
+<li>Understand how type hinting in Python reduces ambiguity and makes code easier to maintain.</li>
+<li>Understand how tooling such as <a href="https://pre-commit.com/"><code>pre-commit</code></a> and type checkers can catch errors before they become problems.</li>
+<li>Understand how to build a Python command line tool to make your code more accessible and reusable.</li>
+</ul>
+<!-- Audience. Think broadly as to who will benefit. -->
+<h2 id="target-audience">Target Audience 🎯</h2>
+<p>Anyone working with Python or interested in learning about software architecture/design patterns that apply to any language.</p>
+<!-- Requirements.
+What skills and knowledge will students need before starting?
+e.g. ECRI courses, knowledge of a programming language or library...
+
+Is it a prerequisite skill or learning outcome?
+e.g. If your project uses a niche library, you could either set it as a
+requirement or make it a learning outcome above. If a learning outcome,
+you must include a relevant section that helps with learning this library.
+-->
+<h2 id="prerequisites">Prerequisites ✅</h2>
+<h3 id="academic">Academic 📚</h3>
+<ul>
+<li>Foundational understanding of the Python programming language</li>
+<li>Familiarity with installing software and packages.</li>
+</ul>
+<h3 id="system">System 💻</h3>
+<ul>
+<li>Ability to install new software on the machine</li>
+</ul>
+<!-- Quick Start Guide. Tell learners how to engage with the exemplar. -->
+<h2 id="getting-started">Getting Started 🚀</h2>
+<ol>
+<li>Install <code>uv</code> <a href="https://docs.astral.sh/uv/getting-started/installation/">by following the instructions here</a>.</li>
+<li>Create a clone of the repository using,
+   <div class="highlight"><pre><span></span><code><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns.git
+</code></pre></div></li>
+<li>Move into the root directory of the project. On linux, this would be,
+   <div class="highlight"><pre><span></span><code><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>ReCoDE-research-python-patterns
+</code></pre></div></li>
+<li>In the root directory of the project, create a virtual environment with <code>uv</code> using
+   <div class="highlight"><pre><span></span><code><span class="gp">$ </span>uv<span class="w"> </span>venv
+</code></pre></div></li>
+<li>Activate the Python environment based on the instructions that appeared from running <code>uv venv</code></li>
+<li>Install the Game of Life Python package in the virtual environment using,
+   <div class="highlight"><pre><span></span><code><span class="gp">$ </span>uv<span class="w"> </span>sync
+</code></pre></div></li>
+<li>Run the game of life in the command line using,
+   <div class="highlight"><pre><span></span><code><span class="gp">$ </span>game-of-life<span class="w"> </span>cli<span class="w"> </span>basic-config.yaml
+</code></pre></div>
+   This runs the game of life in the terminal rather than creating an output file. This runs indefinitely to stop it press <code>ctrl+c</code>. Note: the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/basic-config.yaml">basic-config.yaml</a> file is the root of the repository.</li>
+</ol>
+<!-- Background. Tell learners about why this exemplar is useful. -->
+<h2 id="disciplinary-background">Disciplinary Background 🔬</h2>
+<p>One of the most common challenges in research software development is knowing how to structure code in a way that is maintainable, readable, and reusable. After all, the most frequent user of your own code is yourself, and past you and future you need to be able to communicate clearly through it. Alongside this, there is a wealth of tooling available that can make developing research software significantly easier, yet much of it remains unknown to most researchers. This exemplar was born out of the pain points encountered first-hand when writing research software, and aims to address those challenges in a practical and accessible way. As these are fundamentally generic software development issues, this exemplar is relevant and useful across all research disciplines.</p>
+<!-- Software. What languages, libraries, software you use. -->
+<h2 id="software-tools">Software Tools 🛠️</h2>
+<p>Programming language: Python</p>
+<p>Tools:</p>
+<ol>
+<li><a href="https://docs.astral.sh/uv/#highlights"><code>uv</code></a> - for package and environment management</li>
+<li><a href="https://docs.astral.sh/ruff/"><code>ruff</code></a> - for linting and formatting</li>
+<li><a href="https://prek.j178.dev/"><code>prek</code></a> or <a href="https://pre-commit.com/"><code>pre-commit</code></a> - for git hook script to check code quality before committing to git</li>
+<li><a href="https://docs.astral.sh/ty/"><code>ty</code></a> or <a href="https://github.com/microsoft/pyright"><code>pyright</code></a> - for Python static type checking</li>
+</ol>
+<!--This renders magically as a code snippet on GitHub-->
+<p>Libraries:</p>
+<ol>
+<li><code>numpy</code> for working with arrays</li>
+<li><a href="https://docs.pytest.org/en/stable/"><code>pytest</code></a> for testing code</li>
+<li><code>matplotlib</code> for creating plots</li>
+<li><code>pydantic</code> for handling input from users</li>
+<li><code>pyyaml</code> for loading configuration files from <a href="https://yaml.org/">yaml file format</a></li>
+<li><code>typer</code> for building a command line tool</li>
+</ol>
+<p>All dependencies for this project can be found in the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/pyproject.toml"><code>pyproject.toml</code></a> file</p>
+<!-- Repository structure. Explain how your code is structured. -->
+<h2 id="project-structure">Project Structure 🗂️</h2>
+<!--Initially generated using `tree --gitignore` and shortened for brevity-->
+
+<div class="highlight"><pre><span></span><code>.
+├── LICENSE.md
+├── README.md
+├── docs
+│   ├── assets
+│   │   ├── favicon.ico
+│   │   ├── ...
+│   │   └── gosper-glider-gun.gif
+│   ├── content.md
+│   └── index.md
+├── mkdocs.yml
+├── pyproject.toml
+├── ruff.toml
+├── src/game_of_life
+│   ├── __init__.py
+│   ├── main.py
+│   ├── ...
+│   └── view
+├── tests
+│   ├── __init__.py
+│   ├── ...
+│   └── test_view.py
+└── uv.lock
+</code></pre></div>
+<p>Code is organised into logical components:</p>
+<ul>
+<li><code>docs</code> for documentation</li>
+<li><code>assets</code> for static files like images that are used in the documentation</li>
+<li><code>src</code> for core code, potentially divided into further modules</li>
+<li><code>test</code> for testing scripts</li>
+</ul>
+<!-- Best practice notes. -->
+<h2 id="best-practice-notes">Best Practice Notes 📝</h2>
+<ul>
+<li>Code testing and/or test examples with <a href="https://docs.pytest.org/en/stable/"><code>pytest</code></a> and docstring tests</li>
+<li>Use of continuous integration</li>
+<li>Use of <a href="https://www.conventionalcommits.org/en/v1.0.0/">conventional commits</a> for commit messages</li>
+<li>Use of design patterns, dependency injection, static type checking, linting and pre-commit</li>
+</ul>
+<!-- Estimate the time it will take for a learner to progress through the exemplar. -->
+<h2 id="estimated-time">Estimated Time ⏳</h2>
+<p>The exemplar has three main parts to it. For the first two, you're welcome to read them as standalone topics. For the final one, you'll need to work through all parts if you're not already familiar with the first two topics.</p>
+<ol>
+<li><a href="https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/1-tooling/">Python tooling</a> to aid software development</li>
+<li><a href="https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/2-type-hinting/">Python type hinting</a></li>
+<li>Software design patterns which makes code more maintainable. This starts with an <a href="https://imperialcollegelondon.github.io/ReCoDE-research-python-patterns/3-mvc">introduction to the Model-View-Controller architecture</a></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Time (minutes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tooling</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Type Hinting</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Software Design Patterns</td>
+<td>58</td>
+</tr>
+</tbody>
+</table>
+<!-- Any references, or other resources. -->
+<h2 id="additional-resources">Additional Resources 🔗</h2>
+<ul>
+<li>Book: <a href="https://conwaylife.com/book/">Conway's Game of Life - Mathematics and Construction</a> by Nathaniel Johnston and Dave Greene. DOI: <a href="https://doi.org/10.5281/zenodo.6097284">10.5281/zenodo.6097284</a></li>
+<li>Webpage: <a href="https://conwaylife.com/book/#rle_files">Game of Life Patterns</a></li>
+</ul>
+<!-- LICENCE.
+Imperial prefers BSD-3. Please update the LICENSE.md file with the current year.
+-->
+<h2 id="licence">Licence 📄</h2>
+<p>This project is licensed under the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/LICENSE.md">BSD-3-Clause license</a>.</p>
+<!-- Add more files in the `docs/` directory for them to be automatically
+included in the Mkdocs documentation -->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

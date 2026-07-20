@@ -1,0 +1,1608 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../1-tooling/">
+      
+      
+        <link rel="next" href="../3-mvc/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Type Hinting - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#type-hinting" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Type Hinting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Type Hints?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Are Type Hints?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Type Hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-type-hints-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Type Hints Matter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Type Hints Matter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ide-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. IDE Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-readability-and-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Readability and Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-catching-bugs-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Catching Bugs Early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-better-code-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Better Code Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duck-typing-and-the-limits-of-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duck Typing and the Limits of Type Hints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Duck Typing and the Limits of Type Hints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-checkers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Checkers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-short-tour-of-python-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Short Tour of Python Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A Short Tour of Python Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-and-union-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional and Union Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-generic-types-and-type-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced: Generic Types and Type Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-hints-in-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Hints in This Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-always-annotate-function-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Always Annotate Function Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-specific-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Specific Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-type-aliases-for-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Type Aliases for Complex Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-type-alias-to-improve-readability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use Type Alias to Improve Readability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-document-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Document Complex Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-use-type-checkers-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Use Type Checkers in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-learn-from-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Learn from Experience
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looking-ahead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looking Ahead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Type Hints?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Are Type Hints?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable Type Hints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-type-hints-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Type Hints Matter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Type Hints Matter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ide-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. IDE Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-readability-and-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Readability and Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-catching-bugs-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Catching Bugs Early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-better-code-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Better Code Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duck-typing-and-the-limits-of-type-hints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Duck Typing and the Limits of Type Hints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Duck Typing and the Limits of Type Hints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-checkers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Checkers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-short-tour-of-python-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Short Tour of Python Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="A Short Tour of Python Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-and-union-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional and Union Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-generic-types-and-type-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced: Generic Types and Type Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-hints-in-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Hints in This Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-always-annotate-function-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Always Annotate Function Signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-specific-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use Specific Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-use-type-aliases-for-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Use Type Aliases for Complex Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-type-alias-to-improve-readability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use Type Alias to Improve Readability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-document-complex-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Document Complex Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-use-type-checkers-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Use Type Checkers in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-learn-from-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Learn from Experience
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looking-ahead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looking Ahead
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="type-hinting">Type Hinting</h1>
+<p><strong>Estimated read time:</strong> 16 minutes</p>
+<p>Python is a <a href="https://www.baeldung.com/cs/statically-vs-dynamically-typed-languages">dynamically typed language</a>, so variables can hold any type of data and their type can change at runtime. Python uses <a href="https://en.wikipedia.org/wiki/Duck_typing">duck typing</a>, which means it cares about what objects can <em>do</em> rather than what they <em>are</em>. This provides remarkable flexibility, but results in implicit assumptions scattered throughout the code: you might pass a string to a function that expects a number, or forget what type a variable contains. Then, at runtime, things break &ndash; or fail silently.</p>
+<p><a href="https://docs.python.org/3/library/typing.html">Type hinting</a> is a way to make these implicit assumptions explicit. It enables documentation and verification of the types in your code without sacrificing Python's flexibility. It answers the question of "what type is this supposed to be?" Though it is worth noting that a type mismatch does not necessarily mean something will go wrong. Depending on the situation, things may still work fine (for example, passing a number-like object to a function expecting an <code>int</code>), fail in an obvious and immediate way, or fail silently in a way that is difficult to diagnose.</p>
+<p>Type hints are not enforced by Python itself. They are <a href="https://en.wikipedia.org/wiki/Metadata">metadata</a>. These annotation tell developers and tools what types are expected. This might sound optional, but in practice, type hints have become essential for writing maintainable research software. See <a href="https://peps.python.org/pep-0484/">PEP 484</a> for the full specification.</p>
+<h2 id="what-are-type-hints">What Are Type Hints?</h2>
+<p>A type hint is an annotation that declares what type a variable, parameter, or return value should have. Here's the simplest example,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add two integers and return the result.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></div>
+<p>Breaking this down:</p>
+<ul>
+<li><code>x: int</code> says the parameter <code>x</code> should be an integer</li>
+<li><code>y: int</code> says the parameter <code>y</code> should be an integer</li>
+<li><code>-&gt; int</code> says the function returns an integer</li>
+</ul>
+<p>If you call <code class="highlight"><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></code>, it works. If you call <code class="highlight"><span class="n">add</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">)</span></code>, Python will still execute it (by concatenating strings to return <code class="highlight"><span class="s2">&quot;helloworld&quot;</span></code>), because Python doesn't enforce type hints. But a type checker will complain and your IDE will warn you.</p>
+<div class="admonition abstract">
+<p class="admonition-title">TL;DR</p>
+<p>Type hints are for tools and humans, <em>not</em> for the Python interpreter itself.</p>
+</div>
+<h3 id="variable-type-hints">Variable Type Hints</h3>
+<p>Variables can be annotated when they are assigned to using this syntax:</p>
+<div class="highlight"><pre><span></span><code><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;game of life&quot;</span>
+<span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">is_active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a href="#type-checkers">A type checker</a> is a tool which analyses the code to verify that the types match. These tools are also able to infer what these types are without making it explicit like in the code snippet above. For instance, the type checker will know from <code class="highlight"><span class="n">is_active</span> <span class="o">=</span> <span class="kc">True</span></code> that <code>is_active</code> is a boolean.</p>
+<p>In this project, I have opted to make all of the types explicit.</p>
+</div>
+<p>The type annotation comes after the variable name, before the value. This tells anyone reading the code (or your IDE) what type the variable should hold.</p>
+<h2 id="why-type-hints-matter">Why Type Hints Matter</h2>
+<h3 id="1-ide-support">1. IDE Support</h3>
+<p>When your IDE knows the type of a variable, it can help you immensely. Consider the case where you are writing code and have so far written the following:</p>
+<div class="highlight"><pre><span></span><code><span class="n">game</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">game</span><span class="o">.</span>
+</code></pre></div>
+<p>When you type <code>game.</code> and pause, your IDE doesn't know what properties or methods <code>game</code> has. It can't autocomplete. Now with type hints,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_game_of_life</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">GameOfLifeConfigFrom</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GameOfLife</span><span class="p">:</span> <span class="c1"># (1)</span>
+    <span class="k">return</span> <span class="n">GameOfLife</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">num_cols</span><span class="p">,</span> <span class="n">grid_creator</span><span class="o">=...</span><span class="p">)</span>
+
+<span class="n">game</span><span class="p">:</span> <span class="n">GameOfLife</span> <span class="o">=</span> <span class="n">create_game_of_life</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">game</span><span class="o">.</span>
+</code></pre></div>
+<ol>
+<li>The <code>-&gt; GameOfLife</code> syntax is a type hint that specifies the return type rather than being part of the function.</li>
+</ol>
+<p>Your IDE knows <code>game</code> is a <code>GameOfLife</code> object. It is able to determine this implicitly through the <code>-&gt; GameOfLife</code> return type hint and the explicitly with the <code>game: GameOfLife</code>. Thus, your IDE can autocomplete and show you all available methods and properties: <code>game.step()</code>, <code>game.grid</code>, <code>game.generation</code>, <code>game.compute_next_generation()</code>, etc. This saves time and prevents typos.</p>
+<h3 id="2-readability-and-maintenance">2. Readability and Maintenance</h3>
+<p>Type hints act as inline documentation. Consider a function without hints,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+</code></pre></div>
+<p>What type is <code>data</code>? Is it a list, tuple, or something else? What about <code>factor</code>? Is it a number? The function works, but the reader must trace through the code or guess. With type hints,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">factor</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+</code></pre></div>
+<p>Now it's immediately clear, the function takes a list of floats and a scale factor, and returns a list of floats.</p>
+<h3 id="3-catching-bugs-early">3. Catching Bugs Early</h3>
+<p>Type checkers are tools that analyze your code without running it. They can catch many bugs before they cause problems. For example,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">2</span>
+
+<span class="n">result</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>  <span class="c1"># Type checker warns: expected float, got str</span>
+</code></pre></div>
+<p>The type checker warns you that the return type of <code>double</code> is <code>float</code>, not <code>str</code>. This catches the mismatch before the code runs.</p>
+<p>When the Python interpreter runs this, it does not fail and it returns a valid string. If this is used in a divide operation further down in the code, it will fail there instead</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">result</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">double</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">result</span>
+<span class="s1">&#39;hellohello&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">result</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unsupported</span> <span class="n">operand</span> <span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="o">/</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span> <span class="ow">and</span> <span class="s1">&#39;int&#39;</span>
+</code></pre></div>
+<p>This can make debugging particularly tricky, as the source of the bug is far removed from where it manifests.</p>
+<h3 id="4-better-code-organization">4. Better Code Organization</h3>
+<p>Type hints encourage better code design. When you must explicitly declare input and output types, you think more carefully about what your function does. Vague, overly-general functions become clearer, more focused.</p>
+<h2 id="duck-typing-and-the-limits-of-type-hints">Duck Typing and the Limits of Type Hints</h2>
+<p>Python is built on a principle called <em>duck typing</em>: "If it walks like a duck and quacks like a duck, then it's a duck." In other words, Python cares less about what something <em>is</em> and more about what it can <em>do</em>.</p>
+<p><img align="right" alt="duck typing comic" src="https://4loc.wordpress.com/wp-content/uploads/2009/02/ducktyping1.jpg" width="320," /></p>
+<p>Consider this function,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">process_data</span><span class="p">()</span>
+</code></pre></div>
+<p>Python doesn't care what type <code>obj</code> is. It could be a custom class you defined, a third-party library class, or anything else, as long as it has a <code>process_data()</code> method, it works. This flexibility allows you to write generic functions that work with many types without knowing their names in advance.</p>
+<p>However, this flexibility has a downside - duck typing is implicit. Developers must read the code to understand what methods are expected. An IDE can't autocomplete because it doesn't know what type <code>obj</code> is. If someone passes an object without a <code>process_data()</code> method, the code crashes at runtime with an error message rather than failing early. As the code base and developed over a longer period of time, it becomes a pain to have to trace backward each time to know what is required of the function.</p>
+<p>Type hints make the implicit explicit,</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">DataProcessor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">DataProcessor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">process_data</span><span class="p">()</span>
+</code></pre></div>
+<p>This makes the contract clear. <code>process</code> expects something of type <code>DataProcessor</code> (or a subclass). Your IDE can autocomplete. Type checkers can verify calls at development time.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The crucial limitation is that type hints are not enforced by Python at runtime. This means that <code>process("hello string")</code> can still be invoked and Python will try to execute it. As <code>"hello string"</code> doesn't have a <code>process_data()</code> method, though, you'll get an <code>AttributeError</code> at runtime, type hints notwithstanding.</p>
+<div class="highlight"><pre><span></span><code><span class="n">process</span><span class="p">(</span><span class="s2">&quot;hello string&quot;</span><span class="p">)</span>  <span class="c1"># No error from type hints, but AttributeError at runtime</span>
+</code></pre></div>
+<p>If a static type checker is not run before running the code or enabled in your IDE to scream at you, then the code will fail regardless of whether type hints are present.</p>
+</div>
+<p>This is why type hints are best paired with,</p>
+<ul>
+<li>Type checkers (such as, <a href="https://mypy-lang.org/">mypy</a>, <a href="https://github.com/microsoft/pyright">pyright</a>, <a href="https://docs.astral.sh/ty/">ty</a>) that catch mismatches before runtime<ul>
+<li><a href="https://docs.basedpyright.com/latest/">basedpyright</a> is "a fork of pyright with various type checking improvements, pylance features and more." This is a much stricter type checker. I would only recommend this if you're more experienced with Python type hinting and know how to use their judgment to balance flexibility, safety and simplicity due to <a href="https://docs.basedpyright.com/latest/benefits-over-pyright/new-diagnostic-rules/">its benefit</a>.</li>
+</ul>
+</li>
+<li>Unit tests that verify behavior</li>
+<li>Good documentation that clarifies expectations</li>
+</ul>
+<p>Type hints improve code quality and developer experience, but they're not a substitute for careful testing and design.</p>
+<h3 id="type-checkers">Type Checkers</h3>
+<p>As mentioned, type hints alone don't enforce anything. A type checker is a necessary tool that analyzes your code and reports type mismatches. The three main type checkers for Python are,</p>
+<ul>
+<li><a href="https://www.mypy-lang.org/"><code>mypy</code></a>: The original type checker, widely used</li>
+<li><a href="https://github.com/microsoft/pyright"><code>pyright</code></a>: Made by Microsoft, more modern and faster</li>
+<li><a href="https://docs.astral.sh/ty/"><code>ty</code></a>: A newer type checker that is faster than <code>mypy</code> and <code>pyright</code>. However, it is currently (June 2026) not as full-featured as <code>pyright</code> and <code>mypy</code> (e.g. it does not have a pre-commit hook).</li>
+</ul>
+<p>In the <code>pyproject.toml</code>, <code>ty</code> has been installed as a dev dependency,</p>
+<div class="highlight"><span class="filename">excerpt of pyproject.toml</span><pre><span></span><code><span class="k">[dependency-groups]</span>
+<span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="s2">&quot;ty&quot;</span><span class="err">,</span><span class="w">   </span><span class="c1"># Type checker and language server</span>
+<span class="err">]</span>
+</code></pre></div>
+<p><code>ty</code> can be run from the command line using,</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ty<span class="w"> </span>check<span class="w"> </span>.
+</code></pre></div>
+<p>It analyzes your code and reports any type inconsistencies. You can also configure your IDE to show type checker warnings in real time, where the warnings appear inline as you code.</p>
+<h2 id="a-short-tour-of-python-types">A Short Tour of Python Types</h2>
+<h3 id="common-types">Common Types</h3>
+<p>Python provides basic types you can use in hints,</p>
+<div class="highlight"><pre><span></span><code><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span>           <span class="c1"># Text, i.e. strings</span>
+<span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>               <span class="c1"># Whole numbers, i.e. integers</span>
+<span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>            <span class="c1"># Floating point numbers</span>
+<span class="n">is_active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>        <span class="c1"># True or False</span>
+</code></pre></div>
+<p>For collections, you specify both the container and the element type,</p>
+<div class="highlight"><pre><span></span><code><span class="n">numbers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">names</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Carol&quot;</span><span class="p">)</span>
+<span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+</code></pre></div>
+<p>Sometimes, it's advantageous to type hint using the <a href="https://docs.python.org/3/library/collections.abc.html#collections-abstract-base-classes">abstract base class of the built-in types</a>. For example, lists and tuples are <a href="https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range">sequence types</a> and dictionaries are <a href="https://docs.python.org/3/library/stdtypes.html#mapping-types-dict">mapping types</a> which maps a <a href="https://docs.python.org/3/glossary.html#term-hashable">hashable value</a> to an arbitrary object.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Hashable</span>
+
+<span class="n">numbers</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Carol&quot;</span><span class="p">)</span>
+<span class="n">config</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+</code></pre></div>
+<p><code>Mapping</code> is mainly useful when working with third party libraries.
+In most Python code that only uses the standard library, mapping types are usually a child class of <code>dict</code>, e.g. <a href="https://docs.python.org/3/library/collections.html#collections.defaultdict"><code>defaultdict</code></a>.</p>
+<details class="info">
+<summary>A short detour into <code>defaultdict</code> as it's fantastic</summary>
+<p><a href="https://docs.python.org/3/library/collections.html#collections.defaultdict"><code>defaultdict</code></a> is a sub-class of the built in <code>dict</code> class. It very useful collection which initializes a key the first time it is accessed, rather than raising a <code>KeyError</code>. The default value is determined by a callable passed at instantiation. An example use case of this would be to group items by a key,</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">students</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Carol&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Diana&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Eve&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">grade_groups</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span> <span class="ow">in</span> <span class="n">students</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">grade_groups</span><span class="p">[</span><span class="n">grade</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">dict</span><span class="p">(</span><span class="n">grade_groups</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Carol&#39;</span><span class="p">,</span> <span class="s1">&#39;Eve&#39;</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Diana&#39;</span><span class="p">]}</span>
+</code></pre></div>
+<p>It can also be used for counting occurrences, for example,</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;potato&quot;</span><span class="p">,</span> <span class="s2">&quot;tomato&quot;</span><span class="p">,</span> <span class="s2">&quot;avocado&quot;</span><span class="p">,</span> <span class="s2">&quot;tomato&quot;</span><span class="p">,</span> <span class="s2">&quot;potato&quot;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">word_counts</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+<span class="o">...</span>     <span class="n">word_counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="o">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">dict</span><span class="p">(</span><span class="n">word_counts</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;potato&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;tomato&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;avocado&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</code></pre></div>
+</details>
+<h3 id="optional-and-union-types">Optional and Union Types</h3>
+<p>What if a variable can be <code>None</code> (absent or unset)? This is where the <a href="https://docs.python.org/3/library/typing.html#typing.Optional"><code>Optional</code></a> type hint comes in,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
+<p><code>Optional[str]</code> means the return value is either a <code>str</code> or <code>None</code>. If the user forgets to handle the <code>None</code> case, a type checker will warn them.</p>
+<p>The <code>|</code> operator is <a href="https://docs.python.org/3/library/stdtypes.html#types.UnionType">syntactic sugar for union types</a>. It reads more naturally as "string or None".</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>This is also useful when a function can accept multiple types,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[LOG] </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This says <code>message</code> can be a string, integer, or boolean.</p>
+<h3 id="advanced-generic-types-and-type-variables">Advanced: Generic Types and Type Variables</h3>
+<p>Sometimes a function works with any type. For example, a function that doubles whatever it receives,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+</code></pre></div>
+<p>Here, <code>T</code> is a <a href="https://docs.python.org/3/library/typing.html#typing.TypeVar"><em>type variable</em></a>. It's a placeholder for any type. The function says: "whatever type you pass in, I'll return the same type." If you pass an <code>int</code>, you get an <code>int</code> back. If you pass a <code>float</code>, you get a <code>float</code> back.</p>
+<details class="info" open="open">
+<summary>Info: Advanced <code>TypeVar</code> usage</summary>
+<p>If we want to ensure that this only applies to numbers to avoid our <a href="#3-catching-bugs-early">earlier bug where a string was passed into the <code>double()</code> function</a>, we can <a href="https://docs.python.org/3/library/typing.html#typing.TypeVar">constrain <code>TypeVar</code></a>. One way to achieve it is by <a href="https://typing.python.org/en/latest/spec/generics.html#type-variables-with-an-upper-bound">placing a bound</a> so that it must be a subtype of the bound.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span> <span class="c1"># (1)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Number</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li><a href="https://docs.python.org/3.10/library/numbers.html#numbers.Number"><code>number.Number</code></a> is the parent class of all numbers in Python</li>
+</ol>
+<p>In this example, it places a bound such that <code>T</code> must be a subtype of <a href="https://docs.python.org/3.10/library/numbers.html#numbers.Number"><code>number.Number</code></a> which is at the root of the numeric hierarchy in Python. Thus, an <code>int</code>, <code>float</code> or <code>complex</code> would work.</p>
+<p>Alternatively, we could explicitly restrict <code>T</code> to be exactly those types with,</p>
+<div class="highlight"><pre><span></span><code><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span>
+</code></pre></div>
+</details>
+<p>This is useful for <a href="https://docs.python.org/3/library/typing.html#generics">generic containers</a> like lists,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">first_element</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<p>The type of the returned element matches the type of elements in the list. If <code>items</code> is <code>list[str]</code>, you get a <code>str</code> back.</p>
+<h3 id="type-aliases">Type Aliases</h3>
+<p>Long type hints can become unwieldy. Creating <a href="https://docs.python.org/3/library/typing.html#type-aliases">type aliases</a> helps with readability,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">NonNegativeFloat</span>
+
+<span class="c1"># Type alias for a proportion (0 to 1)</span>
+<span class="n">Proportion</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">NonNegativeFloat</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="c1"># (1)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">set_density</span><span class="p">(</span><span class="n">density</span><span class="p">:</span> <span class="n">Proportion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<ol>
+<li>This reads as <code>Proportion</code> is an alias for a non-negative float that is less than or equal to 1</li>
+</ol>
+<p>This is especially useful in projects, where a type such as <code>Proportion</code> appears throughout the codebase. By defining it once, it can then be easily used everywhere. If requirements change, update the definition in one place.</p>
+<h3 id="type-hints-in-this-project">Type Hints in This Project</h3>
+<p>Throughout the Game of Life project, you'll see type hints extensively:</p>
+<div class="highlight"><span class="filename">model.py</span><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_next_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArrayU8</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p><code>NDArrayU8</code> is a type alias for a NumPy array of unsigned 8-bit integers. It's defined at the top of the file:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="n">NDArrayU8</span> <span class="o">=</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">]</span>
+</code></pre></div>
+<p>When used to annotate a value returned by a function, this communicates to readers that "this function returns a NumPy array of bytes (0-255 values)." Without the type hint, it would be ambiguous.</p>
+<p>Another example,</p>
+<div class="highlight"><span class="filename">controller.py</span><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_game_of_life</span><span class="p">(</span>
+    <span class="n">game</span><span class="p">:</span> <span class="n">GameOfLife</span><span class="p">,</span>
+    <span class="n">view</span><span class="p">:</span> <span class="n">BaseView</span><span class="p">,</span>
+    <span class="n">num_generations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">view</span> <span class="k">as</span> <span class="n">opened_view</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">GoLIterator</span><span class="p">(</span><span class="n">num_generations</span><span class="p">):</span>
+            <span class="n">opened_view</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</code></pre></div>
+<p>The hints tell you:
+- <code>game</code> must be a <code>GameOfLife</code> instance
+- <code>view</code> must be a <code>BaseView</code> instance (or a subclass)
+- <code>num_generations</code> is either an <code>int</code> or <code>None</code>
+- The function returns <code>None</code> (no value)</p>
+<p>If you pass a <code>str</code> as <code>num_generations</code>, a type checker will catch it.</p>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-always-annotate-function-signatures">1. Always Annotate Function Signatures</h3>
+<p>Function signatures are the contract between a function and its callers. Always include type hints for parameters and return types,</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
+<span class="c1"># Avoid</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></div>
+<h3 id="2-use-specific-types">2. Use Specific Types</h3>
+<p>Be as specific as practical. <code>list[str]</code> is better than <code>list</code>, which is better than no hint at all,</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_names</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="o">...</span>
+
+<span class="c1"># Less specific</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_names</span><span class="p">(</span><span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="c1"># No hints</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_names</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h3 id="3-use-type-aliases-for-complex-types">3. Use Type Aliases for Complex Types</h3>
+<p>If a type hint is long and repeated, create an alias. The Game of Life project does this,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="c1"># Type alias for a grid of unsigned 8-bit integers</span>
+<span class="n">NDArrayU8</span> <span class="o">=</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">]</span>
+
+<span class="c1"># Instead of repeating npt.NDArray[np.uint8] everywhere:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_next_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArrayU8</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArrayU8</span><span class="p">]:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>Similar to variables, we can define it once, use it everywhere. If you need to change the type, update the alias in one place.</p>
+<h3 id="4-use-type-alias-to-improve-readability">4. Use Type Alias to Improve Readability</h3>
+<p>Type aliases can be used to improve readability by conveying the intent of it rather than just the type. For example,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeAlias</span>
+
+<span class="n">Name</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n">Name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>When the complexity increases, the effect is more pronounced. Consider the case where we have a set of students and each student takes multiple subjects. To store all of their examination results, we would need a nested dictionary, i.e. <code>dict[str, dict[str, int]]</code>. The outer dictionary would have a key that corresponds to their name, while the key is a dictionary of the name of the subject and score.</p>
+<p>If <code>dict[str, dict[str, int]]</code> is scattered throughout the code base, it isn't particularly useful as it doesn't tell you any additional information. If we introduce type aliases as such,</p>
+<div class="highlight"><pre><span></span><code><span class="n">Subject</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span>
+<span class="n">Score</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">int</span>
+<span class="n">StudentName</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="n">SubjectScores</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subject</span><span class="p">,</span> <span class="n">Score</span><span class="p">]</span>
+<span class="n">StudentResults</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="n">StudentName</span><span class="p">,</span> <span class="n">SubjectScores</span><span class="p">]</span>
+</code></pre></div>
+<p>It will be much easier to conceptualize what is in <code>StudentResults</code> or <code>dict[StudentName, SubjectScores]</code>. This helps to reduce the <a href="https://en.wikipedia.org/wiki/Cognitive_load">cognitive load</a> of understanding the code base making debugging or navigating it easier.</p>
+<h3 id="5-document-complex-types">5. Document Complex Types</h3>
+<p>If a type is not immediately clear, add a docstring,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">NonNegativeFloat</span>
+
+
+<span class="c1"># pydantic.Field(): Performs additional validation on the input. Here, it enforces that it must be &lt;=1</span>
+<span class="n">Proportion</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">NonNegativeFloat</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+<span class="sd">&quot;&quot;&quot;Type alias for a proportion value constrained to [0, 1].</span>
+
+<span class="sd">A validated type that ensures non-negative floats do not exceed 1.0, useful for</span>
+<span class="sd">representing probabilities and density values. This is an example of using type</span>
+<span class="sd">annotations to enhance type safety in Python.</span>
+
+<span class="sd">Type</span>
+<span class="sd">----</span>
+<span class="sd">Annotated[NonNegativeFloat, Field(le=1)]</span>
+<span class="sd">    A constrained float type where 0 &lt;= value &lt;= 1.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</code></pre></div>
+<h3 id="6-use-type-checkers-in-ci">6. Use Type Checkers in CI</h3>
+<p>Configure your type checker to run as part of your continuous integration. If code has type inconsistencies, the build fails. This is a safeguard to prevent bad code from being added to protected branches.</p>
+<div class="highlight"><span class="filename">excerpt from .github/workflows/ci.yml</span><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run ty to type check source code</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv run ty check . --output-format github</span>
+</code></pre></div>
+<h3 id="7-learn-from-experience">7. Learn from Experience</h3>
+<p>Basic use of type hints with Python is quite easy to pick up. However, acquiring the finesse to use type hints in a way that balances flexibility, control, safety and simplicity takes time. It is with experience that you learn how best to use type hints and more importantly, how <em>not</em> to use type hints.</p>
+<h2 id="looking-ahead">Looking Ahead</h2>
+<p>Type hints are foundational for understanding the subsequent tutorials. The Game of Life project uses,</p>
+<ul>
+<li><a href="https://pydantic.dev/docs/validation/latest/concepts/models/">Pydantic models</a> with type hints for configuration validation (covered in the Controller and Bringing It Together tutorials)</li>
+<li><a href="https://docs.python.org/3/library/typing.html#typing.TypeVar">Type variables</a> and <a href="https://docs.python.org/3/library/typing.html#typing.Annotated">annotated types</a> for flexible, constrained types (used throughout)</li>
+<li><a href="https://docs.python.org/3/library/stdtypes.html#types.UnionType">Union types</a> (<code>|</code>) for expressing multiple valid types (used in configuration and view selection)</li>
+</ul>
+<p>Each of these relies on type hints to work correctly and provide IDE support.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Type hints are an investment. The upfront cost of writing and learning them is reaped many times over as,</p>
+<ul>
+<li>Your IDE can help you more effectively</li>
+<li>Bugs are caught before runtime</li>
+<li>Code is easier to read and maintain</li>
+<li>Refactoring becomes safer</li>
+<li>Onboarding new developers is easier</li>
+</ul>
+<p>In the context of research software, type hints are especially valuable. Research often involves complex data structures and transformations. Type hints make implicit assumptions explicit, improving reproducibility and reducing misunderstandings.</p>
+<p>As you work through the subsequent tutorials, pay attention to how type hints are used. They're not just decorations, they're there to help you understand what the code more easily and provide a safety net.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

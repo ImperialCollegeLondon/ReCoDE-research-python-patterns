@@ -1,0 +1,1176 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../5-view/">
+      
+      
+        <link rel="next" href="../7-overall/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>The Controller - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-controller" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Controller
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-to-facilitate-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration to Facilitate Dependency Injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration to Facilitate Dependency Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deserialization-from-input-file-format-to-python-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization: From Input File Format to Python Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-enumerations-for-input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Enumerations for Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composition-of-configuration-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composition of Configuration Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turning-configurations-into-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turning Configurations into Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Turning Configurations into Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-a-factory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Factory?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orchestrating-the-model-and-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrating the Model and the View
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Orchestrating the Model and the View">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-iterator-pattern-for-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Iterator Pattern for Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-orchestration-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Orchestration Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-it-all-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bringing it All Together
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bringing it All Together">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-patterns-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Patterns Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-good-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Good Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-to-facilitate-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration to Facilitate Dependency Injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration to Facilitate Dependency Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deserialization-from-input-file-format-to-python-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization: From Input File Format to Python Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-enumerations-for-input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Enumerations for Input Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composition-of-configuration-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composition of Configuration Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turning-configurations-into-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turning Configurations into Objects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Turning Configurations into Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-a-factory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Factory?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orchestrating-the-model-and-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrating the Model and the View
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Orchestrating the Model and the View">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-iterator-pattern-for-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Iterator Pattern for Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-orchestration-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Orchestration Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bringing-it-all-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bringing it All Together
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bringing it All Together">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-patterns-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Patterns Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-power-of-good-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Power of Good Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-controller">The Controller</h1>
+<p><strong>Estimated read time:</strong> 12 minutes</p>
+<p>The Controller is the orchestrator of the MVC architecture. While the Model knows nothing about the user or the display, and the View knows nothing about the game rules, the Controller coordinates between them. It interprets user input, transforms it into commands for the Model, and ensures the View receives updated state at the right time.</p>
+<p>In our Game of Life application, the Controller's responsibilities include:</p>
+<ul>
+<li>Creating and configuring the Model with the right initialization strategy</li>
+<li>Managing the simulation loop</li>
+<li>Coordinating between Model and View</li>
+</ul>
+<p>In the diagram below, the user provides input through the <a href="#turning-configurations-into-objects">configuration to the controller</a>. This allows it to manipulated the model and configure it to have the right initialization strategy. It then <a href="#orchestrating-the-model-and-the-view">orchestrates the the interactions between the view and the model</a> by managing the simulation loop.</p>
+<pre class="mermaid"><code>---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart BT
+  user([User])
+  user --&gt;|provides input| controller
+  controller --&gt; |manipulates model| a
+  subgraph a [orchestrated by controller]
+    direction RL
+    model --&gt;|updates| view
+  end
+  a --&gt;|view renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style controller fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0,1 stroke:#7455FF,stroke-width:4px</code></pre>
+<p>The MVC architecture enables the Controller logic to remain simple and stable as long as the Model and View interfaces are well-defined.</p>
+<h2 id="configuration-to-facilitate-dependency-injection">Configuration to Facilitate Dependency Injection</h2>
+<p>Before the Controller can orchestrate anything, it needs instructions. In well-designed research software, configuration should be explicit, validated, and separate from code. This is handled through configuration files and <a href="https://pydantic.dev/docs/validation/latest/concepts/models/"><code>pydantic</code> models</a>.</p>
+<pre class="mermaid"><code>---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user --&gt;|provides input| controller
+  controller --&gt;|manipulates| model
+  model --&gt;|updates| view
+  view --&gt;|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style controller fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 0 stroke:#7455FF,stroke-width:4px</code></pre>
+<h3 id="deserialization-from-input-file-format-to-python-object">Deserialization: From Input File Format to Python Object</h3>
+<p>The journey begins with a <a href="https://yaml.org/">YAML</a> configuration file. But these configuration files are just text. They need to (magically) be validated and transformed into typed Python objects. This is where <code>pydantic</code> comes in,</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">config.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FromYaml</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span> <span class="c1"># (1)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class providing YAML loading functionality for configuration classes.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="s2">&quot;Path&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load configuration from a YAML file.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Configuration file not found or is not a file.&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="c1"># raises ValidationError if it fails</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<ol>
+<li>All configurations files which will be loaded from YAML files will inherit from this class. By default, <code>pydantic</code> can load from <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> files. But they get unwieldily for complex data. To give the child classes the <code>pydantic</code> validation capabilities, it inherits from <code>pydantic.BaseModel</code>.</li>
+</ol>
+<p>This class inherits from the <a href="https://pydantic.dev/docs/validation/latest/concepts/models/#basic-model-usage"><code>pydantic.BaseModel</code></a> to provide it with all the validation functionalities of <code>pydantic</code>. The method shown here is a <a href="https://docs.python.org/3.14/library/functions.html#classmethod">class method</a> as the class defines what validation is performed on the data.
+When <code>cls.model_validate(data)</code> is called on line 14, <code>pydantic</code> performs validation by checking types, enforcing constraints, and raising clear errors if something is wrong. This <em>fails fast</em>, any invalid configurations are caught immediately, before the simulation begins.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, <code>pydantic</code> provides an <a href="https://pydantic.dev/docs/validation/latest/concepts/json/">interface for deserialization of JSON files</a>. However, I find JSON files unwieldy and less human readable. My personal preference for configuration files are <a href="https://yaml.org/">YAML files</a>.</p>
+</div>
+<h3 id="using-enumerations-for-input-validation">Using Enumerations for Input Validation</h3>
+<p>Configuration often involves selecting from a fixed set of options. Rather than using strings that can have typos or be misunderstood, we use enums,</p>
+<div class="highlight"><span class="filename">config.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GridInitialiser</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+    <span class="n">ZEROS</span> <span class="o">=</span> <span class="s2">&quot;zeros&quot;</span>
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span>
+    <span class="n">PATTERN</span> <span class="o">=</span> <span class="s2">&quot;pattern&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DisplayInterface</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+    <span class="n">CLI</span> <span class="o">=</span> <span class="s2">&quot;cli&quot;</span>
+    <span class="n">PLOT</span> <span class="o">=</span> <span class="s2">&quot;plot&quot;</span>
+</code></pre></div>
+<p>When a <code>pydantic</code> model field uses an enum, <code>pydantic</code> automatically validates that the input matches one of the defined values. Typos in YAML configuration are caught and reported to the user. At the code level, you can <a href="https://realpython.com/structural-pattern-matching/">exhaustively match patterns</a> on the enum (more on this below), and the type checker can verify you've handled all cases. We talk about this more in <a href="#turning-configurations-into-objects">Turning Configurations into Objects</a>.</p>
+<h3 id="composition-of-configuration-objects">Composition of Configuration Objects</h3>
+<p>Configuration objects themselves are composed into higher-level configurations. For example, to configure the full game of life simulation we have this class,</p>
+<div class="highlight"><span class="filename">config.py</span><pre><span></span><code><span class="n">Proportion</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">NonNegativeFloat</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GameOfLifeConfigFrom</span><span class="p">(</span><span class="n">FromYaml</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for Game of Life simulation parameters.&quot;&quot;&quot;</span>
+    <span class="n">num_rows</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">PositiveInt</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of rows in game of life grid&quot;</span><span class="p">)</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># (1)</span>
+    <span class="n">num_cols</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">PositiveInt</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of cols in game of life grid&quot;</span><span class="p">)</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">grid_initialiser</span><span class="p">:</span> <span class="n">GridInitialiser</span> <span class="o">=</span> <span class="n">GridInitialiser</span><span class="o">.</span><span class="n">ZEROS</span>
+    <span class="n">density</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">Proportion</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Density of cells in game of life grid&quot;</span><span class="p">)</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># (2)</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span>
+        <span class="n">Pattern</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Pattern to initialise grid with&quot;</span><span class="p">)</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<ol>
+<li>The syntax here follows the form of <code>name_of_field: complex_type_information = default_value</code>. Thus, the <code>= 50</code> here is the default value for the <code>num_rows</code> field</li>
+<li>Similarly, the default value for this is <code>None</code>.</li>
+</ol>
+<p>The syntax of the type annotation for the fields here is a little complicated. It follows <a href="https://pydantic.dev/docs/validation/latest/concepts/fields/#the-annotated-pattern"><code>pydantic</code>'s annotated pattern</a> which allows us to specify a constrain and attach the <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/fields/#pydantic.fields.Field"><code>Field()</code> function</a> to provide additional information about a field. In this case, it provides a description of the field which would be useful for the user or a new developer.</p>
+<ol>
+<li>The <code>num_rows</code> and <code>num_cols</code> fields of the class which are constrained to be a positive <code>int</code> through the <a href="https://pydantic.dev/docs/validation/2.3/usage/types/number_types/#constrained-integers"><code>pydantic</code> <code>PositiveInt</code> class</a>.</li>
+<li>The <code>grid_initialiser</code> field uses the <code>GridInitialiser</code> enum thus the only valid values for this field will be <code class="highlight"><span class="s2">&quot;zeros&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;pattern&quot;</span></code></li>
+<li>The <code>density</code> field uses the type alias of <code>Proportion</code>. This pattern is useful when a type will be reused in another case as it avoids code duplication.</li>
+<li>The <code>pattern</code> field is the class <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/model.py#L30-L90"><code>Pattern</code> from our Model</a>. If this is provided, it will perform the validations defined in that class. This is an example of how we can have <a href="https://pydantic.dev/docs/validation/latest/concepts/models/#nested-models">nested models</a>, i.e. a child class of <code>pydantic.BaseModel</code> can be composed of other children of <code>pydantic.BaseModel</code>.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RunConfig</span><span class="p">(</span><span class="n">FromYaml</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Top-level configuration combining game and view settings.&quot;&quot;&quot;</span>
+    <span class="n">interface</span><span class="p">:</span> <span class="n">DisplayInterface</span>
+    <span class="n">view_config</span><span class="p">:</span> <span class="n">CLIViewConfig</span> <span class="o">|</span> <span class="n">PlotViewConfig</span>
+    <span class="n">gol_config</span><span class="p">:</span> <span class="n">GameOfLifeConfigFrom</span>
+</code></pre></div>
+<p>The <code>RunConfig</code> class enables a single configuration file to be provided to specify both the game and the view configurations.</p>
+<!--As mentioned in the [Model section](4-model#)-->
+<p>This reflects the composition pattern mentioned in the Model section: a <code>RunConfig</code> <em>has a</em> <code>GameOfLifeConfigFrom</code> (it is not one). By structuring configuration this way, we make the relationships between components explicit and testable.</p>
+<h2 id="turning-configurations-into-objects">Turning Configurations into Objects</h2>
+<p>The controller's job is to take user input and manipulate the model accordingly. To kick off the simulation, the <code>GameOfLife</code> needs to be instantiated which requires the <code>GridCreator</code> class to be instantiated with the information from the user. As the controller sits between the user input and the model, it is responsible for injecting this information into the <code>GameOfLife</code>. This is a form of <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>, specifically this is a form of <a href="https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection">constructor dependency injection</a> as the instance of <code>GridCreator</code> is passed in as argument to the constructor of the <code>GameOfLife</code>.</p>
+<div class="admonition quote">
+<p class="admonition-title">Quote</p>
+<p>"As an analogy, cars can be thought of as services which perform the useful work of transporting people from one place to another. Car engines can require gas, diesel or electricity, but this detail is unimportant to the client (e.g. a passenger) who only cares if it can get them to their destination.</p>
+<p>Cars present a uniform interface through their pedals, steering wheels and other controls. As such, which engine they were 'injected' with on the factory line ceases to matter and drivers can switch between any kind of car as needed."</p>
+<p><a href="https://en.wikipedia.org/wiki/Dependency_injection#Analogy">From Wikipedia</a></p>
+</div>
+<p>Due to the multiple permutations of the <code>GridCreator</code> and the complexity of instantiating each child class, we want to use a <a href="https://en.wikipedia.org/wiki/Creational_pattern">creational design design pattern</a> - as we want to create an object - called a <a href="https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)">factory</a>. The <code>GridCreatorFactory</code> encapsulates this selection logic,</p>
+<div class="highlight"><span class="filename">controller.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GridCreatorFactory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory for creating appropriate GridCreator instances based on configuration.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_config</span><span class="p">:</span> <span class="n">GameOfLifeConfigFrom</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="p">:</span> <span class="n">GameOfLifeConfigFrom</span> <span class="o">=</span> <span class="n">input_config</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GridCreator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and return an appropriate GridCreator based on configuration.&quot;&quot;&quot;</span>
+        <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">grid_initialiser</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">GridInitialiser</span><span class="o">.</span><span class="n">ZEROS</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ZerosGridCreator</span><span class="p">()</span>
+            <span class="k">case</span> <span class="n">GridInitialiser</span><span class="o">.</span><span class="n">RANDOM</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">density</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">RandomGridCreator</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">density</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">RandomGridCreator</span><span class="p">()</span>
+            <span class="k">case</span> <span class="n">GridInitialiser</span><span class="o">.</span><span class="n">PATTERN</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Pattern must be specified for pattern grid initialiser&quot;</span><span class="p">)</span>
+                <span class="n">target_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">pattern</span>
+                <span class="n">row_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">approximate_offset_to_center</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">height</span>
+                <span class="p">)</span>
+                <span class="n">col_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">approximate_offset_to_center</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input_config</span><span class="o">.</span><span class="n">num_cols</span><span class="p">,</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">width</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">PatternGridCreator</span><span class="p">(</span><span class="n">target_pattern</span><span class="p">,</span> <span class="n">row_offset</span><span class="o">=</span><span class="n">row_offset</span><span class="p">,</span> <span class="n">col_offset</span><span class="o">=</span><span class="n">col_offset</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span> <span class="k">as</span> <span class="n">unreachable</span><span class="p">:</span>
+                <span class="n">assert_never</span><span class="p">(</span><span class="n">unreachable</span><span class="p">)</span>
+</code></pre></div>
+<p>Which child class is instantiated depends on the enum specified in the <code>GameOfLifeConfigFrom.grid_initialiser</code> field. As the initializer for each child class requires a unique logic, this branching has been achieved using <a href="https://docs.python.org/3/reference/compound_stmts.html#the-match-statement">Python's <code>match</code> statement</a>.
+This feature enables exhaustive pattern matching. Each <code>case</code> corresponds to an enum member. The type checker verifies that all cases are covered. The <a href="https://typing.python.org/en/latest/guides/unreachable.html#assert-never-and-exhaustiveness-checking"><code>assert_never()</code></a> acts as a safety net, if an unexpected value somehow reaches this code at runtime, it raises an error. It also allows for some code to be <a href="https://typing.python.org/en/latest/guides/unreachable.html#marking-code-as-unreachable">marked as being unreachable to the static type checker</a>.</p>
+<p>By using <code>match</code> on an enum, it makes the code self-documenting and maintainable. A reader would immediately see all possible initialization strategies. If you add a new <code>GridInitialiser</code> member, the type checker will alert you that the <code>match</code> statement is incomplete.</p>
+<h3 id="why-a-factory">Why a Factory?</h3>
+<p>Why not just instantiate grid creators directly? As configurations grow more complex, they often require intricate setup logic. The Factory Pattern centralizes this logic in one place. If you need to change how random grids are created, you modify only the Factory. If you add a new grid creation strategy, you add only a new case to the match statement. This is the application of the single responsibility principle, <code>GridCreatorFactory</code> has one job: decide which grid creator to instantiate based on configuration. This allows the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/c272ab0f50586085079b61d181ce8ecb37c451e9/src/game_of_life/controller.py#L167-L194"><code>create_game_of_life()</code> method</a> which is responsible for instantiating the <code>GameOfLife</code> to be extremely simple and only be responsible for that.</p>
+<h2 id="orchestrating-the-model-and-the-view">Orchestrating the Model and the View</h2>
+<h3 id="the-iterator-pattern-for-control">The Iterator Pattern for Control</h3>
+<p>The controller is responsible for updating the model such that the view updates accordingly. Thus, it specifies how the two should interact with each other.
+Once the Model is created, how does the Controller advance the simulation? It could be a simple loop, but a better approach is to abstract the iteration logic,</p>
+<div class="highlight"><span class="filename">controller.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GoLIterator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator for controlling Game of Life simulation iterations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">max_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span>
+</code></pre></div>
+<p>The main driver behind this abstraction is our requirement to have the CLI interface to run indefinitely while requiring a maximum number of iterations for the plotting view. This could be avoided by restricting the functionality to be such that a maximum number of iterations must be specified for the CLI interface. This additional complexity was chosen to be able to introduce the <a href="https://en.wikipedia.org/wiki/Iterator_pattern">iterator pattern</a>. Otherwise, one should apply the <a href="https://en.wikipedia.org/wiki/KISS_principle">KISS principle - "keep it simple, stupid"</a></p>
+<p>This implements Python's <strong>Iterator Protocol</strong>. By doing so, <code>GoLIterator</code> works seamlessly with Python's <code>for</code> loop. The iterator pattern decouples iteration logic from the code that uses it. Want to add a pause or checkpoint between iterations? Modify the iterator. Want to log each generation? Add it to <code>__next__</code>. The code using the iterator doesn't need to change.</p>
+<h3 id="the-orchestration-loop">The Orchestration Loop</h3>
+<p>The Controller's main orchestration happens here,</p>
+<div class="highlight"><span class="filename">controller.py</span><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_game_of_life</span><span class="p">(</span>
+    <span class="n">game</span><span class="p">:</span> <span class="n">GameOfLife</span><span class="p">,</span>
+    <span class="n">view</span><span class="p">:</span> <span class="n">BaseView</span><span class="p">,</span>
+    <span class="n">num_generations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">view</span> <span class="k">as</span> <span class="n">opened_view</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">GoLIterator</span><span class="p">(</span><span class="n">num_generations</span><span class="p">):</span>
+            <span class="n">opened_view</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</code></pre></div>
+<p>This is elegant in its simplicity. The function receives already-constructed objects: a Model (i.e. <code>GameOfLife</code> instance), a View, and a maximum generation count. It doesn't create them, they're passed in.
+By using dependency injection - where dependencies are provided rather than created internally - it makes the function easy to test and flexible to use.</p>
+<p>The logic is straightforward,</p>
+<ol>
+<li>Enter the View's context manager (resources are initialized)</li>
+<li>For each generation:</li>
+<li>Ask the View to render the current state</li>
+<li>Tell the Model to step forward one generation</li>
+<li>Exit the View's context manager (resources are cleaned up)</li>
+</ol>
+<p>Notice what's <em>not</em> here: there is no game logic, no display code, no configuration parsing. The Controller orchestrates but doesn't implement. This separation is the power of MVC.</p>
+<h2 id="bringing-it-all-together">Bringing it All Together</h2>
+<h3 id="design-patterns-summary">Design Patterns Summary</h3>
+<p>Several patterns work together in the Controller,</p>
+<ul>
+<li><em>Factory Pattern</em>: <code>GridCreatorFactory</code> encapsulate object creation, hiding complexity from callers.</li>
+<li><em>Iterator Pattern</em>: <code>GoLIterator</code> abstracts iteration over generations, making it easy to modify or extend iteration behavior.</li>
+<li><em>Dependency Injection</em>: Functions receive their dependencies (game, view, config) rather than creating them, enabling testability and flexibility.</li>
+<li><em>Enum Pattern</em>: Enumerations restrict configuration options to valid choices and enable exhaustive pattern matching.</li>
+<li><em>Composition Pattern</em>: Configuration objects are composed together, reflecting the structure of the system.</li>
+<li><em>Strategy Pattern</em>: By accepting a <code>BaseView</code> interface, the orchestration loop works with any view implementation without modification.</li>
+</ul>
+<h3 id="the-power-of-good-architecture">The Power of Good Architecture</h3>
+<p>The Controller layer demonstrates why good architecture matters. The orchestration loop is just five lines of code. It's simple because the Model and View have clean interfaces, and because configuration is explicit and validated before it reaches the orchestration logic.</p>
+<p>Compare this to what might happen without this architecture: for example, mixing concerns, hard-coded configuration and tight coupling between components. Adding a new visualization mode would require modifying multiple files. Bugs would be hard to isolate because no clear boundary exists between simulation and display.</p>
+<p>Instead, our architecture makes adding features straightforward. To add a new <code>GridCreator</code>? Update the factory. Add a new View? Implement <code>BaseView</code> and update the view factory. Add new configuration options? Extend the <code>pydantic</code> model. Each change is localized and minimal.</p>
+<p>The goal of the controller layer is to keep orchestration logic simple by making the pieces it orchestrates (Model and View) well-designed and isolated.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1428 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../2-type-hinting/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Tooling - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tooling" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Tooling
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-environment-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Environment Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python Environment Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-pyprojecttoml-file-and-how-does-it-integrate-with-uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the pyproject.toml file? And how does it integrate with uv
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is the pyproject.toml file? And how does it integrate with uv">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-dependencies-to-pyprojecttoml-with-uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding dependencies to pyproject.toml with uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-dependencies-and-dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional dependencies and dependency groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universal-lock-file-for-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Universal lock file for dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linting and Formatting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linting and Formatting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-linting-and-formatting-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Linting and Formatting Matter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruff-for-linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ruff for Linting and Formatting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ruff for Linting and Formatting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-rufftoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: ruff.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-ruff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running ruff
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Git Commit Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Commit Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-git-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Git Commit Hooks?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managing-hooks-with-prek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Hooks with prek
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Hooks with prek">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-each-hook-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Each Hook Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow in Practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow in Practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#making-a-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making a commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-committing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before committing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shift-left-on-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shift Left on Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-environment-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Environment Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python Environment Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-pyprojecttoml-file-and-how-does-it-integrate-with-uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the pyproject.toml file? And how does it integrate with uv
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is the pyproject.toml file? And how does it integrate with uv">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-dependencies-to-pyprojecttoml-with-uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding dependencies to pyproject.toml with uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-dependencies-and-dependency-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional dependencies and dependency groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universal-lock-file-for-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Universal lock file for dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linting and Formatting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linting and Formatting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-linting-and-formatting-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Linting and Formatting Matter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruff-for-linting-and-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ruff for Linting and Formatting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ruff for Linting and Formatting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-rufftoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration: ruff.toml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-ruff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running ruff
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Git Commit Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Commit Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-are-git-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Git Commit Hooks?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managing-hooks-with-prek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Hooks with prek
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Hooks with prek">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-each-hook-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Each Hook Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow in Practice
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow in Practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#making-a-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making a commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-committing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before committing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shift-left-on-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shift Left on Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tooling">Tooling</h1>
+<p><strong>Estimated read time:</strong> 14 minutes</p>
+<p>This page explores three core tools that strengthen research software development: <code>uv</code> for dependency and environment management, <code>ruff</code> for automated linting and formatting, and <code>pre-commit</code> hooks for quality gating. Beyond <code>uv</code>, the latter two act as automated safeguards—they catch mistakes before you run your code, saving valuable debugging time.</p>
+<h2 id="overview">Overview</h2>
+<ul>
+<li><code>uv</code>: A fast, modern Python package manager and environment manager that integrates with <code>pyproject.toml</code> and produces reproducible lock files</li>
+<li><code>ruff</code>: A unified linter and formatter that enforces code style and catches common errors automatically</li>
+<li><code>pre-commit</code> hooks: Automated checks that run before each git commit, preventing problematic code from entering your repository</li>
+<li><code>ty</code> and <code>pyright</code>: Static type checkers which will be covered in the <a href="../2-type-hinting">next tutorial</a>.</li>
+</ul>
+<h2 id="python-environment-management">Python Environment Management</h2>
+<p><a href="https://docs.astral.sh/uv/"><code>uv</code></a> is a Python package manager and environment manager, similar to <code>pip</code> and <a href="https://www.anaconda.com/docs/main"><code>conda</code></a>. It offers a few advantages over those tools, namely: substantial performance improvements over <code>conda</code>, automatic Python version installation and management, integration with <code>pyproject.toml</code>, and a <a href="https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile">universal lock file (<code>uv.lock</code>)</a> for reproducible environments.</p>
+<h3 id="what-is-the-pyprojecttoml-file-and-how-does-it-integrate-with-uv">What is the <code>pyproject.toml</code> file? And how does it integrate with <code>uv</code></h3>
+<div class="admonition quote">
+<p class="admonition-title">What is the pyproject.toml file?</p>
+<p><a href="https://packaging.python.org/en/latest/guides/writing-pyproject-toml/"><code>pyproject.toml</code></a> is a configuration file used by packaging tools, as well as other tools such as linters, type checkers, etc.</p>
+</div>
+<p>Instead, it is a general-purpose configuration file for Python projects which can be used beyond packaging for specifying settings for tools or dependencies.</p>
+<p>The <code>pyproject.toml</code> file can also specify the entry point for your Python project. This is how users invoke your code from the command line. This project is a command-line tool for running Conway's Game of Life. Once installed into the virtual environment (see <a href="../#getting-started">getting started</a>), users can invoke it with <code>game-of-life --help</code>. This is configured via the <a href="https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts"><code>[project.scripts]</code></a> section:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[project.scripts]</span>
+<span class="n">game-of-life</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;game_of_life.main:app&quot;</span><span class="w"> </span><span class="c1"># Allows CLI to be launched in venv using `game-of-life` command</span>
+</code></pre></div>
+<p>The entry point <code>game_of_life.main:app</code> can be broken down as follows:</p>
+<ul>
+<li><code>game_of_life</code> <script type="math/tex">\Rightarrow</script> the package defined in <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/__init__.py"><code>src/game_of_life/__init__.py</code></a></li>
+<li><code>.main</code> <script type="math/tex">\Rightarrow</script> the module defined in <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/main.py"><code>src/game_of_life/main.py</code></a></li>
+<li><code>:app</code> <script type="math/tex">\Rightarrow</script> the callable function stored in the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/2835a5589068b6446a6e635b0d55c2c9349fc236/src/game_of_life/main.py#L35">variable <code>app</code></a></li>
+</ul>
+<p>A common misconception about the <code>pyproject.toml</code> file is that it is not useful unless you're planning to distribute your code by packaging, i.e. bundling it up the code so that others can easily install and use it through <a href="https://pypi.org/"><code>PyPI</code> (the python package index)</a>. In fact, the <code>pyproject.toml</code> is useful for configuring tools such as uv, providing entry points to your package, and your linter and formatter.</p>
+<h4 id="adding-dependencies-to-pyprojecttoml-with-uv">Adding dependencies to <code>pyproject.toml</code> with <code>uv</code></h4>
+<p>When using <code>conda</code>, dependencies are usually specified using an <code>environment.yml</code> file. When using <code>pip</code> or <code>uv</code>, the dependencies are specified in the the <code>[dependencies]</code> section of the <code>pyproject.toml</code>. For this project, it has been specified as,</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;matplotlib&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pydantic&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pyyaml&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;typer&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><code>uv</code> integrates with <code>pyproject.toml</code> through the <a href="https://docs.astral.sh/uv/reference/cli/#uv-add"><code>uv add</code> command</a>. This will also automatically update the <code>uv.lock</code> file too. For example, to add <code>matplotlib</code> as a dependency:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>uv<span class="w"> </span>add<span class="w"> </span>matplotlib
+</code></pre></div>
+<p>This would add <code>matplotlib</code> under <code>dependencies</code>.</p>
+<h4 id="optional-dependencies-and-dependency-groups">Optional dependencies and dependency groups</h4>
+<div class="admonition abstract">
+<p class="admonition-title">TL;DR</p>
+<p>Optional dependencies are published on <a href="https://pypi.org/">PyPI</a> while dependency groups are local for development. To install all development dependencies for this project,
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>uv<span class="w"> </span>sync<span class="w"> </span>--all-extras
+</code></pre></div>
+For more info about the differences, <a href="https://pydevtools.com/handbook/explanation/what-are-optional-dependencies-and-dependency-groups/">check this page out</a></p>
+</div>
+<p>Optional dependencies are features that some users may want, but not all require. For example, <code>pydantic</code> offers <a href="https://pydantic.dev/docs/validation/latest/get-started/install/#optional-dependencies">two optional dependencies</a>: <code>email</code> and <code>timezone</code>. In this project, documentation tools are grouped as an optional <code>docs</code> feature, allowing users who don't need documentation to avoid installing the extra dependencies:</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[project.optional-dependencies]</span>
+
+<span class="n">docs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs&lt;2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs-include-markdown-plugin&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs-jupyter&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs-exclude&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;mkdocs-material&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;python-markdown-math&quot;</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>Note that in this case, the documentation related dependencies in <code>docs</code> in <code>[optional-dependencies]</code> could also be placed under <code>[dependency-groups]</code> so that it is not installed by default. In fact, this would be ideal set up for this case as it is not strictly necessary for the user and has been organised as such to show the difference between <code>[optional-dependencies]</code> and <code>[dependency-groups]</code>.</p>
+<p>When working on a coding project there are often dependencies that are useful for development but are not required to use and run the code in the project. For example, <code>pytest</code> is used for running and writing test but isn't required to run the core code of the project. Such dependencies are called development dependencies. These have been specified in the <code>pyproject.toml</code> as follows,</p>
+<div class="highlight"><span class="filename">pyproject.toml</span><pre><span></span><code><span class="k">[dependency-groups]</span>
+
+<span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;prek&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1"># Pre-commit: run `prek install` to add to git config</span>
+<span class="w">    </span><span class="s2">&quot;pytest&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;pytest-cov&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ruff&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1"># Linter and formatter</span>
+<span class="w">    </span><span class="s2">&quot;ty&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># Type checker and language server</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>The specifics on what each of these dependencies are and why they are useful will be covered through the course of this tutorial.
+See <a href="https://pydevtools.com/handbook/explanation/understanding-dependency-groups-in-uv/">this page</a> for more information about dependency groups in <code>uv</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The main difference between optional dependencies and dependency groups lies at the packaging level. If you're not planning to distribute your code as a package, the distinction matters less, though it remains good practice to organise them appropriately.</p>
+</div>
+<p><code>uv</code>'s <a href="https://docs.astral.sh/uv/concepts/projects/dependencies/">documentation on managing dependencies</a> has more information about the different types of dependencies and how to manage them.</p>
+<h3 id="universal-lock-file-for-dependencies">Universal lock file for dependencies</h3>
+<p>One of the most common frustrations in software development is when code works perfectly on your machine but fails on someone else's. This is often down to differences in the versions of dependencies being used, a problem that gets worse the longer dependencies go without being updated and can quickly spiral into what is known as <a href="https://en.wikipedia.org/wiki/Dependency_hell">dependency hell</a>.</p>
+<p><img align="right" alt="it works on my machine meme" src="https://raw.githubusercontent.com/DXHeroes/knowledge-base-content/master/files/it_works.jpg" width="350" /></p>
+<div class="admonition info">
+<p class="admonition-title">Info: Flavours of Dependency Hell</p>
+<p>Three ways dependency issues could manifest,</p>
+<ul>
+<li>It won't install. The build fails outright, typically due to a missing or incompatible native dependency.</li>
+<li>It installs but won't run. A missing or incompatible dependency is only discovered at runtime.</li>
+<li>It runs but produces incorrect results. The most insidious failure mode, as it may go unnoticed entirely.</li>
+</ul>
+</div>
+<p>In research software, this is particularly prevalent as keeping dependencies up to date is rarely prioritised. Beyond convenience for users, <a href="https://book.the-turing-way.org/reproducible-research/overview/overview-definitions/">reproducibility</a> depends on others being able to run the exact code that produced your results. <a href="https://book.the-turing-way.org/">The Turing Way</a> offers <a href="https://book.the-turing-way.org/reproducible-research/reproducible-research/">excellent guidance</a> on research reproducibility best practices.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One way to keep dependencies up to date is by using <a href="https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide">dependabot</a>. This checks for updates in your dependencies and submits a pull request when an update is discovered.</p>
+</div>
+<p><code>uv</code> solves this through the <a href="https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile"><code>uv.lock</code> file</a>, which records the specific versions of all installed packages. This includes both the direct dependencies (i.e. the ones explicitly mentioned in <code>pyproject.toml</code>) and the transitive ones (i.e. your dependencies' dependencies). Explicitly pinning the transitive dependencies prevents unpinned transitive dependencies from breaking the installation of the direct dependencies, which can be one of the most frustrating aspects of dependency resolution to track down.
+For more information, see <code>uv</code>'s documentation on <a href="https://docs.astral.sh/uv/concepts/projects/sync/#locking-and-syncing">locking and syncing</a> for more details.</p>
+<div class="admonition quote">
+<p class="admonition-title">What does a lock file do?</p>
+<p>A <a href="https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile">lockfile</a> ensures that developers working on the project are using a consistent set of package versions. Additionally, it ensures when deploying the project as an application that the exact set of used package versions is known.</p>
+</div>
+<p>To update all dependencies, use:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>uv<span class="w"> </span>lock<span class="w"> </span>--upgrade
+</code></pre></div>
+<p>Recently, Python introduced the <a href="https://packaging.python.org/en/latest/specifications/pylock-toml/"><code>pylock.toml</code> specification</a> which is a tooling independent file "for specifying dependencies to enable reproducible installation in a Python environment". Note: this is not compatible with <code>uv</code>.</p>
+<h2 id="linting-and-formatting">Linting and Formatting</h2>
+<h3 id="why-linting-and-formatting-matter">Why Linting and Formatting Matter</h3>
+<p>In research software development, it's easy to focus solely on getting your code to work; making sure your simulation runs and your analysis produces the right output. However, code that only "works" can still be problematic. A linter is a tool that automatically scans your code <em>before</em> you run it to spot issues, such as: unused variables, inconsistent naming conventions, import problems, or code that violates style guidelines. Rather than discovering these issues when tests fail or code is reviewed, a linter catches them immediately while you're working.</p>
+<p>A formatter complements a linter by automatically rewriting your code to follow consistent style conventions, such as line length, spacing, and quote style. Together, linters and formatters serve as an automated code reviewer that enforces standards without requiring human effort. In a research context, this is helps to reduces cognitive load (you don't have to think about style), prevents sneaky bugs (unused imports or variables often indicate logic errors), and makes your code more readable to collaborators and your future self.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Most editors and IDEs can run a linter in the background as you write and highlight problems in the interface in real time. The shorter the feedback loop, the easier the fix. Catching a style or logic issue while you are still in that part of the code beats finding it later in testing or code review.</p>
+</div>
+<p>Linters and formatters are also particularly valuable in collaborative settings,</p>
+<ul>
+<li>A linter enforces project-specific coding style rules in a way that can be automatically checked and, where possible, automatically fixed</li>
+<li>Formatters reduce noise in pull requests and minimize merge conflicts by ensuring consistent formatting across contributors, regardless of individual editor settings</li>
+</ul>
+<h3 id="ruff-for-linting-and-formatting">Ruff for Linting and Formatting</h3>
+<p>This project uses <a href="https://docs.astral.sh/ruff/"><code>ruff</code></a>, a fast, all-in-one linter and formatter written in Rust. Ruff combines the functionality of several traditional Python tools (like <code>flake8</code>, <code>isort</code>, <code>black</code>) into a single tool that is substantially faster than running them separately.</p>
+<h4 id="configuration-rufftoml">Configuration: <code>ruff.toml</code></h4>
+<p>Rather than embedding ruff configuration in the <code>pyproject.toml</code> file, this project maintains a separate <code>ruff.toml</code> file. This separation improves readability and makes it easier to reason about linting rules without scrolling through project metadata. However, this configuration could equivalently be placed under a <code>[tool.ruff]</code> section in <code>pyproject.toml</code>. Both are standard and valid approaches.</p>
+<p>The configuration starts by specifying the that the format for the project.
+Here, the <code>line-length = 120</code> setting allows lines up to 120 characters. This is more relaxed than the Python default (79 characters) which is very restrictive and not necessary for modern screens and terminals.</p>
+<div class="highlight"><span class="filename">ruff.toml</span><pre><span></span><code><span class="c1"># Allow lines to be as long as 120.</span>
+<span class="n">line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span>
+</code></pre></div>
+<p>The next section specifies which linting rules to enforce.
+By default, <code>ruff</code> only enforces a subset of rules, namely <a href="https://docs.astral.sh/ruff/rules/#pyflakes-f"><code>Pyflake</code> (<code>F</code>)</a> and some <a href="https://docs.astral.sh/ruff/rules/#error-e"><code>pycodestyle</code> (<code>E</code>)</a> rules. If you're just starting out with Python, that is a good place to begin without being overwhelmed. If you have some experience with Python, extending the rule set is particularly useful for learning best practices and common pitfalls.
+In the <code>ruff.toml</code> file, the <code>[lint]</code> section uses <code>select</code> to explicitly list which rule categories ruff should apply. This is better than extending the default rules because it makes the chosen rules explicit and visible.</p>
+<div class="highlight"><span class="filename">ruff.toml (excerpt)</span><pre><span></span><code><span class="k">[lint]</span>
+<span class="n">select</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="c1"># Follow guidelines to use select instead of extend-select</span>
+<span class="w">    </span><span class="c1"># This makes the rule set explicit</span>
+<span class="w">    </span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># PyFlakes</span>
+<span class="w">    </span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># builtins</span>
+<span class="w">    </span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># bug bear - likely bugs and design problems</span>
+<span class="w">    </span><span class="s2">&quot;PTH&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># use pathlib instead of os.path</span>
+<span class="w">    </span><span class="s2">&quot;NPY&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># NumPy-specific rules</span>
+<span class="w">    </span><span class="s2">&quot;N&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># PEP 8 Naming</span>
+<span class="w">    </span><span class="s2">&quot;E&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># pycodestyle: error</span>
+<span class="w">    </span><span class="s2">&quot;W&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># pycodestyle: warning</span>
+<span class="w">    </span><span class="s2">&quot;I&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># isort - checks imports</span>
+<span class="w">    </span><span class="s2">&quot;N&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># Follow PEP8 naming</span>
+<span class="w">    </span><span class="s2">&quot;ANN&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Type annotations</span>
+<span class="w">    </span><span class="s2">&quot;C4&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># Comprehensions</span>
+<span class="w">    </span><span class="s2">&quot;ISC&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Implicit string concatenation</span>
+<span class="w">    </span><span class="s2">&quot;ICN&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Import conventions</span>
+<span class="w">    </span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Logging</span>
+<span class="w">    </span><span class="s2">&quot;G&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># Log format</span>
+<span class="w">    </span><span class="s2">&quot;RET&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Good return practices</span>
+<span class="w">    </span><span class="s2">&quot;SIM&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Simplifications</span>
+<span class="w">    </span><span class="s2">&quot;TID&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Tidy imports</span>
+<span class="w">    </span><span class="s2">&quot;TC&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># Type checking</span>
+<span class="w">    </span><span class="s2">&quot;PT&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># Pytest style</span>
+<span class="w">    </span><span class="s2">&quot;ARG&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Checks for unused arguments</span>
+<span class="w">    </span><span class="s2">&quot;PERF&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1"># Linter for performance anti-patterns</span>
+<span class="w">    </span><span class="s2">&quot;PL&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># pylint - static code analyser</span>
+<span class="w">    </span><span class="s2">&quot;UP&quot;</span><span class="p">,</span><span class="w">   </span><span class="c1"># Upgrade old Python syntax</span>
+<span class="w">    </span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># pydocstyle</span>
+<span class="w">    </span><span class="c1">#&quot;PD&quot;,  # linter for pandas</span>
+
+<span class="w">    </span><span class="s2">&quot;BLE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-blind-except</span>
+<span class="w">    </span><span class="s2">&quot;COM&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-commas</span>
+<span class="w">    </span><span class="s2">&quot;PIE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-pie</span>
+<span class="w">    </span><span class="s2">&quot;Q&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1"># flake8-quotes</span>
+<span class="w">    </span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-raise</span>
+<span class="w">    </span><span class="s2">&quot;SLF&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># flake8-self</span>
+<span class="w">    </span><span class="s2">&quot;FURB&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1"># refurb</span>
+<span class="w">    </span><span class="s2">&quot;RUF&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1"># Ruff-specific rules</span>
+<span class="p">]</span>
+<span class="n">ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ISC001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;COM812&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;PLR2004&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>Some of the key categories active in this project are,</p>
+<ul>
+<li><code>F</code> (PyFlakes): Detects undefined names, unused imports, unused variables</li>
+<li><code>E</code>, <code>W</code> (pycodestyle): Enforces <a href="https://peps.python.org/pep-0008/">PEP 8</a> style guidelines</li>
+<li><code>I</code> (isort): Ensures imports are sorted and organized consistently</li>
+<li><code>ANN</code> (annotations): Encourages type annotations on function arguments and returns</li>
+<li><code>D</code> (pydocstyle): Checks that docstrings follow the NumPy convention (specified via <code>convention = "numpy"</code>)</li>
+<li><code>NPY</code>, <code>PT</code>, <code>PL</code>: Domain-specific rules for NumPy, pytest, and pylint</li>
+</ul>
+<p>The <code>ignore</code> list carves out specific rules that would otherwise conflict or be too strict for this project.</p>
+<p>The <code>ruff</code> documentation provides more information on <a href="https://docs.astral.sh/ruff/linter/#rule-selection">rule selection</a> and <a href="https://docs.astral.sh/ruff/rules/">details on what each of these rules contain</a>. Note that individual rules that are too strict or not suitable for the project can also be omitted or suppressed through the rule selection.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Part of gaining mastery in a programming language is learning when some of these rules should be broken.</p>
+</div>
+<h4 id="running-ruff">Running ruff</h4>
+<p>To <a href="https://docs.astral.sh/ruff/linter/#ruff-check">check your code with ruff</a>, run:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ruff<span class="w"> </span>check<span class="w"> </span>.
+</code></pre></div>
+<p>To automatically fix issues that ruff can resolve, use:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ruff<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--fix
+</code></pre></div>
+<p>To <a href="https://docs.astral.sh/ruff/formatter/">format your code</a> consistently, use:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ruff<span class="w"> </span>format<span class="w"> </span>.
+</code></pre></div>
+<h2 id="git-commit-hooks">Git Commit Hooks</h2>
+<h3 id="what-are-git-commit-hooks">What Are Git Commit Hooks?</h3>
+<p>Git allows you to automatically run scripts at certain points in the version control workflow, these are called <em>hooks</em>. A pre-commit hook runs automatically just before you commit, giving you an opportunity to check your work and reject the commit if issues are found. Pre-commit hooks are invaluable for maintaining code quality because they prevent bad code from entering your repository in the first place. Rather than discovering problems after commit (during code review or CI/CD), hooks catch them in your local workflow.</p>
+<p>Without automation, pre-commit checks require discipline and manual execution. Tools like <a href="https://pre-commit.com/"><code>pre-commit</code></a> and <a href="https://prek.j178.dev/"><code>prek</code></a> make managing these hooks easy: they read a configuration file, install the hooks into your repository, and run them automatically when you commit.</p>
+<p>In this project, both <code>pre-commit</code> and <a href="https://prek.j178.dev/"><code>prek</code></a> can be used to run the hooks. The latter does not need any additional set up as it part of the development dependencies.</p>
+<h3 id="managing-hooks-with-prek">Managing Hooks with <code>prek</code></h3>
+<p>This project uses the <code>prek</code> to manage git hooks. As it is specified as a development dependency, it will be installed in the Python environment which has been synced using the <code>uv sync --all-extras</code> command. The <a href="https://prek.j178.dev/quickstart/#new-to-pre-commit-style-workflows">quick start guide</a> in the documentation contains more information generic set up.</p>
+<p>Once <code>prek</code> has been added to your Python environment, invoking <code>prek install</code> in the command line will <a href="https://prek.j178.dev/quickstart/#4-go-further">run the hooks every time you commit</a>.</p>
+<p>The configuration is for this project is specified in <code>.pre-commit-config.yaml</code>:</p>
+<div class="highlight"><span class="filename">.pre-commit-config.yaml</span><pre><span></span><code><span class="nt">repos</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/pre-commit/pre-commit-hooks</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v6.0.0</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing-whitespace</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">end-of-file-fixer</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-added-large-files</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-case-conflict</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-toml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check-yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/astral-sh/ruff-pre-commit</span>
+<span class="w">    </span><span class="c1"># Ruff version.</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.15.4</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Run the linter.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ruff-check</span>
+<span class="w">        </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">--fix</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># Run the formatter.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ruff-format</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/astral-sh/uv-pre-commit</span>
+<span class="w">    </span><span class="c1"># uv version.</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10.7</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv-lock</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">repo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/RobertCraigie/pyright-python</span>
+<span class="w">    </span><span class="nt">rev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1.1.408</span>
+<span class="w">    </span><span class="nt">hooks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyright</span>
+</code></pre></div>
+<p>This file declares which "repositories" (tools) should be run as hooks, along with their versions and which specific hooks to execute from each tool.</p>
+<h4 id="understanding-each-hook-repository">Understanding Each Hook Repository</h4>
+<p><strong>Pre-commit hooks (basic checks)</strong>: The first repository provides general-purpose checks managed by the pre-commit framework itself:
+- <code>trailing-whitespace</code>: Removes trailing whitespace at the end of lines
+- <code>end-of-file-fixer</code>: Ensures files end with exactly one newline at the end of the file
+- <code>check-added-large-files</code>: Prevents accidentally committing large files
+- <code>check-case-conflict</code>: Detects files that differ only in case (problematic on case-insensitive filesystems)
+- <code>check-toml</code>: Validates that TOML files (like <code>pyproject.toml</code>) are syntactically correct
+- <code>check-yaml</code>: Validates YAML files</p>
+<p><strong>Ruff hooks (linting and formatting)</strong>: The ruff-pre-commit repository runs your configured linting and formatting checks:
+- <code>ruff-check --fix</code>: Automatically fixes linting issues that can be auto-corrected
+- <code>ruff-format</code>: Formats code to match the configured style</p>
+<p>These hooks apply the same rules defined in <code>ruff.toml</code>, ensuring that all code entering the repository meets the project's code quality standards.</p>
+<p><strong>UV lock hook</strong>: The <code>uv-lock</code> hook ensures that <code>uv.lock</code> is kept in sync with <code>pyproject.toml</code>. When you add or modify dependencies, this hook will update the lockfile automatically.</p>
+<p><strong>Type checking (pyright)</strong>: The <code>pyright</code> hook runs static type analysis to catch type mismatches. Type checking is detailed in a <a href="../2-type-hinting">separate tutorial</a>. It's mentioned here only to show how it's integrated into the commit workflow.</p>
+<h4 id="workflow-in-practice">Workflow in Practice</h4>
+<h5 id="making-a-commit">Making a commit</h5>
+<p>When you attempt to commit:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: Add feature&quot;</span>
+</code></pre></div>
+<p>Pre-commit automatically runs all configured hooks on the staged files. If any hook fails, your commit is blocked:</p>
+<div class="highlight"><pre><span></span><code>ruff check failed
+...
+# Fix the issues, then:
+$ git add .
+$ git commit -m &quot;Add feature&quot;  # Try again
+</code></pre></div>
+<p>Once all hooks pass, the commit succeeds.</p>
+<h5 id="before-committing">Before committing</h5>
+<p>Before attempting to commit, the hooks can be run using <code>prek -a</code>. The example below shows a case where the formatting of the file had failed. As the issue can be fixed automatically, the hook fixes it.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>prek<span class="w"> </span>-a
+<span class="go">trim trailing whitespace.................................................Failed</span>
+<span class="go">- hook id: trailing-whitespace</span>
+<span class="go">- exit code: 1</span>
+<span class="go">- files were modified by this hook</span>
+
+<span class="go">  Fixing docs/1-tooling.md</span>
+<span class="go">fix end of files.........................................................Passed</span>
+<span class="go">check for added large files..............................................Passed</span>
+<span class="go">check for case conflicts.................................................Passed</span>
+<span class="go">check toml...............................................................Passed</span>
+<span class="go">check yaml...............................................................Passed</span>
+<span class="go">ruff check...............................................................Passed</span>
+<span class="go">ruff format..............................................................Passed</span>
+<span class="go">uv-lock..................................................................Passed</span>
+<span class="go">pyright..................................................................Passed</span>
+</code></pre></div>
+<p>When <code>prek</code> is run again, all the checks pass,</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>prek<span class="w"> </span>-a
+<span class="go">trim trailing whitespace.................................................Passed</span>
+<span class="go">fix end of files.........................................................Passed</span>
+<span class="go">check for added large files..............................................Passed</span>
+<span class="go">check for case conflicts.................................................Passed</span>
+<span class="go">check toml...............................................................Passed</span>
+<span class="go">check yaml...............................................................Passed</span>
+<span class="go">ruff check...............................................................Passed</span>
+<span class="go">ruff format..............................................................Passed</span>
+<span class="go">uv-lock..................................................................Passed</span>
+<span class="go">pyright..................................................................Passed</span>
+</code></pre></div>
+<h3 id="shift-left-on-quality">Shift Left on Quality</h3>
+<p>The term <a href="https://en.wikipedia.org/wiki/Shift-left_testing">"shift left"</a> refers to catching issues as early as possible in development—moving quality checks leftward on the timeline from "after deployment" to "before commit". Pre-commit hooks are a means to achieving it. It helps by catching problems locally, before they ever reach a pull request or shared branch. This makes code review more productive (reviewers focus on logic, not formatting) and keeps the git history clean and consistent.</p>
+<p>In research software, where reproducibility depends on having a clear record of what was tested and why, maintaining a clean commit history via pre-commit hooks is particularly valuable.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

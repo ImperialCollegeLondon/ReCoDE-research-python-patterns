@@ -1,0 +1,1067 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../4-model/">
+      
+      
+        <link rel="next" href="../6-controller/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>The View - Research Software Design Patterns</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-view" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-header__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Research Software Design Patterns
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The View
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://imperialcollegelondon.github.io/ReCoDE-home/" title="Research Software Design Patterns" class="md-nav__button md-logo" aria-label="Research Software Design Patterns" data-md-component="logo">
+      
+  <img src="../assets/iclogo.png" alt="logo">
+
+    </a>
+    Research Software Design Patterns
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-tooling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tooling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-type-hinting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type Hinting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model View Controller Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-mvc-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The MVC Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polymorphism-through-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polymorphism Through Abstraction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Polymorphism Through Abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-baseview-abstract-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The BaseView Abstract Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concrete Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-view-terminal-output-with-rich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI View: Terminal Output with rich
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plot-view-matplotlib-animation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plot View: Matplotlib Animation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-patterns-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design patterns used
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting It Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6-controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7-overall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bringing It Together
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-mvc-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The MVC Loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polymorphism-through-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polymorphism Through Abstraction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Polymorphism Through Abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-baseview-abstract-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The BaseView Abstract Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concrete-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concrete Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concrete Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-view-terminal-output-with-rich" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI View: Terminal Output with rich
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plot-view-matplotlib-animation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plot View: Matplotlib Animation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-patterns-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design patterns used
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting It Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-view">The View</h1>
+<p><strong>Estimated read time:</strong> 10 minutes</p>
+<p>The View is the presentation layer of the MVC architecture. While the Model holds the game state and knows nothing about how it's displayed, and the Controller orchestrates the flow, the View is responsible for making the game visible to the user. In Conway's Game of Life, multiple visualization strategies might be equally valid: a terminal display, a plotting window, or even a web interface. The View layer enables this flexibility.</p>
+<h2 id="the-mvc-loop">The MVC Loop</h2>
+<p>Recall the MVC diagram from the Model section. The flow is unidirectional from the Model to the View by updating it. When the controller tells the model to step forward in time, the model computes the next generation. The view then displays this new state to the user.</p>
+<pre class="mermaid"><code>---
+config:
+  look: handDrawn
+  theme: base
+---
+flowchart TD
+  user([User])
+  user --&gt;|provides input| controller
+  controller --&gt;|manipulates| model
+  model --&gt;|updates| view
+  view --&gt;|renders for| user
+
+  style user fill:#DDF9FF,stroke:#82E8FF
+  style view fill:#E3DDFF,stroke:#BDAEFF
+  linkStyle 2,3 stroke:#7455FF,stroke-width:4px</code></pre>
+<p>The Model emits no output itself. It simply holds state. The View asks the Model for its current state &ndash; specifically, the grid and the generation number &ndash; and transforms that data into a human-readable format. This separation ensures that adding a new visualization method requires only a new View implementation, not changes to the Model.</p>
+<h2 id="polymorphism-through-abstraction">Polymorphism Through Abstraction</h2>
+<p>In the <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/tree/main/src/game_of_life/view"><code>src/game_of_life/view</code> directory</a>, there are three files: <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/base.py"><code>base.py</code></a>, <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/cli.py"><code>cli.py</code></a>, and <a href="https://github.com/ImperialCollegeLondon/ReCoDE-research-python-patterns/blob/main/src/game_of_life/view/plot.py"><code>plot.py</code></a>. Let's start with the abstract foundation.</p>
+<h3 id="the-baseview-abstract-class">The <code>BaseView</code> Abstract Class</h3>
+<p>All view implementations inherit from <code>BaseView</code>, which itself inherits from <code>AbstractContextManager</code>,</p>
+<div class="highlight"><span class="filename">view/base.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractContextManager</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseView</span><span class="p">(</span><span class="n">AbstractContextManager</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for all Game of Life visualization views.&quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">:</span> <span class="s2">&quot;GameOfLife&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display the current state of the Game of Life simulation.&quot;&quot;&quot;</span>
+        <span class="o">...</span>
+</code></pre></div>
+<div class="admonition quote">
+<p class="admonition-title">Definition - context manager</p>
+<p>In Python, a <a href="https://docs.python.org/3/reference/datamodel.html#with-statement-context-managers">context manager</a> "is an object that defines the runtime context to be established when executing a <code>with</code> statement. The context manager handles the entry into, and the exit from, the desired runtime context for the execution of the block of code."</p>
+</div>
+<p>By inheriting from <a href="https://docs.python.org/3/library/contextlib.html#contextlib.AbstractContextManager"><code>AbstractContextManager</code></a>, it makes the resource management explicit. Views often need to allocate resources, for example, a CLI view sets up a live display, a plotting view opens a figure window. By inheriting from <code>AbstractContextManager</code>, we enforce that concrete views implement <a href="https://docs.python.org/3/reference/datamodel.html#object.__enter__"><code>__enter__()</code></a> and <a href="https://docs.python.org/3/reference/datamodel.html#object.__exit__"><code>__exit__()</code></a> methods.  This ensures these resources are properly initialized when we enter a <a href="https://docs.python.org/3/reference/compound_stmts.html#with"><code>with</code></a> block and cleanly released when we exit, even if an error occurs.</p>
+<details class="note">
+<summary>Note on Python <code>__magic__()</code> methods</summary>
+<p>These methods which start and end with a double underline, e.g. <code>__name-of-method__()</code>, are called <a href="https://realpython.com/python-magic-methods/#getting-to-know-pythons-magic-or-special-methods">magic or special or dunder methods</a> in Python.</p>
+</details>
+<p>This pattern is an application of the <em>context manager protocol</em>, which is a Python idiom for reliable resource management. Combined with the <a href="https://docs.python.org/3/library/abc.html#abc.abstractmethod"><code>@abstractmethod</code></a> <a href="https://realpython.com/primer-on-python-decorators/">decorator</a> on <code>render()</code>, it means any concrete view <em>must</em> implement three methods to satisfy the interface: <code>__enter__()</code>, <code>__exit__()</code>, and <code>render()</code>.</p>
+<p>The design choice ensure that the constraints are made explicit in code. By using <a href="https://docs.python.org/3/library/abc.html">abstract base classes</a>, we communicate to other programmers (or our future selves) exactly what a view must do, before they write a single line of a new view class.</p>
+<h3 id="concrete-views">Concrete Views</h3>
+<h4 id="cli-view-terminal-output-with-rich">CLI View: Terminal Output with <code>rich</code></h4>
+<p>The <code>CliView</code> displays the Game of Life in the terminal using the <a href="https://rich.readthedocs.io/en/stable/"><code>rich</code></a> library, which provides tools for beautiful text formatting:</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">view/cli.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CliView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="n">ALIVE_CELL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\u2588</span><span class="s2">&quot;</span>  <span class="c1"># Unicode for full block █</span>
+    <span class="n">DEAD_CELL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+
+   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_between_generations</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="c1"># (1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">:</span> <span class="n">Console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+        <span class="c1"># When time between generations is &lt; 1, +1 is to guarantee that refresh rate is higher than frequency of data</span>
+        <span class="c1"># Otherwise, it can refresh twice a second and still be faster than the refresh rate</span>
+        <span class="n">refresh_per_second</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">time_between_generations</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">time_between_generations</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">live_display</span><span class="p">:</span> <span class="n">Live</span> <span class="o">=</span> <span class="n">Live</span><span class="p">(</span><span class="n">console</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">,</span> <span class="n">refresh_per_second</span><span class="o">=</span><span class="n">refresh_per_second</span><span class="p">,</span> <span class="n">screen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_between_gens</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">time_between_generations</span>
+</code></pre></div></td></tr></table></div>
+<ol>
+<li>Calls the parent's <code>__init__()</code> method. As the parent (<code>BaseView</code>) has an empty initializer, this is not strictly necessary, however, it is good coding practice and will catch issues if the parent's <code>__init__()</code> method changes.</li>
+</ol>
+<p>In line 2 and 3 in the code block above are the class variables <code>ALIVE_CELL</code> and <code>DEAD_CELL</code>. The naming convention of <a href="https://peps.python.org/pep-0008/#descriptive-naming-styles"><code>UPPER_CASE_WITH_UNDERSCORES</code></a> has been used to signal to readers that this is a <a href="https://peps.python.org/pep-0008/#constants">constant</a>. In addition, the <a href="https://docs.python.org/3/library/typing.html#typing.ClassVar"><code>ClassVar</code> type annotation</a>, further signals to readers that this is class variable.
+These class variables store the visual symbols for live cells and a space for dead cells. Here, a full Unicode block character has been used to allow for the display to look professional and handle different terminal widths gracefully.</p>
+<p>The <a href="https://rich.readthedocs.io/en/stable/reference/console.html#module-rich.console"><code>Console</code> object from <code>rich</code></a> is their abstraction of the console and manages the terminal output. The <a href="https://rich.readthedocs.io/en/stable/reference/live.html#rich.live.Live"><code>Live</code> object</a> provides live-updating capabilities. By initializing the <code>Live</code> instance with the <code>Console</code> instance in line 83, it allows for the console output to be updated with a specified refresh rate. In line 82, the refresh rate is calculated to always be faster than the generation interval, ensuring smooth animation.</p>
+<p>When the <code>CliView</code> class is invoked with a <code>with</code> statement, the <code>__enter__()</code> method is executed,</p>
+<div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">view/cli.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CliView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[bold cyan]Conway&#39;s Game of Life[/bold cyan]&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[dim]Press Ctrl+C to stop[/dim]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># (1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">live_display</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="c1"># (2)</span>
+</code></pre></div></td></tr></table></div>
+<ol>
+<li>Sleeps for 1 second so that the text printed to the console remains there for a while before being replaced by the live display</li>
+<li>To conform to the <code>__enter__()</code> signature, <code>self</code> needs to be returned</li>
+</ol>
+<p>The <a href="https://typing.python.org/en/latest/spec/class-compat.html#override"><code>@override</code></a> decorator in line 2 is to signal to the type checker and readers that this <a href="https://en.wikipedia.org/wiki/Method_overriding">method overriding</a> takes place here. This means that this class is replacing the implementation of the implementation of the parent class. In this case, it is providing a concrete implementation of the parent <code>BaseView</code>.</p>
+<p>This method instructs the user what this is for and how to stop it in lines 4 and 5. <a href="https://rich.readthedocs.io/en/stable/markup.html"><code>rich</code> allows for colours and styles</a> to be specified for the output in the console. This simplifies the process of building a pretty CLI tool that highlights the right information to your user. For the example here, the name of this tool is in bold while the exit information (which is less important) has been dimmed.
+In line 7, the live display that was instantiated is started. This replaces any text in the terminal with this display.</p>
+<p>When it comes to rendering, it is important to note that the model stores the grid in an array of ones and zeros. Thus, we need to convert this into a string which can be displayed by the terminal. This is performed using the <code>map_to_string()</code> method which transforms the numeric grid into visual output,</p>
+<div class="highlight"><span class="filename">view/cli.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CliView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span> <span class="c1"># (1)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Array must have two dimensions&quot;</span><span class="p">)</span>
+        <span class="n">chars</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">arr</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALIVE_CELL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEAD_CELL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">chars</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Defensively perform check to ensure that the array only has two dimensions</li>
+</ol>
+<p>This function takes in a grid and produces a string, with no <a href="https://en.wikipedia.org/wiki/Side_effect_(computer_science)">side effects</a>. Here, it use <a href="https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy.where">NumPy's <code>where()</code></a> to swap 1s and 0s for visual characters, then join them into a multi-line string.</p>
+<p>The <code>render()</code> method then wraps this string in a <a href="https://rich.readthedocs.io/en/stable/panel.html"><code>Panel</code></a> for visual formatting which is used to update the <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">live_display</span></code>,</p>
+<div class="highlight"><span class="filename">view/cli.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CliView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">:</span> <span class="s2">&quot;GameOfLife&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_to_string</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span> <span class="c1"># (1)</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">Panel</span><span class="p">(</span>
+            <span class="n">board</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Conway&#39;s Game of Life - Generation </span><span class="si">{</span><span class="n">game</span><span class="o">.</span><span class="n">generation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">live_display</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_between_gens</span><span class="p">)</span> <span class="c1"># (2)</span>
+</code></pre></div>
+<ol>
+<li>Maps the model state to a format that can be "understood" by the view</li>
+<li><code>time.sleep()</code> is to prevent everything from being displayed at once. This forces some time between the generations such that the progression between the generations can be seen by the human.</li>
+</ol>
+<p>When you call <code>render</code>, it asks the game for its grid and generation, converts the grid to a visual string, and updates the live display. The sleep ensures the animation plays at the intended speed.</p>
+<h4 id="plot-view-matplotlib-animation">Plot View: Matplotlib Animation</h4>
+<p>The <code>PlotView</code> takes a different approach. Rather than displaying live in the terminal, it collects frames during rendering and assembles them into an animation at the end:</p>
+<div class="highlight"><span class="filename">view/plot.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PlotView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;black&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_artists</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
+<ul>
+<li>The <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">_cmap</span></code> is a custom colourmap, white for dead cells, black for live cells.</li>
+<li>The <code>matplotlib</code> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure"><code>Figure</code></a> and <a href="https://matplotlib.org/stable/api/axes_api.html#the-axes-class"><code>Axes</code></a> (stored in <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">fig</span></code> and <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">ax</span></code> respectively) have been instantiated using the <code class="highlight"><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span></code>. When instantiated, the <a href="https://matplotlib.org/stable/users/explain/axes/constrainedlayout_guide.html"><code>constrained_layout=True</code></a> keyword argument is used to create cleaner plots with less white space. For users familiar with <code>tight_layout()</code>, this is preferred over <code>tight_layout()</code> (see <a href="https://matplotlib.org/stable/users/explain/axes/tight_layout_guide.html">tight layout guide tip</a>) as constrained layout uses a more modern algorithm.</li>
+<li>The <code class="highlight"><span class="bp">self</span><span class="o">.</span><span class="n">_frame_artists</span></code> list accumulates frames for later animation.</li>
+</ul>
+<p>The setup of the plotting view is fairly straightforward whereby the title is set and axis ticks are disabled.</p>
+<div class="highlight"><span class="filename">view/plot.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PlotView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="c1"># Set title of figure</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Game of Life&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Disable axis ticks</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In <code>__enter__()</code>, the <code>matplotlib</code> methods have the side effect  of setting values and does return a value. However, the returned value is not used. Hence, it has been set to the variable <code>_</code> to indicate that it is not used.</p>
+<p>This is not strictly necessary, especially for <code>matplotlib</code> methods. However, it is a style that I find useful when working with functions that I know return a value but that has been discarded as only the side effects are desired.</p>
+</div>
+<div class="highlight"><span class="filename">view/plot.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PlotView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">:</span> <span class="s2">&quot;GameOfLife&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_artists</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_cmap</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)])</span>
+</code></pre></div>
+<p>To render the changes to the model, the <code>matplotlib</code> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.imshow.html"><code>Axes.imshow()</code></a> method is used to display the information. This returns an <code>AxesImage</code> instance which implements the <code>matplotlib.artist.Artist</code> abstract base class. Thus, the rendering step simply stores a matplotlib image of the current grid. No animation happens here. Instead, all the animation logic lives in <code>__exit__</code>,</p>
+<div class="highlight"><span class="filename">view/plot.py</span><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PlotView</span><span class="p">(</span><span class="n">BaseView</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc_details</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">animated</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">ArtistAnimation</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_frame_artists</span><span class="p">,</span>
+            <span class="n">interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">INTERVAL</span><span class="p">,</span>
+            <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">animated</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
+                <span class="n">savefig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;bbox_inches&quot;</span><span class="p">:</span> <span class="s2">&quot;tight&quot;</span><span class="p">},</span>
+            <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
+</code></pre></div>
+<p>Upon exiting the <code>PlotView</code> context, the animation is created using <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ArtistAnimation.html#matplotlib.animation.ArtistAnimation"><code>ArtistAnimation</code></a>. This uses the created artists stored in <code>!#py self._frame_artists</code> as each frame of the animation.</p>
+<p>This design decision in <code>PlotView</code> defers expensive operations (animation creation and saving) until the end. This is more efficient as you avoid recreating the animation after every single render. Instead, the frames are collected and the animation is assembled once when the context exits. If <code>output_path</code> is <code>None</code>, the animation is displayed interactively; otherwise, it's saved to file (MP4, GIF, etc.).</p>
+<p>For more details on how matplotlib animations work, see the <a href="https://matplotlib.org/stable/users/explain/animations/animations.html">matplotlib animation documentation</a>.</p>
+<h2 id="summary">Summary</h2>
+<h3 id="design-patterns-used">Design patterns used</h3>
+<ul>
+<li><em>Strategy Pattern</em>: Each view class is a different strategy for visualization. The controller doesn't know or care which strategy is active, it just calls <code>render()</code> on whatever view it was given.</li>
+<li><em>Polymorphism</em>: Because all views implement the same interface, the controller can treat them uniformly. The polymorphism is what enables the strategy pattern to be effective as a given method results in different behaviours depending on the object's type.</li>
+<li><em>Context Manager Protocol</em>: By using <code>with</code> statements, resources (display windows, file handles, live terminals) are guaranteed to be cleaned up, even if an exception occurs.</li>
+</ul>
+<h3 id="putting-it-together">Putting It Together</h3>
+<p>The controller doesn't instantiate views directly with complex logic. Instead, it receives a view and uses it like this,</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">view</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">generation</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_generations</span><span class="p">):</span>
+        <span class="n">view</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+        <span class="n">game</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</code></pre></div>
+<p>The simplicity makes it clear. The view's job is to display; the model's job is to compute; the controller's job is to coordinate. Each has a single responsibility, and they communicate through well-defined interfaces.</p>
+<p>By designing views as interchangeable strategies that adhere to a common abstract interface, we've made it trivial to add new visualizations without modifying the existing code.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "toc.follow", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>
